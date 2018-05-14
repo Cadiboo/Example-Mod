@@ -1,0 +1,8 @@
+#Items
+item.example_item.name=Example Item
+
+#Blocks
+tile.example_block.name=Example Block
+
+#Creative Tab(s)
+itemGroup.YOURTABNAME=YOURTABNAME
