@@ -1,0 +1,16 @@
+
+/*/
+!/README.md
+!/src/
+!/src/*
+*.DS_Store*
+!/gradle
+!/gradle*
+!gradle.properties
+!gradlew
+!gradlew.bat
+!build.gradle
+!/build/
+/build/*
+!/build/libs/
+/build/libs/*sources*
