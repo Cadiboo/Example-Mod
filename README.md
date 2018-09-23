@@ -6,3 +6,5 @@ Any code written by me is free for any use at all. Some credit would be nice tho
 Download the repository, follow the directions to install Forge from the README.txt in the root directory and you're ready to go!
 ### Eclipse Preferences
 If you are using eclipse you can go to Preferences and import the helpful-eclipse-preferences file which contains preferences that set up the Java Code Formatter to auto-format your code
+### Changing your username
+You can change your username by launching Minecraft with the `-username` argument. You can do this in eclipse by going to Run > Run Configurations > YOUR CONFIGURATION > Arguments and putting  `-username YOUR USERNAME` into the text box

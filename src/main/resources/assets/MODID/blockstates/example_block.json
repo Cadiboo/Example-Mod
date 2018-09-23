@@ -1,8 +1,0 @@
-{
-    "variants": {
-        "normal": [
-            {"model": "MODID:example_block"}
-        ],
-        "inventory": { "model": "MODID:example_block" }
-    }
-}
