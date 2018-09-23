@@ -48,6 +48,9 @@ run
 !README.*
 !.gitignore
 
+# Eclipse preferences
+!/Cadiboo's Eclipse Preferences.epf
+
 # OPTIONAL - release JARs
 !/build/
 /build/*
