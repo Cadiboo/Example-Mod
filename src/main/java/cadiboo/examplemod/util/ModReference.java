@@ -82,9 +82,9 @@ public final class ModReference {
 
 		/**
 		 * This is our Mod's full Version.<br>
-		 * It is our Mod's Name, our Mod's Minecraft Version, our Mod's Major Mod version, our Mod's Major API version, our Mod's Minor Mod version, our Mod's Patch version and our Mod's Suffix in the format <code>MODNAME MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH[-SUFFIX]</code>
+		 * It is our Mod's Name, our Mod's Minecraft Version, our Mod's Major Mod version, our Mod's Major API version, our Mod's Minor Mod version, our Mod's Patch version and our Mod's Suffix in the format <code>MODNAME-MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH[-SUFFIX]</code>
 		 */
-		public static final String	FULL_VERSION		= MOD_NAME + "" + MINECRAFT_VERSION + "-" + VERSION + (VERSION_SUFFIX.length() > 0 ? "-" + VERSION_SUFFIX : "");
+		public static final String	FULL_VERSION		= MOD_NAME + "-" + MINECRAFT_VERSION + "-" + VERSION + (VERSION_SUFFIX.length() > 0 ? "-" + VERSION_SUFFIX : "");
 
 	}
 
