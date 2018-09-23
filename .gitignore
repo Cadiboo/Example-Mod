@@ -37,8 +37,8 @@ run
 !.project
 
 # Important setup
-!/*
-!/*/
+/*
+/*/
 !/src/
 !/src/*
 *.DS_Store*
