@@ -27,9 +27,18 @@ gradle.properties
 eclipse
 run
 
-# Non-default
-/*
-/*/
+# Files to allow for an easy setup that should NOT be included in your repository
+!eclipse/
+!eclipse/*
+!*.launch
+!.settings
+!.metadata
+!.classpath
+!.project
+
+# Important setup
+!/*
+!/*/
 !/src/
 !/src/*
 *.DS_Store*
@@ -44,7 +53,3 @@ run
 /build/*
 !/build/libs/
 /build/libs/*sources*
-
-# Files to allow for an easy setup that should NOT be included in your repository
-!eclipse/
-!eclipse/*
