@@ -1,3 +1,10 @@
+# Important setup
+/*
+/*/
+!/src/
+!/src/*
+*.DS_Store*
+
 # eclipse
 bin
 *.launch
@@ -36,20 +43,13 @@ run
 !.classpath
 !.project
 
-# Important setup
-/*
-/*/
-!/src/
-!/src/*
-*.DS_Store*
-
 # Vital git files
 !LICENSE
 !README.*
 !.gitignore
 
 # Eclipse preferences
-!/Cadiboo's Eclipse Preferences.epf
+!/Cadiboo's Eclipse Formatter.epf
 
 # OPTIONAL - release JARs
 !/build/
