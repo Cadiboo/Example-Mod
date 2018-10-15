@@ -23,32 +23,19 @@ out
 # gradle
 build
 .gradle
-/gradle
-/gradle*
-gradle.properties
-!gradlew
-!gradlew.bat
-!build.gradle
 
 # other
 eclipse
 run
-
-# Files to allow for an easy setup that should NOT be included in your repository
-!eclipse/
-!eclipse/*
-!*.launch
-!.settings
-!.metadata
-!.classpath
-!.project
+!CREDITS*
+!*changelog*
 
 # Vital git files
-!LICENSE
-!README.*
+!LICENSE*
+!README*
 !.gitignore
 
-# Eclipse preferences
+# Eclipse formatter
 !/Cadiboo's Eclipse Formatter.epf
 
 # OPTIONAL - release JARs

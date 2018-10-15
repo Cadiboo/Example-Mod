@@ -1,6 +1,11 @@
-Minecraft Forge is licensed under the terms of the LGPL 2.1 found
-here http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt and copied
-below.
+Unless noted below, Minecraft Forge, Forge Mod Loader, and all 
+parts herein are licensed under the terms of the LGPL 2.1 found
+here http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt and 
+copied below.
+
+Homepage: http://MinecraftForge.net/
+          http://github.com/MinecraftForge/MinecraftForge
+          
 
 A note on authorship:
 All source artifacts are property of their original author, with
@@ -21,6 +26,44 @@ features without being infected with its license. That is the
 purpose of the LGPL. Mods and others using this code via ordinary
 Java mechanics for referencing libraries are specifically not bound
 by Forge's license for the Mod code.
+
+
+=== MCP Data ===
+This software includes data from the Minecraft Coder Pack (MCP), with kind permission
+from them. The license to MCP data is not transitive - distribution of this data by
+third parties requires independent licensing from the MCP team. This data is not
+redistributable without permission from the MCP team.
+
+=== Sharing ===
+I grant permission for some parts of FML to be redistributed outside the terms of the LGPL, for the benefit of
+the minecraft modding community. All contributions to these parts should be licensed under the same additional grant.
+
+-- Runtime patcher --
+License is granted to redistribute the runtime patcher code (src/main/java/net/minecraftforge/fml/common/patcher
+and subdirectories) under any alternative open source license as classified by the OSI (http://opensource.org/licenses)
+
+-- ASM transformers --
+License is granted to redistribute the ASM transformer code (src/main/java/net/minecraftforge/common/asm/ and subdirectories)
+under any alternative open source license as classified by the OSI (http://opensource.org/licenses)
+
+=========================================================================
+This software includes portions from the Apache Maven project at
+http://maven.apache.org/ specifically the ComparableVersion.java code. It is
+included based on guidelines at
+http://www.softwarefreedom.org/resources/2007/gpl-non-gpl-collaboration.html
+with notices intact. The only change is a non-functional change of package name.
+
+This software contains a partial repackaging of javaxdelta, a BSD licensed program for generating
+binary differences and applying them, sourced from the subversion at http://sourceforge.net/projects/javaxdelta/
+authored by genman, heikok, pivot.
+The only changes are to replace some Trove collection types with standard Java collections, and repackaged.
+
+This software contains potions of Paulscodee IBXM library, a BSD liceensed library for
+loading and playing IBXM formated auto. No modifications havee beeen made. The associated 
+licenses can be found along side this one, or at
+https://github.com/MinecraftForge/MinecraftForge/blob/1.12.x/LICENSE-Paulscode%20IBXM%20Library.txt
+https://github.com/MinecraftForge/MinecraftForge/blob/1.12.x/LICENSE-Paulscode%20SoundSystem%20CodecIBXM.txt
+=========================================================================
 
 
                   GNU LESSER GENERAL PUBLIC LICENSE
