@@ -1,0 +1,33 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+
+*.DS_Store*
+
+# OPTIONAL - release JARs
+!/build/
+/build/*
+!/build/libs/
+/build/libs/*sources*
+
+#Mac setup script
+!/mac_setup.command

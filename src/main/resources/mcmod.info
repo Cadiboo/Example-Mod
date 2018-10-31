@@ -1,0 +1,16 @@
+[
+{
+  "modid": "examplemod",
+  "name": "Example Mod",
+  "description": "An example mod with some good code practices already in it.",
+  "version": "0.0.0",
+  "mcversion": "1.12.2",
+  "url": "https://github.com/Cadiboo/Cadiboo_Example_Mod_1_12_2/",
+  "updateUrl": "",
+  "authorList": ["Cadiboo"],
+  "credits": "Cadiboo and the Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
