@@ -1,9 +1,0 @@
-#Items
-item.example_item.name=Example Item
-
-#Blocks
-tile.example_block.name=Example Block
-tile.example_ore.name=Example Ore
-
-#Creative Tab(s)
-itemGroup.examplemod=Example Mod
