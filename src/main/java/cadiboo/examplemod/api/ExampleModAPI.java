@@ -1,7 +1,7 @@
 package cadiboo.examplemod.api;
 
 /**
- * API (Application Programming Interface) to allow other Mods to add stuff to our mod
+ * API (Application Programming Interface) to allow other Mods to do stuff with/to our mod
  *
  * @author Cadiboo
  */
