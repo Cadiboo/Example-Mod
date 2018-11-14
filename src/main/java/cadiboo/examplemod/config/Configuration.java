@@ -3,13 +3,14 @@ package cadiboo.examplemod.config;
 import cadiboo.examplemod.util.ModReference;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
+import net.minecraftforge.common.config.Config.LangKey;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@net.minecraftforge.common.config.Config(modid = ModReference.MOD_ID)
-@net.minecraftforge.common.config.Config.LangKey(ModReference.MOD_ID + ".config.title")
+@Config(modid = ModReference.MOD_ID)
+@LangKey(ModReference.MOD_ID + ".config.title")
 public class Configuration {
 
 	@Comment("Numbers")
