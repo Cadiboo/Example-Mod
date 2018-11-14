@@ -42,12 +42,13 @@ public final class ClientUtil {
 		//
 		// RenderHelper.enableGUIStandardItemLighting();
 		//
+		//
 		// net.minecraftforge.client.model.pipeline.LightUtil.diffuseLight(EnumFacing side);
 		// net.minecraftforge.client.model.pipeline.LightUtil.renderQuadColor(BufferBuilder wr, BakedQuad quad, int auxColor);
 		//
-		// Tessellator.getInstance().getBuffer().lightmap(p_187314_1_, p_187314_2_);
+		// Tessellator.getInstance().getBuffer().lightmap(int skyLight, int blockLight);
 		//
-		// OpenGlHelper.setLightmapTextureCoords(int target, float p_77475_1_, float t)
+		// OpenGlHelper.setLightmapTextureCoords(int target, float x, float y)
 
 	}
 
