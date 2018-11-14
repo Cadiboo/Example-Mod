@@ -1,9 +1,12 @@
 package cadiboo.examplemod.client;
 
+/**you can also import constants directly*/
+import static cadiboo.examplemod.util.ModReference.MOD_ID;
+import static net.minecraftforge.fml.relauncher.Side.CLIENT;
+
 import cadiboo.examplemod.ExampleMod;
 import cadiboo.examplemod.init.ModBlocks;
 import cadiboo.examplemod.init.ModItems;
-import cadiboo.examplemod.util.ModReference;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -12,7 +15,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
+@Mod.EventBusSubscriber(modid = MOD_ID, value = CLIENT)
 public final class ClientEventSubscriber {
 
 	private static final String DEFAULT_VARIANT = "normal";
