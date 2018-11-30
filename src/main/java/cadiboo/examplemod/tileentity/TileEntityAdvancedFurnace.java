@@ -4,6 +4,12 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityAdvancedFurnace extends TileEntity {
 
-	// TODO
-
+    /**
+     * If your TileEntity's TESR implementation is a FastTESR then this method needs to return true.
+     */
+    @Override
+    public boolean hasFastRenderer()
+    {
+        return true;
+    }
 }
