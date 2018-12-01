@@ -1,11 +1,26 @@
-# Example Mod
-### An example mod created to try and get new modders to use good code practices
+# [Example Mod](https://github.com/Cadiboo/Example-Mod) 
+### An example mod created by [Cadiboo](https://github.com/Cadiboo) to try and get new modders to use good code practices
 This contains the basic setup for a normal mod, and the included files use good code practices.
 ### All credits for Forge, FML etc go to their respective owners.
 Any code written by me is free for any use at all. Some credit would be nice though :)
 Download the repository, follow the directions to install Forge from the README.txt in the root directory and you're ready to go!
 
-## I’ll add some info about setting up a repository soon.
+## Setting up a repository
+1. Download and extract (or Fork) the repository to a folder you will be able to find and write a mod in
+2. Open up your command prompt and go to that folder
+
+#### Using Eclipse
+3. Run the `setupDecompWorkspace` gradle task
+	- On Mac: run `./gradlew setupDecompWorkspace`
+	- On Windows: run `gradlew setupDecompWorkspace`
+4. Run the `eclipse` gradle task
+	- On Mac: run `./gradlew eclipse`
+	- On Windows: run `gradlew eclipse`
+5. Open eclipse... TODO add instructions
+
+#### Using IntelliJ
+3. import the build.gradle file....
+TODO add instructions
 
 ## Concepts
 A Proxy holds code that is run EXCLUSIVELY on the physical client or the physical server. It's only purpose is to handle code that can't be run on the other physical side (i.e. it will crash the game if run on the wrong side). Any common code should be run from literally anywhere else. 
