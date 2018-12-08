@@ -7,9 +7,9 @@ Download the repository, follow the directions to install Forge from the README.
 
 ## Setting up a repository
 1. Download and extract (or Fork) the repository to a folder you will be able to find and write a mod in
-2. Open up your command prompt and go to that folder
 
 #### Using Eclipse
+2. Open up your command prompt and go to that folder
 3. Run the `setupDecompWorkspace` gradle task
 	- On Mac: run `./gradlew setupDecompWorkspace`
 	- On Windows: run `gradlew setupDecompWorkspace`
@@ -19,8 +19,13 @@ Download the repository, follow the directions to install Forge from the README.
 5. Open eclipse... TODO add instructions
 
 #### Using IntelliJ
-3. import the build.gradle file....
-TODO add instructions
+2. Open IntelliJ Idea
+3. Open the workspace as a gradle project(File -> Open -> Navigate to the MDK directory). It will have a gradle icon next to it
+4. In the pop-up window check "Create separate module per source set" and select `Use default gradle wrapper`. This will import the project as a gradle project.
+5. Wait for the importing to be done and then open the gradle sub-menu. This can be done by mousing over the square icon in the bottom left of IDEA and selecting Gradle in the popup.
+6. In the open window expand Tasks -> forgegradle and double-click the `setupDecompWorkspace` task.
+7. Run the genIntellijRuns task. This will generate the runs for your workspace.
+8. Click the `Refresh all gradle projects` button.
 
 ## Concepts
 A Proxy holds code that is run EXCLUSIVELY on the physical client or the physical server. It's only purpose is to handle code that can't be run on the other physical side (i.e. it will crash the game if run on the wrong side). Any common code should be run from literally anywhere else. 
@@ -37,8 +42,9 @@ You can change your username by launching Minecraft with the `-username` argumen
 
 
 ### See Also
-- Jabelar's test mod
-- Choonsters test mod
-- Draco18s's Harder Ores (called Reasonable Realism now?) mod
-- Diesieben07's mods (they have lots of mods)
-- the Forge test mods
+- [Jabelar's test mod](https://github.com/jabelar/ExampleMod-1.12)
+- [Choonsters test mod](https://github.com/Choonster-Minecraft-Mods/TestMod3)
+- [Draco18s's Reasonable Realism](https://github.com/Draco18s/ReasonableRealism)
+- [Diesieben07's mods](https://github.com/diesieben07)
+- [Forge test mods](https://github.com/MinecraftForge/MinecraftForge/tree/1.12.x/src/test)
+- [V0idWalk3r's mods](https://github.com/V0idWa1k3r)
