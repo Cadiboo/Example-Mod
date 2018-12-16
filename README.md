@@ -6,7 +6,7 @@ Any code written by me is free for any use at all. Some credit would be nice tho
 Download the repository, follow the directions to install Forge from the README.txt in the root directory and you're ready to go!
 
 ## Setting up a repository
-1. Download and extract (or Fork) the repository to a folder you will be able to find and write a mod in
+1. Download and extract (or Clone/Fork) the repository to a folder you will be able to find and write a mod in
 
 #### Using Eclipse
 2. Open up your command prompt and go to that folder
