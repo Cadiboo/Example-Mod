@@ -122,7 +122,7 @@ public final class ClientUtil {
 	 * Rotates around X axis based on Pitch input and around Y axis based on Yaw input
 	 *
 	 * @param pitch the pitch
-	 * @param yaw the yaw
+	 * @param yaw   the yaw
 	 */
 	public static void rotateForPitchYaw(final double pitch, final double yaw) {
 		GlStateManager.rotate((float) yaw, 0, 1, 0);
@@ -132,7 +132,7 @@ public final class ClientUtil {
 	/**
 	 * Gets the pitch rotation between two vectors
 	 *
-	 * @param source the source vector
+	 * @param source      the source vector
 	 * @param destination the destination vector
 	 * @return the pitch rotation
 	 */
@@ -146,7 +146,7 @@ public final class ClientUtil {
 	/**
 	 * Gets the yaw rotation between two vectors
 	 *
-	 * @param source the source vector
+	 * @param source      the source vector
 	 * @param destination the destination vector
 	 * @return the yaw rotation
 	 */

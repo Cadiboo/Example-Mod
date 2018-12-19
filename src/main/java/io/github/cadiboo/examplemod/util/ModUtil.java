@@ -3,11 +3,9 @@ package io.github.cadiboo.examplemod.util;
 import com.google.common.base.Preconditions;
 import io.github.cadiboo.examplemod.creativetab.ModCreativeTabs;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -18,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
-import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
@@ -58,8 +55,8 @@ public final class ModUtil {
 	/**
 	 * Sets the {@link Impl#setRegistryName(ResourceLocation) Registry Name} and the {@link Item#setTranslationKey(String) Translation Key} (if applicable) for the entry
 	 *
-	 * @param entry           the {@link Impl IForgeRegistryEntry.Impl<?>} to set the names for
-	 * @param registryName    the registry name for the entry
+	 * @param entry          the {@link Impl IForgeRegistryEntry.Impl<?>} to set the names for
+	 * @param registryName   the registry name for the entry
 	 * @param translationKey the unlocalized name for the entry
 	 * @return the entry
 	 */
@@ -116,6 +113,7 @@ public final class ModUtil {
 
 	/**
 	 * Returns a random between the specified values;
+	 *
 	 * @param min the minimum value of the random number
 	 * @param max the maximum value of the random number
 	 * @return the random number

@@ -2,7 +2,6 @@ package io.github.cadiboo.examplemod.util;
 
 import io.github.cadiboo.examplemod.ExampleMod;
 import net.minecraft.crash.CrashReport;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Holds mod-wide constant values
