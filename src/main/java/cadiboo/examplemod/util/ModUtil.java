@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.apache.logging.log4j.Logger;
 
 public class ModUtil {
 
@@ -52,7 +53,6 @@ public class ModUtil {
 		if (entry instanceof Block) {
 			((Block) entry).setTranslationKey(unlocalizedName);
 			setCreativeTab((Block) entry);
-			((Block) entry).setHardness(1);
 		}
 		if (entry instanceof Item) {
 			((Item) entry).setTranslationKey(unlocalizedName);
@@ -133,8 +133,8 @@ public class ModUtil {
 		}
 	}
 
-	public static void logLogicalSide(final World world) {
-		ExampleMod.info("Logical Side: " + getLogicalSide(world));
+	public static void logLogicalSide(final Logger logger, final World world) {
+		logger.info("Logical Side: " + getLogicalSide(world));
 	}
 
 	/**

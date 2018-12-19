@@ -9,9 +9,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
+ * All the creative tabs of our mod
  * Modified by Cadiboo
  *
  * @author jabelar
+ * @author Cadiboo
  */
 
 public class ModCreativeTabs {
@@ -21,7 +23,9 @@ public class ModCreativeTabs {
 	@ItemStackHolder(value = TAB_ICON_ITEM_REGISTRY_NAME)
 	public static final ItemStack TAB_ICON_ITEMSTACK = null;
 
-	/** instantiate creative tabs */
+	/**
+	 * instantiate creative tabs
+	 */
 	public static final CustomCreativeTab CREATIVE_TAB = new CustomCreativeTab(ModReference.MOD_ID, true) {
 		@Override
 		public ItemStack createIcon() {
@@ -73,4 +77,5 @@ public class ModCreativeTabs {
 		}
 
 	}
+
 }

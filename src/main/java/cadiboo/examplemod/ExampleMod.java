@@ -1,15 +1,10 @@
 package cadiboo.examplemod;
 
-import java.lang.reflect.Field;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import cadiboo.examplemod.network.ModNetworkManager;
 import cadiboo.examplemod.util.IProxy;
 import cadiboo.examplemod.util.ModGuiHandler;
-import cadiboo.examplemod.util.ModReference;
 import cadiboo.examplemod.world.gen.ModWorldGenerator;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -19,34 +14,49 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-/*@formatter:off*/
+import java.lang.reflect.Field;
+
+import static cadiboo.examplemod.util.ModReference.ACCEPTED_VERSIONS;
+import static cadiboo.examplemod.util.ModReference.CLIENT_PROXY_CLASS;
+import static cadiboo.examplemod.util.ModReference.MOD_ID;
+import static cadiboo.examplemod.util.ModReference.MOD_NAME;
+import static cadiboo.examplemod.util.ModReference.SERVER_PROXY_CLASS;
+import static cadiboo.examplemod.util.ModReference.Version.VERSION;
+
+/**
+ * Our main mod class
+ *
+ * @author Cadiboo
+ */
 @Mod(
-		modid = ModReference.MOD_ID,
-		name = ModReference.MOD_NAME,
-		version = ModReference.Version.VERSION,
-		acceptedMinecraftVersions = ModReference.ACCEPTED_VERSIONS
-	)
-/*@formatter:on*/
+		modid = MOD_ID,
+		name = MOD_NAME,
+		version = VERSION,
+		acceptedMinecraftVersions = ACCEPTED_VERSIONS
+)
 public class ExampleMod {
 
-	@Instance(ModReference.MOD_ID)
-	public static ExampleMod	instance;
+	@Instance(MOD_ID)
+	public static ExampleMod instance;
 
-	@SidedProxy(serverSide = ModReference.SERVER_PROXY_CLASS, clientSide = ModReference.CLIENT_PROXY_CLASS)
-	public static IProxy		proxy;
+	@SidedProxy(serverSide = SERVER_PROXY_CLASS, clientSide = CLIENT_PROXY_CLASS)
+	public static IProxy proxy;
 
-	private static Logger		logger;
+	public static final Logger EXAMPLE_MOD_LOG = LogManager.getLogger(MOD_ID);
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Run before anything else. <s>Read your config, create blocks, items, etc, and register them with the GameRegistry</s>
 	 *
-	 * @see {@link net.minecraftforge.common.ForgeModContainer#preInit(FMLPreInitializationEvent) ForgeModContainer.preInit}
+	 * @param event the event
+	 * @see ForgeModContainer#preInit(FMLPreInitializationEvent)
 	 */
 	@EventHandler
 	public void preInit(final FMLPreInitializationEvent event) {
-		logger = event.getModLog();
-		proxy.logPhysicalSide();
+		proxy.logPhysicalSide(EXAMPLE_MOD_LOG);
 
 		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 3);
 		new ModNetworkManager();
@@ -58,6 +68,8 @@ public class ExampleMod {
 
 	/**
 	 * Do your mod setup. Build whatever data structures you care about. Register recipes, send FMLInterModComms messages to other mods.
+	 *
+	 * @param event the event
 	 */
 	@EventHandler
 	public void init(final FMLInitializationEvent event) {
@@ -66,98 +78,30 @@ public class ExampleMod {
 	/**
 	 * Mod compatibility, or anything which depends on other mods’ init phases being finished.
 	 *
-	 * @see {@link net.minecraftforge.common.ForgeModContainer#postInit(FMLPostInitializationEvent) ForgeModContainer.postInit}
+	 * @param event the event
+	 * @see ForgeModContainer#postInit(FMLPostInitializationEvent)
 	 */
 	@EventHandler
 	public void postInit(final FMLPostInitializationEvent event) {
 	}
 
-	private static Logger getLogger() {
-		if (logger == null) {
-			final Logger tempLogger = LogManager.getLogger();
-			tempLogger.error("[" + ExampleMod.class.getSimpleName() + "]: getLogger called before logger has been initalised! Providing default logger");
-			return tempLogger;
-		}
-		return logger;
-	}
-
-	/**
-	 * Logs message object(s) with the {@link org.apache.logging.log4j.Level#DEBUG DEBUG} level.
-	 *
-	 * @param messages the message objects to log.
-	 * @author Cadiboo
-	 */
-	public static void debug(final Object... messages) {
-		for (final Object msg : messages) {
-			getLogger().debug(msg);
-		}
-	}
-
-	/**
-	 * Logs message object(s) with the {@link org.apache.logging.log4j.Level#INFO ERROR} INFO.
-	 *
-	 * @param messages the message objects to log.
-	 * @author Cadiboo
-	 */
-	public static void info(final Object... messages) {
-		for (final Object msg : messages) {
-			getLogger().info(msg);
-		}
-	}
-
-	/**
-	 * Logs message object(s) with the {@link org.apache.logging.log4j.Level#WARN WARN} level.
-	 *
-	 * @param messages the message objects to log.
-	 * @author Cadiboo
-	 */
-	public static void warn(final Object... messages) {
-		for (final Object msg : messages) {
-			getLogger().warn(msg);
-		}
-	}
-
-	/**
-	 * Logs message object(s) with the {@link org.apache.logging.log4j.Level#ERROR ERROR} level.
-	 *
-	 * @param messages the message objects to log.
-	 * @author Cadiboo
-	 */
-	public static void error(final Object... messages) {
-		for (final Object msg : messages) {
-			getLogger().error(msg);
-		}
-	}
-
-	/**
-	 * Logs message object(s) with the {@link org.apache.logging.log4j.Level#FATAL FATAL} level.
-	 *
-	 * @param messages the message objects to log.
-	 * @author Cadiboo
-	 */
-	public static void fatal(final Object... messages) {
-		for (final Object msg : messages) {
-			getLogger().fatal(msg);
-		}
-	}
-
 	/**
 	 * Logs all {@link java.lang.reflect.Field Field}s and their values of an object with the {@link org.apache.logging.log4j.Level#INFO INFO} level.
 	 *
+	 * @param logger  the logger to dump on
 	 * @param objects the objects to dump.
-	 * @author Cadiboo
 	 */
-	public static void dump(final Object... objects) {
+	public static void dump(final Logger logger, final Object... objects) {
 		for (final Object obj : objects) {
 			final Field[] fields = obj.getClass().getDeclaredFields();
-			info("Dump of " + obj + ":");
+			logger.info("Dump of " + obj + ":");
 			for (int i = 0; i < fields.length; i++) {
 				try {
 					fields[i].setAccessible(true);
-					info(fields[i].getName() + " - " + fields[i].get(obj));
+					logger.info(fields[i].getName() + " - " + fields[i].get(obj));
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					info("Error getting field " + fields[i].getName());
-					info(e.getLocalizedMessage());
+					logger.info("Error getting field " + fields[i].getName());
+					logger.info(e.getLocalizedMessage());
 				}
 			}
 		}

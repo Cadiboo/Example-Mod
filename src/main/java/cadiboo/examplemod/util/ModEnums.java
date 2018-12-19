@@ -37,7 +37,8 @@ public final class ModEnums {
 			return StringUtils.capitalize(this.getNameLowercase());
 		}
 
-		String name(); /* not exactly hacky, but this method is provided by enum */
+		/* not exactly hacky, but this method is provided by enum */
+		String name();
 
 	}
 

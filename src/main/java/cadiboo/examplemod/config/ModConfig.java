@@ -9,9 +9,14 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Our Mod's configuration
+ *
+ * @author Cadiboo
+ */
 @Config(modid = ModReference.MOD_ID)
 @LangKey(ModReference.MOD_ID + ".config.title")
-public class Configuration {
+public class ModConfig {
 
 	@Comment("Numbers")
 	public static final Numbers numbers = new Numbers(1, 2.5f, 3.1d);
@@ -25,11 +30,12 @@ public class Configuration {
 		}
 
 		@Comment("An Integer (int) type number")
-		public int		int_;
+		public int int_;
 		@Comment("A Float (floating point) type number")
-		public float	float_;
+		public float float_;
 		@Comment("A Double (double length floating point) type number")
-		public double	double_;
+		public double double_;
+
 	}
 
 	@Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
@@ -46,6 +52,7 @@ public class Configuration {
 				ConfigManager.sync(ModReference.MOD_ID, Config.Type.INSTANCE);
 			}
 		}
+
 	}
 
 }
