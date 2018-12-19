@@ -15,8 +15,9 @@ public interface IProxy {
 	String localizeAndFormat(String unlocalized, Object... args);
 
 	default void logPhysicalSide(Logger logger) {
-		logger.info("Physical Side: " + getPhysicalSide());
+		logger.debug("Physical Side: " + getPhysicalSide());
 	}
 
 	Side getPhysicalSide();
+
 }

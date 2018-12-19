@@ -1,11 +1,11 @@
 package io.github.cadiboo.examplemod.client;
 
+import com.google.common.base.Preconditions;
 import io.github.cadiboo.examplemod.block.IModBlock;
 import io.github.cadiboo.examplemod.client.render.tileentity.RenderExampleTileEntity;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.item.IModItem;
 import io.github.cadiboo.examplemod.tileentity.TileEntityExampleTileEntity;
-import com.google.common.base.Preconditions;
 import io.github.cadiboo.examplemod.util.ModReference;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -83,7 +83,7 @@ public final class ClientEventSubscriber {
 	public static void onTextureStitchEvent(final TextureStitchEvent event) {
 		// register texture for example tile entity
 		final ResourceLocation registryName = ModBlocks.EXAMPLE_TILE_ENTITY.getRegistryName();
-		event.getMap().registerSprite(new ResourceLocation(registryName.getNamespace(), "block/"+registryName.getPath()));
+		event.getMap().registerSprite(new ResourceLocation(registryName.getNamespace(), "block/" + registryName.getPath()));
 	}
 
 }

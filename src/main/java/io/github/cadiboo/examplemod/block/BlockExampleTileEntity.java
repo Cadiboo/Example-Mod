@@ -24,6 +24,16 @@ public class BlockExampleTileEntity extends Block implements IModBlock {
 	}
 
 	@Override
+	public EnumBlockRenderType getRenderType(final IBlockState state) {
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+	}
+
+	@Override
+	public boolean isOpaqueCube(final IBlockState state) {
+		return false;
+	}
+
+	@Override
 	public boolean hasTileEntity(final IBlockState state) {
 		return true;
 	}
@@ -32,16 +42,6 @@ public class BlockExampleTileEntity extends Block implements IModBlock {
 	@Override
 	public TileEntityExampleTileEntity createTileEntity(final World world, final IBlockState state) {
 		return new TileEntityExampleTileEntity();
-	}
-
-	@Override
-	public EnumBlockRenderType getRenderType(final IBlockState state) {
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-
-	@Override
-	public boolean isOpaqueCube(final IBlockState state) {
-		return false;
 	}
 
 }

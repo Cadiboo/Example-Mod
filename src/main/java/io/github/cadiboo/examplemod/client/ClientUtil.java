@@ -36,6 +36,22 @@ import java.util.stream.Collectors;
 public final class ClientUtil {
 
 	/**
+	 * A vertex definition for a simple 2-dimensional quad defined in counter-clockwise order with the top-left origin.
+	 */
+	public static final Vector4f[] SIMPLE_QUAD = {
+			new Vector4f(1, 1, 0, 0),
+			new Vector4f(1, 0, 0, 0),
+			new Vector4f(0, 0, 0, 0),
+			new Vector4f(0, 1, 0, 0)
+	};
+	// add or subtract from the sprites UV location to remove transparent lines in between textures
+	private static final float UV_CORRECT = 1F / 16F / 10000;
+	/**
+	 * A field reference to the rawIntBuffer of the BufferBuilder class. Need reflection since the field is private.
+	 */
+	private static final Field bufferBuilder_rawIntBuffer = ReflectionHelper.findField(BufferBuilder.class, "rawIntBuffer", "field_178999_b");
+
+	/**
 	 * Rotation algorithm Taken off Max_the_Technomancer from <a href= "https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/modification-development/2772267-tesr-getting-darker-and-lighter-as-it-rotates">here</a>
 	 *
 	 * @param face the {@link net.minecraft.util.EnumFacing face} to rotate for
@@ -178,15 +194,7 @@ public final class ClientUtil {
 		return color(redInt, greenInt, blueInt);
 	}
 
-	/**
-	 * A vertex definition for a simple 2-dimensional quad defined in counter-clockwise order with the top-left origin.
-	 */
-	public static final Vector4f[] SIMPLE_QUAD = {
-			new Vector4f(1, 1, 0, 0),
-			new Vector4f(1, 0, 0, 0),
-			new Vector4f(0, 0, 0, 0),
-			new Vector4f(0, 1, 0, 0)
-	};
+	// Below are some helper methods to upload data to the buffer for use by FastTESRs
 
 	public static int getLightmapSkyLightCoordsFromPackedLightmapCoords(int packedLightmapCoords) {
 		return (packedLightmapCoords >> 16) & 0xFFFF; // get upper 4 bytes
@@ -195,8 +203,6 @@ public final class ClientUtil {
 	public static int getLightmapBlockLightCoordsFromPackedLightmapCoords(int packedLightmapCoords) {
 		return packedLightmapCoords & 0xFFFF; // get lower 4 bytes
 	}
-
-	// Below are some helper methods to upload data to the buffer for use by FastTESRs
 
 	/**
 	 * Renders a simple 2 dimensional quad at a given position to a given buffer with the given transforms, color, texture and lightmap values.
@@ -212,9 +218,6 @@ public final class ClientUtil {
 	public static void renderSimpleQuad(Vector3f baseOffset, BufferBuilder buffer, Matrix4f transform, int color, TextureAtlasSprite texture, int lightmapSkyLight, int lightmapBlockLight) {
 		renderCustomQuad(SIMPLE_QUAD, baseOffset, buffer, transform, color, texture, lightmapSkyLight, lightmapBlockLight);
 	}
-
-	// add or subtract from the sprites UV location to remove transparent lines in between textures
-	private static final float UV_CORRECT = 1F / 16F / 10000;
 
 	/**
 	 * Renders a simple 2 dimensional quad at a given position to a given buffer with the given transforms, color, texture and lightmap values.
@@ -348,11 +351,6 @@ public final class ClientUtil {
 		intBuf.put(offset + 1, y);
 		intBuf.put(offset + 2, z);
 	}
-
-	/**
-	 * A field reference to the rawIntBuffer of the BufferBuilder class. Need reflection since the field is private.
-	 */
-	private static final Field bufferBuilder_rawIntBuffer = ReflectionHelper.findField(BufferBuilder.class, "rawIntBuffer", "field_178999_b");
 
 	/**
 	 * A getter for the rawIntBuffer field value of the BufferBuilder.

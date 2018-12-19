@@ -23,18 +23,18 @@ public class ModConfig {
 
 	public static class Numbers {
 
-		public Numbers(final int int_, final float float_, final double double_) {
-			this.int_ = int_;
-			this.float_ = float_;
-			this.double_ = double_;
-		}
-
 		@Comment("An Integer (int) type number")
 		public int int_;
 		@Comment("A Float (floating point) type number")
 		public float float_;
 		@Comment("A Double (double length floating point) type number")
 		public double double_;
+
+		public Numbers(final int int_, final float float_, final double double_) {
+			this.int_ = int_;
+			this.float_ = float_;
+			this.double_ = double_;
+		}
 
 	}
 

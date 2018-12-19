@@ -53,6 +53,15 @@ public class ModCreativeTabs {
 		@Override
 		abstract public ItemStack createIcon();
 
+		@Override
+		public String getBackgroundImageName() {
+			if (this.hasSearchBar) {
+				return "item_search.png";
+			} else {
+				return super.getBackgroundImageName();
+			}
+		}
+
 		/**
 		 * Useful for adding extra items such as full variants of energy related items
 		 */
@@ -65,15 +74,6 @@ public class ModCreativeTabs {
 		@Override
 		public boolean hasSearchBar() {
 			return this.hasSearchBar;
-		}
-
-		@Override
-		public String getBackgroundImageName() {
-			if (this.hasSearchBar) {
-				return "item_search.png";
-			} else {
-				return super.getBackgroundImageName();
-			}
 		}
 
 	}

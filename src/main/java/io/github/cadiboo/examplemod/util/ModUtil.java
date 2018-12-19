@@ -1,7 +1,5 @@
 package io.github.cadiboo.examplemod.util;
 
-import java.util.Random;
-
 import io.github.cadiboo.examplemod.creativetab.ModCreativeTabs;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -13,6 +11,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Random;
 
 public class ModUtil {
 
@@ -68,9 +68,9 @@ public class ModUtil {
 	 */
 	public static CreativeTabs[] getCreativeTabs(final Item item) {
 		if (item.getRegistryName().getNamespace().equals(ModReference.MOD_ID)) {
-			return new CreativeTabs[] { item.getCreativeTab(), ModCreativeTabs.CREATIVE_TAB, CreativeTabs.SEARCH };
+			return new CreativeTabs[]{item.getCreativeTab(), ModCreativeTabs.CREATIVE_TAB, CreativeTabs.SEARCH};
 		}
-		return new CreativeTabs[] { item.getCreativeTab(), CreativeTabs.SEARCH };
+		return new CreativeTabs[]{item.getCreativeTab(), CreativeTabs.SEARCH};
 	}
 
 	/**

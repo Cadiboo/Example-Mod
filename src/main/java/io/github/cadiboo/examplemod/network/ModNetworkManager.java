@@ -15,19 +15,15 @@ import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
  */
 public final class ModNetworkManager {
 
-	private static final Logger LOGGER = LogManager.getLogger();
-
-	public static final String CHANNEL;
-	static {
-		final String channel = StringUtils.substring(MOD_ID, 0, 20);
-		if (channel.length() != MOD_ID.length()) {
-			// Network Channel CAN'T be longer than 20 characters due to Minecraft & Forge's packet system
-			LOGGER.error("Network Channel was clamped to 20 characters! {}, {}", channel, MOD_ID);
-		}
-		CHANNEL = channel;
-	}
-
+	public static final String CHANNEL = StringUtils.substring(MOD_ID, 0, 20);
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL);
+	private static final Logger LOGGER = LogManager.getLogger();
+	static {
+		if (CHANNEL.length() != MOD_ID.length()) {
+			// Network Channel CAN'T be longer than 20 characters due to Minecraft & Forge's packet system
+			LOGGER.error("Network Channel was clamped to 20 characters! {}, {}", CHANNEL, MOD_ID);
+		}
+	}
 
 	public ModNetworkManager() {
 		int networkIds = 0;

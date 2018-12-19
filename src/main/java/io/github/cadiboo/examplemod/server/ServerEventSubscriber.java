@@ -1,9 +1,9 @@
 package io.github.cadiboo.examplemod.server;
 
-import static net.minecraftforge.fml.relauncher.Side.CLIENT;
-
 import io.github.cadiboo.examplemod.util.ModReference;
 import net.minecraftforge.fml.common.Mod;
+
+import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
 /**
  * Subscribe to events that should be handled on the PHYSICAL/DEDICATED SERVER in this class

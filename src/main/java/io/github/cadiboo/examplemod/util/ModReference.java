@@ -1,5 +1,8 @@
 package io.github.cadiboo.examplemod.util;
 
+import io.github.cadiboo.examplemod.ExampleMod;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Holds mod-wide constant values
  *
@@ -16,11 +19,38 @@ public final class ModReference {
 	 * This is our Mod's Mod Id that is used for stuff like resource locations.
 	 */
 	public static final String MOD_ID = "examplemod";
+	/**
+	 * The fully qualified name of the version of IProxy that gets injected into {@link ExampleMod#proxy} on a PHYSICAL CLIENT
+	 */
+	public static final String CLIENT_PROXY_CLASS = "io.github.cadiboo.examplemod.client.ClientProxy";
+	/**
+	 * The fully qualified name of the version of IProxy that gets injected into {@link ExampleMod#proxy} on a PHYSICAL/DEDICATED SERVER
+	 */
+	public static final String SERVER_PROXY_CLASS = "io.github.cadiboo.examplemod.server.ServerProxy";
+	/**
+	 * @see "https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html"
+	 */
+	public static final String ACCEPTED_VERSIONS = "[1.12.2]";
+	/**
+	 * @see "https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html"
+	 */
+	public static final String DEPENDENCIES = "" +
+			"required-after:minecraft;" +
+			"required-after:forge@[14.23.4.2704,);" +
+			"";
+	static {
+		final String modId = StringUtils.substring(MOD_ID, 0, 64);
+		if (modId.length() != MOD_ID.length()) {
+			// Mod ID CAN'T be longer than 64 characters due to Forge's system
+			throw new RuntimeException("Mod ID can't be longer than 64 characters! " + MOD_ID + ", " + modId);
+		}
+	}
 
 	/**
 	 * @author Cadiboo
 	 * @see <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/">Forge Versioning Docs</a>
 	 */
+	// TODO: Remove in 1.13 and put in mods.toml
 	public static final class Version {
 
 		/**
@@ -61,14 +91,13 @@ public final class ModReference {
 		 * This is our Mod's Suffix including our PreRelease Version.<br>
 		 * It can be any one of the following values:
 		 * <ul>
-		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#final-release">final</a><br>
-		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#pre-releases">alpha</a><br>
-		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#pre-releases">beta</a><br>
-		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#pre-releases">betaX</a><br>
-		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#release-candidates">rcX</a><br>
+		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#final-release">final</a>
+		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#pre-releases">alpha</a>
+		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#pre-releases">beta</a>
+		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#pre-releases">betaX</a>
+		 * <a href= "https://mcforge.readthedocs.io/en/latest/conventions/versioning/#release-candidates">rcX</a>
 		 * </ul>
 		 */
-		@SuppressWarnings("unused")
 		public static final String VERSION_SUFFIX = "alpha" + (PRE_RELEASE_VERSION > 0 ? PRE_RELEASE_VERSION : "");
 
 		/**
@@ -84,14 +113,5 @@ public final class ModReference {
 		public static final String FULL_VERSION = MOD_NAME + "-" + MINECRAFT_VERSION + "-" + VERSION + (VERSION_SUFFIX.length() > 0 ? "-" + VERSION_SUFFIX : "");
 
 	}
-
-	public static final String CLIENT_PROXY_CLASS = "io.github.cadiboo.examplemod.client.ClientProxy";
-	public static final String SERVER_PROXY_CLASS = "io.github.cadiboo.examplemod.server.ServerProxy";
-
-	public static final String ACCEPTED_VERSIONS = "[1.12.2]";
-	public static final String DEPENDENCIES = "" +
-			"required-after:minecraft;" +
-			"required-after:forge@[14.23.4.2704,);" +
-			"";
 
 }

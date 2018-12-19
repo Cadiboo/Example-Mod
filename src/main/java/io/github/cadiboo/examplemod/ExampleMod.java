@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 
 import static io.github.cadiboo.examplemod.util.ModReference.ACCEPTED_VERSIONS;
 import static io.github.cadiboo.examplemod.util.ModReference.CLIENT_PROXY_CLASS;
+import static io.github.cadiboo.examplemod.util.ModReference.DEPENDENCIES;
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_NAME;
 import static io.github.cadiboo.examplemod.util.ModReference.SERVER_PROXY_CLASS;
@@ -35,55 +36,17 @@ import static io.github.cadiboo.examplemod.util.ModReference.Version;
 		modid = MOD_ID,
 		name = MOD_NAME,
 		version = Version.VERSION,
-		acceptedMinecraftVersions = ACCEPTED_VERSIONS
+		acceptedMinecraftVersions = ACCEPTED_VERSIONS,
+		dependencies = DEPENDENCIES
 )
 public class ExampleMod {
 
-	@Instance(MOD_ID)
-	public static ExampleMod instance;
-
-	@SidedProxy(serverSide = SERVER_PROXY_CLASS, clientSide = CLIENT_PROXY_CLASS)
-	public static IProxy proxy;
-
 	public static final Logger EXAMPLE_MOD_LOG = LogManager.getLogger(MOD_ID);
 	private static final Logger LOGGER = LogManager.getLogger();
-
-	/**
-	 * Run before anything else. <s>Read your config, create blocks, items, etc, and register them with the GameRegistry</s>
-	 *
-	 * @param event the event
-	 * @see ForgeModContainer#preInit(FMLPreInitializationEvent)
-	 */
-	@EventHandler
-	public void preInit(final FMLPreInitializationEvent event) {
-		proxy.logPhysicalSide(EXAMPLE_MOD_LOG);
-
-		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 3);
-		new ModNetworkManager();
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new ModGuiHandler());
-
-		// register Capabilities if you have any
-
-	}
-
-	/**
-	 * Do your mod setup. Build whatever data structures you care about. Register recipes, send FMLInterModComms messages to other mods.
-	 *
-	 * @param event the event
-	 */
-	@EventHandler
-	public void init(final FMLInitializationEvent event) {
-	}
-
-	/**
-	 * Mod compatibility, or anything which depends on other mods’ init phases being finished.
-	 *
-	 * @param event the event
-	 * @see ForgeModContainer#postInit(FMLPostInitializationEvent)
-	 */
-	@EventHandler
-	public void postInit(final FMLPostInitializationEvent event) {
-	}
+	@Instance(MOD_ID)
+	public static ExampleMod instance;
+	@SidedProxy(serverSide = SERVER_PROXY_CLASS, clientSide = CLIENT_PROXY_CLASS)
+	public static IProxy proxy;
 
 	/**
 	 * Logs all {@link java.lang.reflect.Field Field}s and their values of an object with the {@link org.apache.logging.log4j.Level#INFO INFO} level.
@@ -105,6 +68,46 @@ public class ExampleMod {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Run before anything else. <s>Read your config, create blocks, items, etc, and register them with the GameRegistry</s>
+	 *
+	 * @param event the event
+	 * @see ForgeModContainer#preInit(FMLPreInitializationEvent)
+	 */
+	@EventHandler
+	public void preInit(final FMLPreInitializationEvent event) {
+		LOGGER.debug("preInit");
+		proxy.logPhysicalSide(EXAMPLE_MOD_LOG);
+
+		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 3);
+		new ModNetworkManager();
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new ModGuiHandler());
+
+		// register Capabilities if you have any
+
+	}
+
+	/**
+	 * Do your mod setup. Build whatever data structures you care about. Register recipes, send FMLInterModComms messages to other mods.
+	 *
+	 * @param event the event
+	 */
+	@EventHandler
+	public void init(final FMLInitializationEvent event) {
+		LOGGER.debug("init");
+	}
+
+	/**
+	 * Mod compatibility, or anything which depends on other mods’ init phases being finished.
+	 *
+	 * @param event the event
+	 * @see ForgeModContainer#postInit(FMLPostInitializationEvent)
+	 */
+	@EventHandler
+	public void postInit(final FMLPostInitializationEvent event) {
+		LOGGER.debug("postInit");
 	}
 
 }
