@@ -17,8 +17,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Field;
-
 import static io.github.cadiboo.examplemod.util.ModReference.ACCEPTED_VERSIONS;
 import static io.github.cadiboo.examplemod.util.ModReference.CLIENT_PROXY_CLASS;
 import static io.github.cadiboo.examplemod.util.ModReference.DEPENDENCIES;
@@ -47,28 +45,6 @@ public class ExampleMod {
 	public static ExampleMod instance;
 	@SidedProxy(serverSide = SERVER_PROXY_CLASS, clientSide = CLIENT_PROXY_CLASS)
 	public static IProxy proxy;
-
-	/**
-	 * Logs all {@link java.lang.reflect.Field Field}s and their values of an object with the {@link org.apache.logging.log4j.Level#INFO INFO} level.
-	 *
-	 * @param logger  the logger to dump on
-	 * @param objects the objects to dump.
-	 */
-	public static void dump(final Logger logger, final Object... objects) {
-		for (final Object obj : objects) {
-			final Field[] fields = obj.getClass().getDeclaredFields();
-			logger.info("Dump of " + obj + ":");
-			for (int i = 0; i < fields.length; i++) {
-				try {
-					fields[i].setAccessible(true);
-					logger.info(fields[i].getName() + " - " + fields[i].get(obj));
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					logger.info("Error getting field " + fields[i].getName());
-					logger.info(e.getLocalizedMessage());
-				}
-			}
-		}
-	}
 
 	/**
 	 * Run before anything else. <s>Read your config, create blocks, items, etc, and register them with the GameRegistry</s>

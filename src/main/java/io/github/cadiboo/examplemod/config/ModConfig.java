@@ -14,9 +14,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  *
  * @author Cadiboo
  */
+@SuppressWarnings("WeakerAccess")
 @Config(modid = ModReference.MOD_ID)
 @LangKey(ModReference.MOD_ID + ".config.title")
-public class ModConfig {
+public final class ModConfig {
 
 	@Comment("Numbers")
 	public static final Numbers numbers = new Numbers(1, 2.5f, 3.1d);

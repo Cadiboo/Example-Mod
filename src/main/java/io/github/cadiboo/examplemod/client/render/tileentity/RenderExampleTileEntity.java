@@ -13,6 +13,8 @@ import net.minecraftforge.client.model.animation.FastTESR;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author V0IDW4LK3R
  * @author Cadiboo
@@ -32,7 +34,7 @@ public class RenderExampleTileEntity extends FastTESR<TileEntityExampleTileEntit
 	 * @param buffer       the BufferBuilder containing vertex data for vertices being rendered. It is safe to assume that the format is {@link DefaultVertexFormats#BLOCK}. It is also safe to assume that the GL primitive for drawing is QUADS.
 	 */
 	@Override
-	public void renderTileEntityFast(final TileEntityExampleTileEntity tileEntity, final double x, final double y, final double z, final float partialTicks, final int destroyStage, final float partial, final BufferBuilder buffer) {
+	public void renderTileEntityFast(@Nonnull final TileEntityExampleTileEntity tileEntity, final double x, final double y, final double z, final float partialTicks, final int destroyStage, final float partial, @Nonnull final BufferBuilder buffer) {
 		final ResourceLocation registryName = ModBlocks.EXAMPLE_TILE_ENTITY.getRegistryName();
 		final TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(registryName.getNamespace(), "block/" + registryName.getPath()).toString());
 

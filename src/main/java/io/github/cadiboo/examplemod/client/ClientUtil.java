@@ -6,14 +6,15 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.VertexBufferConsumer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,6 +22,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.nio.IntBuffer;
 import java.util.Arrays;
@@ -28,10 +30,12 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * Util that is only used on the client i.e. Rendering code
+ * Util that is only used on the Physical Client i.e. Rendering code
  *
  * @author Cadiboo
+ * @author V0idW4lk3r
  */
+@SuppressWarnings("WeakerAccess")
 @SideOnly(Side.CLIENT)
 public final class ClientUtil {
 
@@ -68,7 +72,8 @@ public final class ClientUtil {
 	 * @param partialTicks The multiplier used to predict where the entity is/will be
 	 * @return The position of the entity as a Vec3d
 	 */
-	public static Vec3d getEntityRenderPos(final Entity entity, final double partialTicks) {
+	@Nonnull
+	public static Vec3d getEntityRenderPos(@Nonnull final Entity entity, @Nonnull final double partialTicks) {
 		double flyingMultiplier = 1.825;
 		double yFlying = 1.02;
 		double yAdd = 0.0784000015258789;
@@ -116,10 +121,9 @@ public final class ClientUtil {
 	/**
 	 * Rotates around X axis based on Pitch input and around Y axis based on Yaw input
 	 *
-	 * @param pitch
-	 * @param yaw
+	 * @param pitch the pitch
+	 * @param yaw the yaw
 	 */
-	@SideOnly(Side.CLIENT)
 	public static void rotateForPitchYaw(final double pitch, final double yaw) {
 		GlStateManager.rotate((float) yaw, 0, 1, 0);
 		GlStateManager.rotate((float) pitch, 1, 0, 0);
@@ -128,12 +132,11 @@ public final class ClientUtil {
 	/**
 	 * Gets the pitch rotation between two vectors
 	 *
-	 * @param source
-	 * @param destination
+	 * @param source the source vector
+	 * @param destination the destination vector
 	 * @return the pitch rotation
 	 */
-	@SideOnly(Side.CLIENT)
-	public static double getPitch(final Vec3d source, final Vec3d destination) {
+	public static double getPitch(@Nonnull final Vec3d source, @Nonnull final Vec3d destination) {
 		double pitch = Math.atan2(destination.y, Math.sqrt((destination.x * destination.x) + (destination.z * destination.z)));
 		pitch = pitch * (180 / Math.PI);
 		pitch = pitch < 0 ? 360 - (-pitch) : pitch;
@@ -143,11 +146,11 @@ public final class ClientUtil {
 	/**
 	 * Gets the yaw rotation between two vectors
 	 *
-	 * @param source
-	 * @param destination
+	 * @param source the source vector
+	 * @param destination the destination vector
 	 * @return the yaw rotation
 	 */
-	public static double getYaw(final Vec3d source, final Vec3d destination) {
+	public static double getYaw(@Nonnull final Vec3d source, @Nonnull final Vec3d destination) {
 		double yaw = Math.atan2(destination.x - source.x, destination.z - source.z);
 		yaw = yaw * (180 / Math.PI);
 		yaw = yaw < 0 ? 360 - (-yaw) : yaw;
@@ -239,7 +242,8 @@ public final class ClientUtil {
 			// Transforming the position vector by the transform matrix.
 			quadPos = Matrix4f.transform(transform, quadPos, new Vector4f());
 
-			// Getting the RGBA values from the color. To put it another way unpacking an int representation of a color to a 4-component float vector representation.
+			// Getting the RGBA values from the color. (The color is in ARGB format)
+			// To put it another way - unpacking an int representation of a color to a 4-component float vector representation.
 			float r = ((color & 0xFF0000) >> 16) / 255F;
 			float g = ((color & 0xFF00) >> 8) / 255F;
 			float b = (color & 0xFF) / 255F;
@@ -358,15 +362,16 @@ public final class ClientUtil {
 	 * @param buffer the buffer builder to get the buffer from
 	 * @return the rawIntbuffer component
 	 */
+	@Nonnull
 	public static IntBuffer getIntBuffer(BufferBuilder buffer) {
 		try {
 			return (IntBuffer) bufferBuilder_rawIntBuffer.get(buffer);
-		} catch (IllegalAccessException e) {
+		} catch (IllegalAccessException exception) {
 			// Some other mod messed up and reset the access flag of the field.
-			FMLCommonHandler.instance().raiseException(e, "An impossible error has occurred!", true);
+			CrashReport crashReport = new CrashReport("An impossible error has occurred!", exception);
+			crashReport.makeCategory("Reflectively Accessing BufferBuilder#rawIntBuffer");
+			throw new ReportedException(crashReport);
 		}
-
-		return null;
 	}
 
 }

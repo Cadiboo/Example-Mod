@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -17,14 +18,15 @@ import javax.annotation.Nullable;
  */
 public class BlockExampleTileEntity extends Block implements IModBlock {
 
-	public BlockExampleTileEntity(final String name) {
+	public BlockExampleTileEntity(@Nonnull final String name) {
 		super(Material.IRON);
 		ModUtil.setRegistryNames(this, name);
 		this.setHardness(1);
 	}
 
 	@Override
-	public EnumBlockRenderType getRenderType(final IBlockState state) {
+	@Nonnull
+	public EnumBlockRenderType getRenderType(@Nonnull final IBlockState state) {
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
@@ -40,7 +42,7 @@ public class BlockExampleTileEntity extends Block implements IModBlock {
 
 	@Nullable
 	@Override
-	public TileEntityExampleTileEntity createTileEntity(final World world, final IBlockState state) {
+	public TileEntityExampleTileEntity createTileEntity(@Nonnull final World world, @Nonnull final IBlockState state) {
 		return new TileEntityExampleTileEntity();
 	}
 

@@ -37,7 +37,7 @@ public final class ClientEventSubscriber {
 	private static final String DEFAULT_VARIANT = "normal";
 
 	@SubscribeEvent
-	public static void onRegisterModelsEvent(final ModelRegistryEvent event) {
+	public static void onRegisterModelsEvent(@Nonnull final ModelRegistryEvent event) {
 
 		registerTileEntitySpecialRenderers();
 		LOGGER.debug("Registered tile entity special renderers");
@@ -80,7 +80,7 @@ public final class ClientEventSubscriber {
 	}
 
 	@SubscribeEvent
-	public static void onTextureStitchEvent(final TextureStitchEvent event) {
+	public static void onTextureStitchEvent(@Nonnull final TextureStitchEvent event) {
 		// register texture for example tile entity
 		final ResourceLocation registryName = ModBlocks.EXAMPLE_TILE_ENTITY.getRegistryName();
 		event.getMap().registerSprite(new ResourceLocation(registryName.getNamespace(), "block/" + registryName.getPath()));

@@ -1,6 +1,7 @@
 package io.github.cadiboo.examplemod.world.gen;
 
 import io.github.cadiboo.examplemod.init.ModBlocks;
+import io.github.cadiboo.examplemod.util.ModUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -9,6 +10,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -25,7 +27,7 @@ public class ModWorldGenerator implements IWorldGenerator {
 	public static final int OVERWORLD_CHANCE = 4;
 
 	@Override
-	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkGenerator chunkGenerator, final IChunkProvider chunkProvider) {
+	public void generate(@Nonnull final Random random, final int chunkX, final int chunkZ, @Nonnull final World world, @Nonnull final IChunkGenerator chunkGenerator, @Nonnull final IChunkProvider chunkProvider) {
 		switch (world.provider.getDimensionType()) {
 			case NETHER:
 				break;
@@ -40,14 +42,13 @@ public class ModWorldGenerator implements IWorldGenerator {
 		}
 	}
 
-	private void generateOverworld(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkGenerator chunkGenerator, final IChunkProvider chunkProvider) {
+	private void generateOverworld(@Nonnull final Random random, final int chunkX, final int chunkZ, @Nonnull final World world, @Nonnull final IChunkGenerator chunkGenerator, @Nonnull final IChunkProvider chunkProvider) {
 		this.generateOre(ModBlocks.EXAMPLE_ORE.getDefaultState(), world, random, chunkX << 4, chunkZ << 4, OVERWORLD_MIN_Y, OVERWORLD_MAX_Y, OVERWORLD_SIZE, OVERWORLD_CHANCE);
 	}
 
-	private void generateOre(final IBlockState ore, final World world, final Random random, final int x, final int z, final int minY, final int maxY, final int size, final int chances) {
-		final int deltaY = maxY - minY;
-		for (int i = 0; i < chances; i++) {
-			final BlockPos pos = new BlockPos(x + random.nextInt(16), minY + random.nextInt(deltaY), z + random.nextInt(16));
+	private void generateOre(@Nonnull final IBlockState ore, @Nonnull final World world, @Nonnull final Random random, final int x, final int z, final int minY, final int maxY, final int size, final int chances) {
+		for (int chance = 0; chance < chances; chance++) {
+			final BlockPos pos = new BlockPos(x + random.nextInt(16), minY + ModUtil.randomBetween(minY, maxY), z + random.nextInt(16));
 			final WorldGenMinable generator = new WorldGenMinable(ore, size);
 			generator.generate(world, random, pos);
 		}

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
  *
  * @author Cadiboo
  */
-public class ClientProxy implements IProxy {
+public final class ClientProxy implements IProxy {
 
 	@Override
 	public String localize(final String unlocalized) {

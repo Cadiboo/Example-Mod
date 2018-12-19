@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
  * @author Cadiboo
  */
 @ObjectHolder(ModReference.MOD_ID)
-public class ModBlocks {
+public final class ModBlocks {
 
 	public static final BlockResource EXAMPLE_BLOCK = null;
 	public static final BlockModOre EXAMPLE_ORE = null;

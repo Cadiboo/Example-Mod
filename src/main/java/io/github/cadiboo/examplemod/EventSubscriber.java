@@ -10,18 +10,21 @@ import io.github.cadiboo.examplemod.tileentity.TileEntityExampleTileEntity;
 import io.github.cadiboo.examplemod.util.ModReference;
 import io.github.cadiboo.examplemod.util.ModUtil;
 import net.minecraft.block.Block;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import javax.annotation.Nonnull;
 
 /**
  * Subscribe to events that should be handled on both PHYSICAL sides in this class
@@ -33,7 +36,7 @@ public final class EventSubscriber {
 
 	/* register blocks */
 	@SubscribeEvent
-	public static void onRegisterBlocksEvent(final RegistryEvent.Register<Block> event) {
+	public static void onRegisterBlocksEvent(@Nonnull final RegistryEvent.Register<Block> event) {
 		final IForgeRegistry<Block> registry = event.getRegistry();
 
 		registry.register(new BlockResource("example_block"));
@@ -52,17 +55,19 @@ public final class EventSubscriber {
 		registerTileEntity(TileEntityExampleTileEntity.class);
 	}
 
-	private static void registerTileEntity(final Class<? extends TileEntity> clazz) {
+	private static void registerTileEntity(@Nonnull final Class<? extends TileEntity> clazz) {
 		try {
 			GameRegistry.registerTileEntity(clazz, new ResourceLocation(ModReference.MOD_ID, ModUtil.getRegistryNameForClass(clazz, "TileEntity")));
-		} catch (final Exception e) {
-			FMLCommonHandler.instance().raiseException(e, "Error registering Tile Entity " + clazz.getSimpleName(), true);
+		} catch (final Exception exception) {
+			CrashReport crashReport = new CrashReport("Error registering Tile Entity " + clazz.getSimpleName(), exception);
+			crashReport.makeCategory("Registering Tile Entity");
+			throw new ReportedException(crashReport);
 		}
 	}
 
 	/* register items */
 	@SubscribeEvent
-	public static void onRegisterItemsEvent(final RegistryEvent.Register<Item> event) {
+	public static void onRegisterItemsEvent(@Nonnull final RegistryEvent.Register<Item> event) {
 		final IForgeRegistry<Item> registry = event.getRegistry();
 
 		// item blocks
@@ -82,7 +87,7 @@ public final class EventSubscriber {
 
 	/* register entities */
 	@SubscribeEvent
-	public static void onRegisterEntitiesEvent(final RegistryEvent.Register<EntityEntry> event) {
+	public static void onRegisterEntitiesEvent(@Nonnull final RegistryEvent.Register<EntityEntry> event) {
 		final IForgeRegistry<EntityEntry> registry = event.getRegistry();
 
 		{

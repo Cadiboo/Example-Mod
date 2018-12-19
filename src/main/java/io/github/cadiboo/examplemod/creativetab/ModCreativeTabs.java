@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Cadiboo
  */
 
-public class ModCreativeTabs {
+public final class ModCreativeTabs {
 
 	public static final String TAB_ICON_ITEM_REGISTRY_NAME = ModReference.MOD_ID + ":" + "example_block";
 
@@ -31,7 +31,6 @@ public class ModCreativeTabs {
 		public ItemStack createIcon() {
 			return TAB_ICON_ITEMSTACK;
 		}
-
 	};
 
 	/**

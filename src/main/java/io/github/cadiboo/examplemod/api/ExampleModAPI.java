@@ -5,6 +5,7 @@ package io.github.cadiboo.examplemod.api;
  *
  * @author Cadiboo
  */
+@SuppressWarnings("WeakerAccess")
 public final class ExampleModAPI {
 
 }

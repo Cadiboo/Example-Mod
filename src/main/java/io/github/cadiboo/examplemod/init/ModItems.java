@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
  * @author Cadiboo
  */
 @ObjectHolder(ModReference.MOD_ID)
-public class ModItems {
+public final class ModItems {
 
 	public static final ItemExampleItem EXAMPLE_ITEM = null;
 	public static final ItemExampleIngot EXAMPLE_INGOT = null;

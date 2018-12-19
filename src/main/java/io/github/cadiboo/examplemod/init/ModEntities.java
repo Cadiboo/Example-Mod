@@ -10,6 +10,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
  * @author Cadiboo
  */
 @ObjectHolder(ModReference.MOD_ID)
-public class ModEntities {
+public final class ModEntities {
 
 }

@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * The version of IProxy that gets injected into {@link ExampleMod#proxy} on a PHYSICAL/DEDICATED SERVER
  */
-public class ServerProxy implements IProxy {
+public final class ServerProxy implements IProxy {
 
 	@Override
 	public String localize(final String unlocalized) {

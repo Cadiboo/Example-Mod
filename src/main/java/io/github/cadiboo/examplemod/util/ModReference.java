@@ -1,6 +1,7 @@
 package io.github.cadiboo.examplemod.util;
 
 import io.github.cadiboo.examplemod.ExampleMod;
+import net.minecraft.crash.CrashReport;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Cadiboo
  */
+@SuppressWarnings("WeakerAccess")
 public final class ModReference {
 
 	/**
@@ -39,10 +41,10 @@ public final class ModReference {
 			"required-after:forge@[14.23.4.2704,);" +
 			"";
 	static {
-		final String modId = StringUtils.substring(MOD_ID, 0, 64);
-		if (modId.length() != MOD_ID.length()) {
-			// Mod ID CAN'T be longer than 64 characters due to Forge's system
-			throw new RuntimeException("Mod ID can't be longer than 64 characters! " + MOD_ID + ", " + modId);
+		if (MOD_ID.length() > 64) {
+			final IllegalStateException exception = new IllegalStateException("Mod Id is too long!");
+			CrashReport crashReport = new CrashReport("Mod Id must be 64 characters or shorter!", exception);
+			crashReport.makeCategory("Constructing Mod");
 		}
 	}
 

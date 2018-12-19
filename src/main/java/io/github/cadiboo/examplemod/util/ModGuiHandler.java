@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * @author Cadiboo
  */
-public class ModGuiHandler implements IGuiHandler {
+public final class ModGuiHandler implements IGuiHandler {
 
 	public static final int EXAMPLE_GUI_1 = 0;
 	public static final int EXAMPLE_GUI_2 = 1;
