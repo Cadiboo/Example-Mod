@@ -1,9 +1,14 @@
 #Items
 item.example_item.name=Example Item
+item.example_ingot.name=Example Ingot
 
 #Blocks
 tile.example_block.name=Example Block
 tile.example_ore.name=Example Ore
+tile.example_tile_entity.name=Example Tile Entity
+
+#Tile Entities
+example_tile_entity.name=Example Tile Entity
 
 #Creative Tab(s)
 itemGroup.examplemod=Example Mod
