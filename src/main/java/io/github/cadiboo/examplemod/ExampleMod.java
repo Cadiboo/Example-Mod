@@ -4,7 +4,6 @@ import io.github.cadiboo.examplemod.network.ModNetworkManager;
 import io.github.cadiboo.examplemod.util.IProxy;
 import io.github.cadiboo.examplemod.util.ModGuiHandler;
 import io.github.cadiboo.examplemod.world.gen.ModWorldGenerator;
-import io.github.cadiboo.examplemod.util.ModReference;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -20,26 +19,33 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
 
+import static io.github.cadiboo.examplemod.util.ModReference.ACCEPTED_VERSIONS;
+import static io.github.cadiboo.examplemod.util.ModReference.CLIENT_PROXY_CLASS;
+import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
+import static io.github.cadiboo.examplemod.util.ModReference.MOD_NAME;
+import static io.github.cadiboo.examplemod.util.ModReference.SERVER_PROXY_CLASS;
+import static io.github.cadiboo.examplemod.util.ModReference.Version;
+
 /**
  * Our main mod class
  *
  * @author Cadiboo
  */
 @Mod(
-		modid = ModReference.MOD_ID,
-		name = ModReference.MOD_NAME,
-		version = ModReference.Version.VERSION,
-		acceptedMinecraftVersions = ModReference.ACCEPTED_VERSIONS
+		modid = MOD_ID,
+		name = MOD_NAME,
+		version = Version.VERSION,
+		acceptedMinecraftVersions = ACCEPTED_VERSIONS
 )
 public class ExampleMod {
 
-	@Instance(ModReference.MOD_ID)
+	@Instance(MOD_ID)
 	public static ExampleMod instance;
 
-	@SidedProxy(serverSide = ModReference.SERVER_PROXY_CLASS, clientSide = ModReference.CLIENT_PROXY_CLASS)
+	@SidedProxy(serverSide = SERVER_PROXY_CLASS, clientSide = CLIENT_PROXY_CLASS)
 	public static IProxy proxy;
 
-	public static final Logger EXAMPLE_MOD_LOG = LogManager.getLogger(ModReference.MOD_ID);
+	public static final Logger EXAMPLE_MOD_LOG = LogManager.getLogger(MOD_ID);
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
