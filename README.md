@@ -5,6 +5,8 @@ This contains the basic setup for a normal mod, and the included files use good 
 Any code written by me is free for any use at all. Some credit would be nice though :)
 Download the repository, follow the directions to install Forge from the README.txt in the root directory and you're ready to go!
 
+# Take a look at https://github.com/jriwanek/ForgeModdingSkeleton/
+
 ## Setting up a repository
 1. Download and extract (or Clone/Fork) the repository to a folder you will be able to find and write a mod in
 
