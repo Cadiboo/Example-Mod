@@ -125,18 +125,18 @@ public final class ModUtil {
 	/**
 	 * Maps a value from one range to another range. Taken from https://stackoverflow.com/a/5732117
 	 *
-	 * @param input_start  the start of the input's range
-	 * @param input_end    the end of the input's range
-	 * @param output_start the start of the output's range
-	 * @param output_end   the end of the output's range
-	 * @param input        the input
+	 * @param input       the input
+	 * @param inputStart  the start of the input's range
+	 * @param inputEnd    the end of the input's range
+	 * @param outputStart the start of the output's range
+	 * @param outputEnd   the end of the output's range
 	 * @return the newly mapped value
 	 */
-	public static double map(final double input_start, final double input_end, final double output_start, final double output_end, final double input) {
-		final double input_range = input_end - input_start;
-		final double output_range = output_end - output_start;
+	public static double map(final double input, final double inputStart, final double inputEnd, final double outputStart, final double outputEnd) {
+		final double input_range = inputEnd - inputStart;
+		final double output_range = outputEnd - outputStart;
 
-		return (((input - input_start) * output_range) / input_range) + output_start;
+		return (((input - inputStart) * output_range) / input_range) + outputStart;
 	}
 
 	@Nonnull

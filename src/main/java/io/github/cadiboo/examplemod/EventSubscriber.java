@@ -1,11 +1,11 @@
 package io.github.cadiboo.examplemod;
 
+import com.google.common.base.Preconditions;
 import io.github.cadiboo.examplemod.block.BlockExampleTileEntity;
 import io.github.cadiboo.examplemod.block.BlockModOre;
 import io.github.cadiboo.examplemod.block.BlockResource;
-import io.github.cadiboo.examplemod.block.IModBlock;
+import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.item.ItemExampleIngot;
-import io.github.cadiboo.examplemod.item.ItemExampleItem;
 import io.github.cadiboo.examplemod.tileentity.TileEntityExampleTileEntity;
 import io.github.cadiboo.examplemod.util.ModReference;
 import io.github.cadiboo.examplemod.util.ModUtil;
@@ -20,11 +20,11 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 /**
  * Subscribe to events that should be handled on both PHYSICAL sides in this class
@@ -71,14 +71,18 @@ public final class EventSubscriber {
 		final IForgeRegistry<Item> registry = event.getRegistry();
 
 		// item blocks
-		ForgeRegistries.BLOCKS.getValuesCollection().stream()
-				.filter(block -> block instanceof IModBlock && ((IModBlock) block).hasItemBlock())
-				.forEach(block ->
-						registry.register(ModUtil.setRegistryNames(new ItemBlock(block), block.getRegistryName()))
-				);
+		Arrays.stream(new Block[]{
+				ModBlocks.EXAMPLE_BLOCK,
+				ModBlocks.EXAMPLE_ORE,
+				ModBlocks.EXAMPLE_TILE_ENTITY
+		}).forEach(block -> {
+			Preconditions.checkNotNull(block.getRegistryName(), "Registry name cannot be null!");
+			registry.register(ModUtil.setRegistryNames(new ItemBlock(block), block.getRegistryName()));
+		});
 
 		// items
-		registry.register(ModUtil.setRegistryNames(new ItemExampleItem(), "example_item"));
+		// you can also instantiate items like this, however its not often used for anumber of reasons
+		registry.register(ModUtil.setRegistryNames(new Item(), "example_item"));
 		registry.register(new ItemExampleIngot("example_ingot"));
 
 		ExampleMod.EXAMPLE_MOD_LOG.debug("Registered items");

@@ -1,10 +1,9 @@
 package io.github.cadiboo.examplemod.client;
 
 import com.google.common.base.Preconditions;
-import io.github.cadiboo.examplemod.block.IModBlock;
 import io.github.cadiboo.examplemod.client.render.tileentity.RenderExampleTileEntity;
 import io.github.cadiboo.examplemod.init.ModBlocks;
-import io.github.cadiboo.examplemod.item.IModItem;
+import io.github.cadiboo.examplemod.init.ModItems;
 import io.github.cadiboo.examplemod.tileentity.TileEntityExampleTileEntity;
 import io.github.cadiboo.examplemod.util.ModReference;
 import net.minecraft.block.Block;
@@ -17,7 +16,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,13 +43,18 @@ public final class ClientEventSubscriber {
 		registerEntityRenderers();
 		LOGGER.debug("Registered entity renderers");
 
-		ForgeRegistries.BLOCKS.getValuesCollection().stream()
-				.filter(block -> block instanceof IModBlock)
-				.forEach(ClientEventSubscriber::registerItemBlockModel);
+		// Registration can be automated like this
+		// But when you're learning its better to manually register your objects
+//		ForgeRegistries.BLOCKS.getValuesCollection().stream()
+//				.filter(block -> block.getRegistryName().getNamespace().equals(MOD_ID))
+//				.forEach(ClientEventSubscriber::registerItemBlockModel);
 
-		ForgeRegistries.ITEMS.getValuesCollection().stream()
-				.filter(item -> item instanceof IModItem)
-				.forEach(ClientEventSubscriber::registerItemModel);
+		registerItemBlockModel(ModBlocks.EXAMPLE_BLOCK);
+		registerItemBlockModel(ModBlocks.EXAMPLE_ORE);
+		registerItemBlockModel(ModBlocks.EXAMPLE_TILE_ENTITY);
+
+		registerItemModel(ModItems.EXAMPLE_ITEM);
+		registerItemModel(ModItems.EXAMPLE_INGOT);
 
 		LOGGER.debug("Registered models");
 

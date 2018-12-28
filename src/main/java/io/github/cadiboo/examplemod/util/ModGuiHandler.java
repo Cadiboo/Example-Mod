@@ -22,7 +22,7 @@ public final class ModGuiHandler implements IGuiHandler {
 	/**
 	 * gets the server's part of a Gui
 	 *
-	 * @return a {@link net.minecraft.inventory.Container Container} for the server
+	 * @return a {@link Container} for the server
 	 */
 	@Override
 	public Container getServerGuiElement(final int ID, final EntityPlayer player, final World world, final int x, final int y, final int z) {
@@ -44,7 +44,7 @@ public final class ModGuiHandler implements IGuiHandler {
 	/**
 	 * gets the client's part of a Gui
 	 *
-	 * @return a {@link net.minecraft.client.gui.GuiScreen GuiScreen} for the client
+	 * @return a {@link GuiScreen} for the client
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)

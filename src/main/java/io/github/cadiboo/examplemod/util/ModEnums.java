@@ -17,21 +17,21 @@ public final class ModEnums {
 	public interface IEnumNameFormattable {
 
 		/**
-		 * Converts the name to lowercase as per {@link java.lang.String#toLowerCase() String.toLowerCase}.
+		 * Converts the name to lowercase as per {@link String#toLowerCase()}.
 		 */
 		default String getNameLowercase() {
 			return this.name().toLowerCase();
 		}
 
 		/**
-		 * Converts the name to uppercase as per {@link java.lang.String#toUpperCase() String.toUpperCase}.
+		 * Converts the name to uppercase as per {@link String#toUpperCase()}.
 		 */
 		default String getNameUppercase() {
 			return this.getNameLowercase().toUpperCase();
 		}
 
 		/**
-		 * Capitalizes the name of the material as per {@link org.apache.commons.lang3.StringUtils#capitalize(String) StringUtils.capitalize}.
+		 * Capitalizes the name of the material as per {@link StringUtils#capitalize(String)}.
 		 */
 		default String getNameFormatted() {
 			return StringUtils.capitalize(this.getNameLowercase());

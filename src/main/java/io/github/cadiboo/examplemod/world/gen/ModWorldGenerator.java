@@ -21,10 +21,10 @@ import java.util.Random;
 public class ModWorldGenerator implements IWorldGenerator {
 
 	/* these values are very similar to Iron */
-	public static final int OVERWORLD_MIN_Y = 8;
-	public static final int OVERWORLD_MAX_Y = 64;
-	public static final int OVERWORLD_SIZE = 6;
-	public static final int OVERWORLD_CHANCE = 4;
+	private static final int OVERWORLD_MIN_Y = 8;
+	private static final int OVERWORLD_MAX_Y = 64;
+	private static final int OVERWORLD_SIZE = 6;
+	private static final int OVERWORLD_CHANCE = 4;
 
 	@Override
 	public void generate(@Nonnull final Random random, final int chunkX, final int chunkZ, @Nonnull final World world, @Nonnull final IChunkGenerator chunkGenerator, @Nonnull final IChunkProvider chunkProvider) {

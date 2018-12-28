@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  *
  * @author Cadiboo
  */
-public class BlockModOre extends Block implements IModBlock {
+public class BlockModOre extends Block {
 
 	public BlockModOre(@Nonnull final String name) {
 		super(Material.ROCK);

@@ -7,7 +7,7 @@ import io.github.cadiboo.examplemod.util.ModReference;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 
 /**
- * Block Instances class
+ * {@link Block} Instances class
  * All the blocks in here will be public static final and null as their values will be filled by the magical @ObjectHolder
  *
  * @author Cadiboo

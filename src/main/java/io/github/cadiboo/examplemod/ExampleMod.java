@@ -23,7 +23,7 @@ import static io.github.cadiboo.examplemod.util.ModReference.DEPENDENCIES;
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_NAME;
 import static io.github.cadiboo.examplemod.util.ModReference.SERVER_PROXY_CLASS;
-import static io.github.cadiboo.examplemod.util.ModReference.Version;
+import static io.github.cadiboo.examplemod.util.ModReference.VERSION;
 
 /**
  * Our main mod class
@@ -33,7 +33,7 @@ import static io.github.cadiboo.examplemod.util.ModReference.Version;
 @Mod(
 		modid = MOD_ID,
 		name = MOD_NAME,
-		version = Version.VERSION,
+		version = VERSION,
 		acceptedMinecraftVersions = ACCEPTED_VERSIONS,
 		dependencies = DEPENDENCIES
 )
@@ -53,7 +53,7 @@ public class ExampleMod {
 	 * @see ForgeModContainer#preInit(FMLPreInitializationEvent)
 	 */
 	@EventHandler
-	public void preInit(final FMLPreInitializationEvent event) {
+	public void onPreInit(final FMLPreInitializationEvent event) {
 		LOGGER.debug("preInit");
 		proxy.logPhysicalSide(EXAMPLE_MOD_LOG);
 
@@ -71,7 +71,7 @@ public class ExampleMod {
 	 * @param event the event
 	 */
 	@EventHandler
-	public void init(final FMLInitializationEvent event) {
+	public void onInit(final FMLInitializationEvent event) {
 		LOGGER.debug("init");
 	}
 
@@ -82,7 +82,7 @@ public class ExampleMod {
 	 * @see ForgeModContainer#postInit(FMLPostInitializationEvent)
 	 */
 	@EventHandler
-	public void postInit(final FMLPostInitializationEvent event) {
+	public void onPostInit(final FMLPostInitializationEvent event) {
 		LOGGER.debug("postInit");
 	}
 

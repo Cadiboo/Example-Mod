@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  *
  * @author Cadiboo
  */
-public class ItemExampleIngot extends Item implements IModItem {
+public class ItemExampleIngot extends Item {
 
 	public ItemExampleIngot(@Nonnull String name) {
 		ModUtil.setRegistryNames(this, name);

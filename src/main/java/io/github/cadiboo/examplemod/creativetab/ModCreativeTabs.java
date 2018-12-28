@@ -1,12 +1,13 @@
 package io.github.cadiboo.examplemod.creativetab;
 
-import io.github.cadiboo.examplemod.util.ModReference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.GameRegistry.ItemStackHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
 
 /**
  * All the creative tabs of our mod
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class ModCreativeTabs {
 
-	public static final String TAB_ICON_ITEM_REGISTRY_NAME = ModReference.MOD_ID + ":" + "example_block";
+	public static final String TAB_ICON_ITEM_REGISTRY_NAME = MOD_ID + ":" + "example_block";
 
 	@ItemStackHolder(value = TAB_ICON_ITEM_REGISTRY_NAME)
 	public static final ItemStack TAB_ICON_ITEMSTACK = null;
@@ -26,7 +27,7 @@ public final class ModCreativeTabs {
 	/**
 	 * instantiate creative tabs
 	 */
-	public static final CustomCreativeTab CREATIVE_TAB = new CustomCreativeTab(ModReference.MOD_ID, true) {
+	public static final CustomCreativeTab CREATIVE_TAB = new CustomCreativeTab(MOD_ID, true) {
 		@Override
 		public ItemStack createIcon() {
 			return TAB_ICON_ITEMSTACK;
@@ -46,7 +47,7 @@ public final class ModCreativeTabs {
 		}
 
 		/**
-		 * gets the {@link net.minecraft.item.ItemStack ItemStack} to display for the tab's icon
+		 * gets the {@link ItemStack} to display for the tab's icon
 		 */
 		@SideOnly(Side.CLIENT)
 		@Override

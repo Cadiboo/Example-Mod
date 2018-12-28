@@ -9,18 +9,24 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static io.github.cadiboo.examplemod.util.ModReference.*;
+
 /**
  * Our Mod's configuration
  *
  * @author Cadiboo
  */
 @SuppressWarnings("WeakerAccess")
-@Config(modid = ModReference.MOD_ID)
-@LangKey(ModReference.MOD_ID + ".config.title")
+@Config(modid = MOD_ID)
+@LangKey(MOD_ID + ".config.title")
 public final class ModConfig {
 
+	@Comment("Boolean")
+	public static boolean exampleBoolean = false;
+
+	//sub category
 	@Comment("Numbers")
-	public static final Numbers numbers = new Numbers(1, 2.5f, 3.1d);
+	public static Numbers numbers = new Numbers(1, 2.5f, 3.1d);
 
 	public static class Numbers {
 
@@ -39,7 +45,7 @@ public final class ModConfig {
 
 	}
 
-	@Mod.EventBusSubscriber(modid = ModReference.MOD_ID)
+	@Mod.EventBusSubscriber(modid = MOD_ID)
 	private static class EventHandler {
 
 		/**
@@ -49,8 +55,8 @@ public final class ModConfig {
 		 */
 		@SubscribeEvent
 		public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
-			if (event.getModID().equals(ModReference.MOD_ID)) {
-				ConfigManager.sync(ModReference.MOD_ID, Config.Type.INSTANCE);
+			if (event.getModID().equals(MOD_ID)) {
+				ConfigManager.sync(MOD_ID, Config.Type.INSTANCE);
 			}
 		}
 

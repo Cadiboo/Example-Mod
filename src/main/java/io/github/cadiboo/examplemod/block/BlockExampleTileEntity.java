@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  *
  * @author Cadiboo
  */
-public class BlockExampleTileEntity extends Block implements IModBlock {
+public class BlockExampleTileEntity extends Block {
 
 	public BlockExampleTileEntity(@Nonnull final String name) {
 		super(Material.IRON);
@@ -31,12 +31,12 @@ public class BlockExampleTileEntity extends Block implements IModBlock {
 	}
 
 	@Override
-	public boolean isOpaqueCube(final IBlockState state) {
+	public boolean isOpaqueCube(@Nonnull final IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean hasTileEntity(final IBlockState state) {
+	public boolean hasTileEntity(@Nonnull final IBlockState state) {
 		return true;
 	}
 

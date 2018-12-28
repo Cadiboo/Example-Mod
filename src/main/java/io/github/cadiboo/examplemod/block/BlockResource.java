@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  *
  * @author Cadiboo
  */
-public class BlockResource extends Block implements IModBlock {
+public class BlockResource extends Block {
 
 	public BlockResource(@Nonnull final String name) {
 		super(Material.IRON);
