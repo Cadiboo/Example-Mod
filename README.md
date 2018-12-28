@@ -5,8 +5,6 @@ This contains the basic setup for a normal mod, and the included files use good 
 Any code written by me is free for any use at all. Some credit would be nice though :)
 Download the repository, follow the directions to install Forge from the README.txt in the root directory and you're ready to go!
 
-# Take a look at https://github.com/jriwanek/ForgeModdingSkeleton/
-
 ## Setting up a repository
 1. Download and extract (or Clone/Fork) the repository to a folder you will be able to find and write a mod in
 
@@ -51,3 +49,4 @@ You can change your username by launching Minecraft with the `-username` argumen
 - [Diesieben07's mods](https://github.com/diesieben07)
 - [Forge test mods](https://github.com/MinecraftForge/MinecraftForge/tree/1.12.x/src/test)
 - [V0idWalk3r's mods](https://github.com/V0idWa1k3r)
+- [jriwanek's Forge Modding Skeleton](https://github.com/jriwanek/ForgeModdingSkeleton/)
