@@ -27,6 +27,12 @@ compileJava {
 	sourceCompatibility = targetCompatibility = '1.8'
 }
 
+repositories {
+
+	// put remote maven repositories here
+
+}
+
 minecraft {
 
 	version = "1.12.2-14.23.5.2768" // Latest Stable
