@@ -16,7 +16,7 @@ Download the repository, follow the directions to install Forge from the README.
 4. Run the `eclipse` gradle task
 	- On Mac: run `./gradlew eclipse`
 	- On Windows: run `gradlew eclipse`
-5. Open eclipse... TODO add instructions
+5. Open eclipse... TODO add instructions (read the forge tutorial in README.txt for now)
 
 #### Using IntelliJ
 2. Open IntelliJ Idea
