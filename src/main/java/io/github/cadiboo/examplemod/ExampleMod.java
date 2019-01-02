@@ -42,9 +42,12 @@ import static io.github.cadiboo.examplemod.util.ModReference.VERSION;
 public class ExampleMod {
 
 	public static final Logger EXAMPLE_MOD_LOG = LogManager.getLogger(MOD_ID);
+
 	private static final Logger LOGGER = LogManager.getLogger();
+
 	@Instance(MOD_ID)
 	public static ExampleMod instance;
+
 	@SidedProxy(serverSide = SERVER_PROXY_CLASS, clientSide = CLIENT_PROXY_CLASS)
 	public static IProxy proxy;
 
