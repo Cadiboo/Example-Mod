@@ -19,7 +19,8 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 // We use the format MCVERSION-MAJOR.MINOR.PATCH
 version = "1.12.2-0.1.0"
 group = "mod.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Mod Name"
+// Maven and Gradle don't like spaces in filenames, so use a different separator character like '-'
+archivesBaseName = "Mod-Name"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
