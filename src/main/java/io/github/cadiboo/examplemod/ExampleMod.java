@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static io.github.cadiboo.examplemod.util.ModReference.ACCEPTED_VERSIONS;
+import static io.github.cadiboo.examplemod.util.ModReference.CERTIFICATE_FINGERPRINT;
 import static io.github.cadiboo.examplemod.util.ModReference.CLIENT_PROXY_CLASS;
 import static io.github.cadiboo.examplemod.util.ModReference.DEPENDENCIES;
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
@@ -35,7 +36,8 @@ import static io.github.cadiboo.examplemod.util.ModReference.VERSION;
 		name = MOD_NAME,
 		version = VERSION,
 		acceptedMinecraftVersions = ACCEPTED_VERSIONS,
-		dependencies = DEPENDENCIES
+		dependencies = DEPENDENCIES,
+		certificateFingerprint = CERTIFICATE_FINGERPRINT
 )
 public class ExampleMod {
 

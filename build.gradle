@@ -52,6 +52,8 @@ minecraft {
 	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
 	replace "@VERSION@", project.version
+	// Find the keystore properties in /gradle-keystore-gradle.properties
+	replace '@FINGERPRINT@', project.findProperty('signSHA1')
 	replaceIn "io/github/cadiboo/examplemod/util/ModReference.java"
 }
 
@@ -97,3 +99,26 @@ processResources {
 		exclude 'mcmod.info'
 	}
 }
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+
+	// Find the keystore properties in /gradle-keystore-gradle.properties
+
+	// Skips if the keyStore property is missing.
+	onlyIf {
+		project.hasProperty('keyStore')
+	}
+
+	// findProperty allows us to reference the property without it existing.
+	// Using project.propName would cause the script to fail validation if
+	// the property did not exist.
+	keyStore = project.findProperty('keyStore')
+	alias = project.findProperty('keyStoreAlias')
+	storePass = project.findProperty('keyStorePass')
+	keyPass = project.findProperty('keyStoreKeyPass')
+	inputFile = jar.archivePath
+	outputFile = jar.archivePath
+}
+
+// Runs this task automatically when build is run.
+build.dependsOn signJar
