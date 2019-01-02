@@ -9,4 +9,4 @@ import net.minecraftforge.fml.common.API;
 
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_NAME;
-import static io.github.cadiboo.examplemod.util.ModReference.Version.VERSION;
+import static io.github.cadiboo.examplemod.util.ModReference.VERSION;

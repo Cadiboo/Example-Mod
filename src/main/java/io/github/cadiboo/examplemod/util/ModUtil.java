@@ -10,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
@@ -65,11 +64,25 @@ public final class ModUtil {
 		entry.setRegistryName(registryName);
 		if (entry instanceof Block) {
 			((Block) entry).setTranslationKey(translationKey);
-			setCreativeTab((Block) entry);
 		}
 		if (entry instanceof Item) {
 			((Item) entry).setTranslationKey(translationKey);
-			setCreativeTab((Item) entry);
+		}
+		return entry;
+	}
+
+	@Nonnull
+	public static <T extends IForgeRegistryEntry.Impl<?>> T setCreativeTab(@Nonnull final T entry) {
+		return setCreativeTab(entry, ModCreativeTabs.CREATIVE_TAB);
+	}
+
+	@Nonnull
+	public static <T extends IForgeRegistryEntry.Impl<?>> T setCreativeTab(@Nonnull final T entry, final CreativeTabs creativeTab) {
+		if (entry instanceof Block) {
+			((Block) entry).setCreativeTab(creativeTab);
+		}
+		if (entry instanceof Item) {
+			((Item) entry).setCreativeTab(creativeTab);
 		}
 		return entry;
 	}
@@ -87,28 +100,6 @@ public final class ModUtil {
 			return new CreativeTabs[]{item.getCreativeTab(), ModCreativeTabs.CREATIVE_TAB, CreativeTabs.SEARCH};
 		}
 		return new CreativeTabs[]{item.getCreativeTab(), CreativeTabs.SEARCH};
-	}
-
-	/**
-	 * Utility method to make sure that all our items appear on our creative tab
-	 *
-	 * @param item the {@link Item Item}
-	 */
-	public static void setCreativeTab(@Nonnull final Item item) {
-		if (item.getCreativeTab() == null) {
-			item.setCreativeTab(ModCreativeTabs.CREATIVE_TAB);
-		}
-	}
-
-	/**
-	 * Utility method to make sure that all our blocks appear on our creative tab
-	 *
-	 * @param block the {@link Block Block}
-	 */
-	public static void setCreativeTab(@Nonnull final Block block) {
-		if (block.getCreativeTab() == null) {
-			block.setCreativeTab(ModCreativeTabs.CREATIVE_TAB);
-		}
 	}
 
 	/**
@@ -150,26 +141,6 @@ public final class ModUtil {
 
 	public static void logLogicalSide(@Nonnull final Logger logger, @Nonnull final World world) {
 		logger.info("Logical Side: " + getLogicalSide(world));
-	}
-
-	/**
-	 * Turns a class's name into a registry name<br>
-	 * It expects the Class's Name to be in CamelCase format<br>
-	 * It returns the registry name in snake_case format<br>
-	 * <br>
-	 * Examples:<br>
-	 * (TileEntitySuperAdvancedFurnace, "TileEntity") -> super_advanced_furnace<br>
-	 * (EntityPortableGenerator, "Entity") -> portable_generator<br>
-	 * (TileEntityPortableGenerator, "Entity") -> tile_portable_generator<br>
-	 * (EntityPortableEntityGeneratorEntity, "Entity") -> portable_generator<br>
-	 *
-	 * @param clazz      the class
-	 * @param removeType the string to be removed from the class's name
-	 * @return the recommended registry name for the class
-	 */
-	@Nonnull
-	public static String getRegistryNameForClass(@Nonnull final Class<?> clazz, @Nonnull final String removeType) {
-		return StringUtils.uncapitalize(clazz.getSimpleName().replace(removeType, "")).replaceAll("([A-Z])", "_$1").toLowerCase();
 	}
 
 	/**

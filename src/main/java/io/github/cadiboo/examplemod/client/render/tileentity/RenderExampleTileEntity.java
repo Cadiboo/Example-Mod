@@ -40,7 +40,7 @@ public class RenderExampleTileEntity extends FastTESR<TileEntityExampleTileEntit
 
 		// rotations need to be in radians
 		final float quarterRotation = (float) Math.PI / 2;
-		final float rotation = (float) ModUtil.map(0, 360, -Math.PI, Math.PI, getWorld().getTotalWorldTime() + partialTicks % 360);
+		final float rotation = (float) ModUtil.map(getWorld().getTotalWorldTime() + partialTicks % 360, 0, 360, -Math.PI, Math.PI);
 
 		// the 4 forward rotating quads
 		for (int i = 0; i < 4; i++) {
@@ -68,6 +68,36 @@ public class RenderExampleTileEntity extends FastTESR<TileEntityExampleTileEntit
 					0
 			);
 		}
+		//TODO top & translations
+		// the bottom horizontal quad
+		final Matrix4f matrixBottom = Matrix4f.mul(
+				Matrix4f
+						.rotate(quarterRotation,
+								new Vector3f(1, 0, 0),
+								Matrix4f.setIdentity(new Matrix4f()),
+								Matrix4f.setIdentity(new Matrix4f())
+						)
+				,
+				Matrix4f
+						.rotate(
+								rotation,
+								new Vector3f(0, 0, 1),
+								Matrix4f.setIdentity(new Matrix4f()),
+								Matrix4f.setIdentity(new Matrix4f())
+						)
+				,
+				new Matrix4f()
+		).scale(new Vector3f(0.5F, 0.5F, 0.5F)
+		);
+		ClientUtil.renderSimpleQuad(
+				new Vector3f((float) x + 0.5F, (float) y, (float) z + 0.5F),
+				buffer,
+				matrixBottom,
+				ClientUtil.color(0xFF, 0xFF, 0xFF),
+				sprite,
+				240,
+				0
+		);
 
 	}
 

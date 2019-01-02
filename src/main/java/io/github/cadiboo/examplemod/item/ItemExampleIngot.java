@@ -14,6 +14,7 @@ public class ItemExampleIngot extends Item {
 
 	public ItemExampleIngot(@Nonnull String name) {
 		ModUtil.setRegistryNames(this, name);
+		ModUtil.setCreativeTab(this);
 	}
 
 }

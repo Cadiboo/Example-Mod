@@ -4,6 +4,7 @@ import io.github.cadiboo.examplemod.block.BlockExampleTileEntity;
 import io.github.cadiboo.examplemod.block.BlockModOre;
 import io.github.cadiboo.examplemod.block.BlockResource;
 import io.github.cadiboo.examplemod.util.ModReference;
+import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 
 /**
@@ -16,7 +17,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 public final class ModBlocks {
 
 	public static final BlockResource EXAMPLE_BLOCK = null;
+
 	public static final BlockModOre EXAMPLE_ORE = null;
+
 	public static final BlockExampleTileEntity EXAMPLE_TILE_ENTITY = null;
 
 }

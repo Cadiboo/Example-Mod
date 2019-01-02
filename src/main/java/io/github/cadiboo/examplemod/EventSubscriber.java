@@ -52,12 +52,12 @@ public final class EventSubscriber {
 	}
 
 	private static void registerTileEntities() {
-		registerTileEntity(TileEntityExampleTileEntity.class);
+		registerTileEntity(TileEntityExampleTileEntity.class, "example_tile_entity");
 	}
 
-	private static void registerTileEntity(@Nonnull final Class<? extends TileEntity> clazz) {
+	private static void registerTileEntity(@Nonnull final Class<? extends TileEntity> clazz, String name) {
 		try {
-			GameRegistry.registerTileEntity(clazz, new ResourceLocation(ModReference.MOD_ID, ModUtil.getRegistryNameForClass(clazz, "TileEntity")));
+			GameRegistry.registerTileEntity(clazz, new ResourceLocation(ModReference.MOD_ID, name));
 		} catch (final Exception exception) {
 			CrashReport crashReport = new CrashReport("Error registering Tile Entity " + clazz.getSimpleName(), exception);
 			crashReport.makeCategory("Registering Tile Entity");
@@ -71,18 +71,27 @@ public final class EventSubscriber {
 		final IForgeRegistry<Item> registry = event.getRegistry();
 
 		// item blocks
+		// make an array of all the blocks we want to have items
 		Arrays.stream(new Block[]{
+
 				ModBlocks.EXAMPLE_BLOCK,
 				ModBlocks.EXAMPLE_ORE,
 				ModBlocks.EXAMPLE_TILE_ENTITY
+
 		}).forEach(block -> {
 			Preconditions.checkNotNull(block.getRegistryName(), "Registry name cannot be null!");
-			registry.register(ModUtil.setRegistryNames(new ItemBlock(block), block.getRegistryName()));
+			registry.register(
+					ModUtil.setCreativeTab( // set it's creative tab to our creativetab (Optional)
+							ModUtil.setRegistryNames( //set its name
+									new ItemBlock(block), //make the itemblock
+									block.getRegistryName())
+					)
+			);
 		});
 
 		// items
-		// you can also instantiate items like this, however its not often used for anumber of reasons
-		registry.register(ModUtil.setRegistryNames(new Item(), "example_item"));
+		// you can also instantiate items like this, however its not often used for a number of reasons
+		registry.register(ModUtil.setCreativeTab(ModUtil.setRegistryNames(new Item(), "example_item")));
 		registry.register(new ItemExampleIngot("example_ingot"));
 
 		ExampleMod.EXAMPLE_MOD_LOG.debug("Registered items");
