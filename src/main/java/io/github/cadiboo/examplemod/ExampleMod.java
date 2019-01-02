@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -89,6 +90,17 @@ public class ExampleMod {
 	@EventHandler
 	public void onPostInit(final FMLPostInitializationEvent event) {
 		LOGGER.debug("postInit");
+	}
+
+	/**
+	 * Do your invalid fingerprint handling here
+	 *
+	 * @param event
+	 * @see "https://tutorials.darkhax.net/tutorials/jar_signing/" and "https://mcforge.readthedocs.io/en/latest/concepts/jarsigning/"
+	 */
+	@EventHandler
+	public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+		EXAMPLE_MOD_LOG.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
 	}
 
 }
