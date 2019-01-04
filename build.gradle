@@ -10,54 +10,35 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-// Taken from https://semver.org
-// Given a version number MAJOR.MINOR.PATCH, increment the:
-//	 MAJOR version when you make incompatible API changes,
-//	 MINOR version when you add functionality in a backwards-compatible manner, and
-//	 PATCH version when you make backwards-compatible bug fixes.
-// Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
-// We use the format MCVERSION-MAJOR.MINOR.PATCH
-version = "1.12.2-0.1.0"
-group = "mod.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-// Maven and Gradle don't like spaces in filenames, so use a different separator character like '-'
-archivesBaseName = "Mod-Name"
+version = modMinecraftVersion + "-" + modVersion
+group = modGroup
+archivesBaseName = modFileName
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-	sourceCompatibility = targetCompatibility = '1.8'
-}
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 
-	// put remote maven repositories here
+	// Put other remote maven repositories here
 
 }
 
 minecraft {
 
-	version = "1.12.2-14.23.5.2768" // Latest Stable
+	version = modMinecraftVersion + "-" + modForgeVersion
 
 	runDir = "run"
 
-	// the mappings can be changed at any time, and must be in the following format.
-	// snapshot_YYYYMMDD	snapshot are built nightly.
-	// stable_#				stables are built at the discretion of the MCP team.
-	// Use non-default mappings at your own risk. they may not always work.
-	// simply re-run your setup task after changing the mappings to update your workspace.
-
-	// mappings = "snapshot_20180814" // Latest 1.12.x Mappings
-	mappings = "stable_39" // Latest stable 1.12.x Mappings
-	// mappings = "snapshot_20171003" // Default mappings for 1.12.x
-
-	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+	mappings = modMcpMappings
 
 	replace "@VERSION@", project.version
-	// Find the keystore properties in /gradle-keystore-gradle.properties
+	// Find the keystore properties in ./gradle-keystore-gradle.properties
 	replace '@FINGERPRINT@', project.findProperty('signSHA1')
-	replaceIn "io/github/cadiboo/examplemod/util/ModReference.java"
+	replaceIn modReferenceClass
 }
 
 dependencies {
+
 	// you may put jars on which you depend on in ./libs
 	// or you may define them like so..
 	//compile "some.group:artifact:version:classifier"
@@ -102,7 +83,7 @@ processResources {
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
 
-	// Find the keystore properties in /gradle-keystore-gradle.properties
+	// Find the keystore properties in ./gradle-keystore-gradle.properties
 
 	// Skips if the keyStore property is missing.
 	onlyIf {
@@ -110,8 +91,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
 	}
 
 	// findProperty allows us to reference the property without it existing.
-	// Using project.propName would cause the script to fail validation if
-	// the property did not exist.
+	// Using project.propName would cause the script to fail validation if the property did not exist.
 	keyStore = project.findProperty('keyStore')
 	alias = project.findProperty('keyStoreAlias')
 	storePass = project.findProperty('keyStorePass')
