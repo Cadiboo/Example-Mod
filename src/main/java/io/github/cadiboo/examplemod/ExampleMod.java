@@ -95,7 +95,7 @@ public class ExampleMod {
 	/**
 	 * Do your invalid fingerprint handling here
 	 *
-	 * @param event
+	 * @param event the event
 	 * @see "https://tutorials.darkhax.net/tutorials/jar_signing/" and "https://mcforge.readthedocs.io/en/latest/concepts/jarsigning/"
 	 */
 	@EventHandler
