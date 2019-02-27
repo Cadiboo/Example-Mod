@@ -44,7 +44,7 @@ You can change your username by launching Minecraft with the `-username` argumen
 
 
 ### See Also
-- [Cubicoder's tutorials](https://cubicoder.wordpress.com) (VERY good practices)
+- [Cubicoder's tutorials](https://cubicoder.github.io)
 - [Jabelar's test mod](https://github.com/jabelar/ExampleMod-1.12)
 - [Choonsters test mod](https://github.com/Choonster-Minecraft-Mods/TestMod3)
 - [Draco18s's Reasonable Realism](https://github.com/Draco18s/ReasonableRealism)
