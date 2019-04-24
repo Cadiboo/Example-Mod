@@ -1,6 +1,7 @@
 // Forge buildscript
 buildscript {
-	
+
+	// Buildscript repositiories
 	repositories {
 
 		// Forge Maven
@@ -37,43 +38,64 @@ repositories {
 }
 
 minecraft {
-	
+
 	// The mappings can be changed at any time, and must be in the following format.
 	// snapshot_YYYYMMDD   snapshot are built nightly.
 	// stable_#            stables are built at the discretion of the MCP team.
 	// Use non-default mappings at your own risk. they may not always work.
 	// simply re-run your setup task after changing the mappings to update your workspace.
 	mappings channel: modMcpMappingsChannel, version: modMcpMappingsVersion
-	
+
 	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+//	accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
 
 	// Default run configurations.
 	// These can be tweaked, removed, or duplicated as needed.
 	runs {
-		client = {
+		client {
+			workingDirectory project.file('run')
+
 			// Recommended logging data for a userdev environment
-			properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
 			// Recommended logging level for the console
-			properties 'forge.logging.console.level': 'debug'
-			workingDirectory project.file('run').canonicalPath
-			source sourceSets.main
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				examplemod {
+					// Main sources (everything that goes in your final compiled mod. From /src/main/)
+					source sourceSets.main
+//					// Test sources (debugging, unit tests. From /src/test/)
+//					source sourceSets.test
+				}
+			}
 		}
-		server = {
+
+		server {
+			workingDirectory project.file('run')
+
 			// Recommended logging data for a userdev environment
-			properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
 			// Recommended logging level for the console
-			properties 'forge.logging.console.level': 'debug'
-			workingDirectory project.file('run').canonicalPath
-			source sourceSets.main
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				examplemod {
+					// Main sources (everything that goes in your final compiled mod. From /src/main/)
+					source sourceSets.main
+//					// Test sources (debugging, unit tests. From /src/test/)
+//					source sourceSets.test
+				}
+			}
 		}
 	}
 
 }
 
 dependencies {
-	
+
 	// Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
 	// that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
 	// The userdev artifact is a special name and will get all sorts of transformations applied to it.
@@ -107,7 +129,7 @@ jar {
 		attributes([
 				"Specification-Title"     : modId,
 				"Specification-Vendor"    : modGroup,
-				"Specification-Version"   : "25.0", // We are version 1 of the modlauncher specification
+				"Specification-Version"   : "1.0", // We are version 1 of ourselves
 				"Implementation-Title"    : project.name,
 				"Implementation-Version"  : "${version}",
 				"Implementation-Vendor"   : modGroup,
@@ -175,7 +197,7 @@ processResources {
 		include 'META-INF/mods.toml'
 
 		// Replace version
-		expand 'version':project.version
+		expand 'version': project.version
 	}
 
 	// Copy everything else except the mods.toml
@@ -183,4 +205,23 @@ processResources {
 		exclude 'META-INF/mods.toml'
 	}
 
+}
+
+// Create Sources Jar
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+build.dependsOn sourcesJar
+
+//// Create Javadoc Jar
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//	classifier = 'javadoc'
+//	from javadoc.destinationDir
+//}
+//build.dependsOn javadocJar
+
+artifacts {
+	archives sourcesJar
+//	archives javadocJar
 }
