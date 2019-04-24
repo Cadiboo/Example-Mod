@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "examplemod:item/example_item"
-    }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "examplemod:item/example_item"
+	}
 }
