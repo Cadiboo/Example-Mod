@@ -1,6 +1,7 @@
 package io.github.cadiboo.examplemod;
 
 import com.google.common.base.Preconditions;
+import io.github.cadiboo.examplemod.init.ModItemGroups;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -38,8 +39,8 @@ public final class ModEventSubscriber {
 		);
 		ForgeRegistries.BLOCKS.getValues().stream()
 				.filter(block -> Objects.requireNonNull(block.getRegistryName(), "Registry Name of Block \"" + block + "\" is null! This is not allowed!").getNamespace().equals(ExampleMod.MODID))
-//				.filter(block -> block instanceof IHasNoItemBlock) // If you have blocks that don't have a corresponding ItemBlock, uncomment this code and create an Interface called IHasNoItemBlock with no methods and implement it on your blocks that shouldn't have ItemBlocks
 				.forEach(block -> registry.register(setup(new ItemBlock(block, new Item.Properties()), block.getRegistryName())));
+				.forEach(block -> registry.register(setup(new ItemBlock(block, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)), block.getRegistryName())));
 	}
 
 	@Nonnull

@@ -1,5 +1,6 @@
 {
 	"block.examplemod.example_ore": "Example Ore",
 	"block.examplemod.example_block": "Example Block",
-	"item.examplemod.example_item": "Example Item"
+	"item.examplemod.example_item": "Example Item",
+	"itemGroup.examplemod": "Example Mod"
 }
