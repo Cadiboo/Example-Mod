@@ -39,7 +39,7 @@ public final class ModEventSubscriber {
 		);
 		ForgeRegistries.BLOCKS.getValues().stream()
 				.filter(block -> Objects.requireNonNull(block.getRegistryName(), "Registry Name of Block \"" + block + "\" is null! This is not allowed!").getNamespace().equals(ExampleMod.MODID))
-				.forEach(block -> registry.register(setup(new ItemBlock(block, new Item.Properties()), block.getRegistryName())));
+//				.filter(block -> block instanceof NoAutomaticItemBlock) // If you have blocks that don't have a corresponding ItemBlock, uncomment this code and create an Interface - or even better an Annotation - called NoAutomaticItemBlock with no methods and implement it on your blocks that shouldn't have ItemBlocks
 				.forEach(block -> registry.register(setup(new ItemBlock(block, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)), block.getRegistryName())));
 	}
 
