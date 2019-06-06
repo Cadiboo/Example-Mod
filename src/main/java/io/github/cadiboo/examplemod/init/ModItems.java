@@ -11,6 +11,6 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(ExampleMod.MODID)
 public final class ModItems {
 
-	public static final Item EXAMPLE_ITEM =  ModUtil._null();
+	public static final Item EXAMPLE_ITEM = ModUtil._null();
 
 }

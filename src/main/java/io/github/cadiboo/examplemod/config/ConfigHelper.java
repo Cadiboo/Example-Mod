@@ -4,6 +4,7 @@ import net.minecraftforge.fml.config.ModConfig;
 
 /**
  * This bakes the config values to normal fields
+ *
  * @author Cadiboo
  * It can be merged into the main ExampleModConfig class, but is separate because of personal preference and to keep the code organised
  */

@@ -12,6 +12,7 @@ public class TileEntityExampleTileEntity extends TileEntity {
 	public TileEntityExampleTileEntity(final TileEntityType<?> type) {
 		super(type);
 	}
+
 	public TileEntityExampleTileEntity() {
 		super(ModTileEntityTypes.EXAMPLE_TILE_ENTITY);
 	}
