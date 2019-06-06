@@ -1,6 +1,9 @@
 package io.github.cadiboo.examplemod;
 
+import io.github.cadiboo.examplemod.config.ConfigHolder;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +19,10 @@ public final class ExampleMod {
 
 	public ExampleMod() {
 		LOGGER.debug("Hello from Example Mod!");
+
+		final ModLoadingContext modLoadingContext = ModLoadingContext.get();
+		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
+		modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
 	}
 
 }
