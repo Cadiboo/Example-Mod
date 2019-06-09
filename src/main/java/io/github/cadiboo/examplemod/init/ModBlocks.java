@@ -11,6 +11,6 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(ExampleMod.MODID)
 public final class ModBlocks {
 
-	public static final Block EXAMPLE_TILE_ENTITY = ModUtil._null();
+	public static final Block MINI_MODEL = ModUtil._null();
 
 }

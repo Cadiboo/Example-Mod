@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "minecraft:map"
+		},
+		{
+			"item": "minecraft:beacon"
+		}
+	],
+	"result": {
+		"item": "examplemod:mini_model"
+	}
+}

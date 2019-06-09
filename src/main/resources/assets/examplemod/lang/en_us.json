@@ -1,6 +1,7 @@
 {
 	"block.examplemod.example_ore": "Example Ore",
 	"block.examplemod.example_block": "Example Block",
+	"block.examplemod.mini_model": "Mini Model",
 	"item.examplemod.example_item": "Example Item",
 	"itemGroup.examplemod": "Example Mod"
 }

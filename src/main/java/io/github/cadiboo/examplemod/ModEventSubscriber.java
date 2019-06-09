@@ -1,12 +1,12 @@
 package io.github.cadiboo.examplemod;
 
 import com.google.common.base.Preconditions;
-import io.github.cadiboo.examplemod.block.ExampleTileEntityBlock;
+import io.github.cadiboo.examplemod.block.MiniModelBlock;
 import io.github.cadiboo.examplemod.config.ConfigHelper;
 import io.github.cadiboo.examplemod.config.ConfigHolder;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModItemGroups;
-import io.github.cadiboo.examplemod.tileentity.ExampleTileEntityTileEntity;
+import io.github.cadiboo.examplemod.tileentity.MiniModelTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -50,7 +50,7 @@ public final class ModEventSubscriber {
 				// This block has the IRON material, meaning it needs at least a stone pickaxe to break it. It is very similar to the Iron Block
 				setup(new Block(Block.Properties.create(Material.IRON, MaterialColor.IRON).hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)), "example_block"),
 				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to Furnace
-				setup(new ExampleTileEntityBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "example_tile_entity")
+				setup(new MiniModelBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "mini_model")
 		);
 		LOGGER.debug("Registered Blocks");
 	}
@@ -113,7 +113,7 @@ public final class ModEventSubscriber {
 		event.getRegistry().registerAll(
 				// We don't have a datafixer for our TileEntity, so we pass null into build
 				//TODO func_223042_a is called create
-				setup(TileEntityType.Builder.func_223042_a(ExampleTileEntityTileEntity::new, ModBlocks.EXAMPLE_TILE_ENTITY).build(null), "example_tile_entity")
+				setup(TileEntityType.Builder.func_223042_a(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model")
 		);
 		LOGGER.debug("Registered TileEntitys");
 	}

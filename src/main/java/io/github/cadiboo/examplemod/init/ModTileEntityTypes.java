@@ -11,6 +11,6 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(ExampleMod.MODID)
 public class ModTileEntityTypes {
 
-	public static final TileEntityType<?> EXAMPLE_TILE_ENTITY = ModUtil._null();
+	public static final TileEntityType<?> MINI_MODEL = ModUtil._null();
 
 }

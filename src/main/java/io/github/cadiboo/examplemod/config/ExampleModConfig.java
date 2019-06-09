@@ -18,6 +18,9 @@ public final class ExampleModConfig {
 	public static List<String> clientStringList;
 	public static DyeColor clientEnumDyeColor;
 
+	public static boolean modelTranslucency;
+	public static double modelScale;
+
 	// Server
 	public static boolean serverBoolean;
 	public static List<String> serverStringList;
