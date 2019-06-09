@@ -1,16 +1,18 @@
 package io.github.cadiboo.examplemod;
 
 import com.google.common.base.Preconditions;
+import io.github.cadiboo.examplemod.block.ExampleTileEntityBlock;
 import io.github.cadiboo.examplemod.config.ConfigHelper;
 import io.github.cadiboo.examplemod.config.ConfigHolder;
+import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModItemGroups;
-import io.github.cadiboo.examplemod.tileentity.TileEntityExampleTileEntity;
+import io.github.cadiboo.examplemod.tileentity.ExampleTileEntityTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -46,7 +48,9 @@ public final class ModEventSubscriber {
 				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to Iron Ore
 				setup(new Block(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F)), "example_ore"),
 				// This block has the IRON material, meaning it needs at least a stone pickaxe to break it. It is very similar to the Iron Block
-				setup(new Block(Block.Properties.create(Material.IRON, MaterialColor.IRON).hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)), "example_block")
+				setup(new Block(Block.Properties.create(Material.IRON, MaterialColor.IRON).hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)), "example_block"),
+				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to Furnace
+				setup(new ExampleTileEntityBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "example_tile_entity")
 		);
 		LOGGER.debug("Registered Blocks");
 	}
@@ -91,16 +95,16 @@ public final class ModEventSubscriber {
 
 			// Make the properties, and make it so that the item will be on our ItemGroup (CreativeTab)
 			final Item.Properties properties = new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP);
-			// Create the new ItemBlock with the block and it's properties
-			final ItemBlock itemBlock = new ItemBlock(block, properties);
-			// Setup the new ItemBlock with the block's registry name and register it
-			registry.register(setup(itemBlock, blockRegistryName));
+			// Create the new BlockItem with the block and it's properties
+			final BlockItem blockItem = new BlockItem(block, properties);
+			// Setup the new BlockItem with the block's registry name and register it
+			registry.register(setup(blockItem, blockRegistryName));
 		}
 		LOGGER.debug("Registered Items");
 	}
 
 	/**
-	 * This method will be called by Forge when it is time for the mod to register its EntityTypes.
+	 * This method will be called by Forge when it is time for the mod to register its TileEntityType.
 	 * This method will always be called after the Block and Item registry methods.
 	 */
 	@SubscribeEvent
@@ -108,7 +112,8 @@ public final class ModEventSubscriber {
 		// Register your TileEntities here if you have them
 		event.getRegistry().registerAll(
 				// We don't have a datafixer for our TileEntity, so we pass null into build
-				setup(TileEntityType.Builder.create(TileEntityExampleTileEntity::new).build(null), "example_tile_entity")
+				//TODO func_223042_a is called create
+				setup(TileEntityType.Builder.func_223042_a(ExampleTileEntityTileEntity::new, ModBlocks.EXAMPLE_TILE_ENTITY).build(null), "example_tile_entity")
 		);
 		LOGGER.debug("Registered TileEntitys");
 	}

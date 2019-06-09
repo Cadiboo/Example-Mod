@@ -1,7 +1,7 @@
 package io.github.cadiboo.examplemod.config;
 
 import io.github.cadiboo.examplemod.ExampleMod;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.DyeColor;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ final class ClientConfig {
 
 	final ForgeConfigSpec.BooleanValue clientBoolean;
 	final ForgeConfigSpec.ConfigValue<List<String>> clientStringList;
-	final ForgeConfigSpec.ConfigValue<EnumDyeColor> clientEnumDyeColor;
+	final ForgeConfigSpec.ConfigValue<DyeColor> clientEnumDyeColor;
 
 	ClientConfig(final ForgeConfigSpec.Builder builder) {
 		builder.push("general");
@@ -30,9 +30,9 @@ final class ClientConfig {
 				.translation(ExampleMod.MODID + ".config.clientStringList")
 				.define("clientStringList", new ArrayList<>());
 		clientEnumDyeColor = builder
-				.comment("An example EnumDyeColor in the client config")
-				.translation(ExampleMod.MODID + ".config.clientEnumColor")
-				.defineEnum("clientEnumDyeColor", EnumDyeColor.WHITE);
+				.comment("An example enum DyeColor in the client config")
+				.translation(ExampleMod.MODID + ".config.clientEnumDyeColor")
+				.defineEnum("clientEnumDyeColor", DyeColor.WHITE);
 		builder.pop();
 	}
 
