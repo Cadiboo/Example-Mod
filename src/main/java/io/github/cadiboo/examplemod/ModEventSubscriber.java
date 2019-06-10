@@ -112,8 +112,7 @@ public final class ModEventSubscriber {
 		// Register your TileEntities here if you have them
 		event.getRegistry().registerAll(
 				// We don't have a datafixer for our TileEntity, so we pass null into build
-				//TODO func_223042_a is called create
-				setup(TileEntityType.Builder.func_223042_a(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model")
+				setup(TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model")
 		);
 		LOGGER.debug("Registered TileEntitys");
 	}
