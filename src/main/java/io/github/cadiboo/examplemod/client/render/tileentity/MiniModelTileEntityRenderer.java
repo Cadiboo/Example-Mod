@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 /**
- * Renders a hologram of the surrounding blocks.
+ * Renders a model of the surrounding blocks.
  * This should really probably not be in an examplemod for beginners,
  * but I added comments to it so its all good
  *
@@ -80,7 +80,7 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 
 		GlStateManager.pushMatrix();
 
-		// Translate to render pos. The 0.5 is to translate into the centre of the block, rather than to the edge of it
+		// Translate to render pos. The 0.5 is to translate into the centre of the block, rather than to the corner of it
 		GlStateManager.translated(x + 0.5, y + 0.5, z + 0.5);
 
 		final double scale = ExampleModConfig.modelScale;
@@ -103,6 +103,8 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 	/**
 	 * This renderer is a global renderer.
 	 * This means that it will always render, even if the player is not able to see it's block.
+	 * This is useful for rendering larger models or dynamically sized models.
+	 * The Beacon's beam is also a global renderer
 	 */
 	@Override
 	public boolean isGlobalRenderer(final MiniModelTileEntity te) {
@@ -197,7 +199,8 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 			generator.setStatus(ChunkRenderTask.Status.COMPILING);
 			generator.setRegionRenderCacheBuilder(buffers);
 
-//		    final Vec3d vec3d = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getCachedProjectedView();
+			// TODO: when mappings update, func_215316_n->getActiveRenderInfo and func_216785_c->getProjectedView
+//		    final Vec3d vec3d = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
 			final Vec3d vec3d = Minecraft.getInstance().gameRenderer.func_215316_n().func_216785_c();
 
 			chunkRender.rebuildChunk((float) vec3d.x, (float) vec3d.y, (float) vec3d.z, generator);

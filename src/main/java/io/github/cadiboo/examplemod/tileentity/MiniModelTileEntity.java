@@ -11,6 +11,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 public class MiniModelTileEntity extends TileEntity {
 
 	// Constructor without hardcoded TileEntityType so that subclasses can use their own.
+	// Alternatively, subclasses can also override getType if a hardcoded type is used in a superclass' constructor
 	public MiniModelTileEntity(final TileEntityType<?> type) {
 		super(type);
 	}
@@ -23,7 +24,7 @@ public class MiniModelTileEntity extends TileEntity {
 	public AxisAlignedBB getRenderBoundingBox() {
 		// This, combined with isGlobalRenderer in the TileEntityRenderer makes it so that the
 		// render does not disappear if the player can't see the block
-		// This would be useful for rendering larger models or dynamic models
+		// This is useful for rendering larger models or dynamically sized models
 		return INFINITE_EXTENT_AABB;
 	}
 
