@@ -108,13 +108,13 @@ public final class ModEventSubscriber {
 	 * This method will always be called after the Block and Item registry methods.
 	 */
 	@SubscribeEvent
-	public static void onRegister(@Nonnull final RegistryEvent.Register<TileEntityType<?>> event) {
-		// Register your TileEntities here if you have them
+	public static void onRegisterTileEntityTypes(@Nonnull final RegistryEvent.Register<TileEntityType<?>> event) {
+		// Register your TileEntityTypes here if you have them
 		event.getRegistry().registerAll(
 				// We don't have a datafixer for our TileEntity, so we pass null into build
 				setup(TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model")
 		);
-		LOGGER.debug("Registered TileEntitys");
+		LOGGER.debug("Registered TileEntityTypes");
 	}
 
 	@Nonnull
