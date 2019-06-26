@@ -9,17 +9,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+/**
+ * Subscribe to events from the FORGE EventBus that should be handled on the PHYSICAL CLIENT side in this class
+ *
+ * @author Cadiboo
+ */
 @EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class ClientForgeEventSubscriber {
-
-	@SubscribeEvent
-	public static void onRegisterModels(final ModelRegistryEvent event) {
-
-		// Register TileEntity Renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(MiniModelTileEntity.class, new MiniModelTileEntityRenderer());
-
-		// Register Entity Renderers
-
-	}
 
 }

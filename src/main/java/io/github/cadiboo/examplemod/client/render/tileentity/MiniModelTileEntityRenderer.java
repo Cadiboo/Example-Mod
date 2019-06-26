@@ -34,7 +34,11 @@ import java.util.WeakHashMap;
 public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTileEntity> {
 
 	/**
-	 * We use a WeakHashMap so that we don't hold on to ExampleTileEntityTileEntitys after they have been removed
+	 * We use a WeakHashMap so that we don't hold on to MiniModelTileEntity instances after they have been removed from the world
+	 * If we held on to these references we could cause memory leaks.
+	 * This is because worlds that should be unloaded can't be garbage collected if we still have a reference to them through our TileEntity
+	 * A more efficient system using blockstate updates for cache invalidation & re-rendering could be used
+	 * However, this would be highly advanced and even less suitable for an example mod than this is.
 	 */
 	private final WeakHashMap<MiniModelTileEntity, RenderCache> map = new WeakHashMap<>();
 
@@ -199,9 +203,7 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 			generator.setStatus(ChunkRenderTask.Status.COMPILING);
 			generator.setRegionRenderCacheBuilder(buffers);
 
-			// TODO: when mappings update, func_215316_n->getActiveRenderInfo and func_216785_c->getProjectedView
-//		    final Vec3d vec3d = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
-			final Vec3d vec3d = Minecraft.getInstance().gameRenderer.func_215316_n().func_216785_c();
+			final Vec3d vec3d = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
 
 			chunkRender.rebuildChunk((float) vec3d.x, (float) vec3d.y, (float) vec3d.z, generator);
 			// rebuildChunk increments this, we don't want to increment it
