@@ -1,6 +1,6 @@
 {
 	"parent": "block/block",
 	"textures": {
-		"particle": "examplemod:block/example_tile_entity"
+		"particle": "examplemod:block/mini_model"
 	}
 }

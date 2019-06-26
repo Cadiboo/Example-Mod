@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "examplemod:block/example_tile_entity"
+        "all": "examplemod:block/mini_model"
     }
 }
