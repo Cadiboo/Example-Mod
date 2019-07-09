@@ -20,12 +20,13 @@ import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
 public final class ModCreativeTabs {
 
 	/**
-	 * instantiate creative tabs
+	 * Instantiate creative tabs
 	 */
-	public static final CustomCreativeTab CREATIVE_TAB = new CustomCreativeTab(MOD_ID, true, () ->new ItemStack(ModBlocks.EXAMPLE_BLOCK));
+	public static final CustomCreativeTab CREATIVE_TAB = new CustomCreativeTab(MOD_ID, true, () -> new ItemStack(ModBlocks.EXAMPLE_BLOCK));
 
 	/**
-	 * This class is used for an extra tab in the creative inventory. Many mods like to group their special items and blocks in a dedicated tab although it is also perfectly acceptable to put them in the vanilla tabs where it makes sense.
+	 * This class is used for an extra tab in the creative inventory.
+	 * Many mods like to group their special items and blocks in a dedicated tab although it is also perfectly acceptable to put them in the vanilla tabs where it makes sense.
 	 */
 	public static class CustomCreativeTab extends CreativeTabs {
 
@@ -39,7 +40,7 @@ public final class ModCreativeTabs {
 		}
 
 		/**
-		 * gets the {@link ItemStack} to display for the tab's icon
+		 * Gets the {@link ItemStack} to display for the tab's icon
 		 */
 		@SideOnly(Side.CLIENT)
 		@Override
