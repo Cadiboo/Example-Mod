@@ -3,9 +3,10 @@ package io.github.cadiboo.examplemod.creativetab;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.registry.GameRegistry.ItemStackHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.function.Supplier;
 
 import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
 
@@ -16,34 +17,25 @@ import static io.github.cadiboo.examplemod.util.ModReference.MOD_ID;
  * @author jabelar
  * @author Cadiboo
  */
-
 public final class ModCreativeTabs {
-
-	public static final String TAB_ICON_ITEM_REGISTRY_NAME = MOD_ID + ":" + "example_block";
-
-	@ItemStackHolder(value = TAB_ICON_ITEM_REGISTRY_NAME)
-	public static final ItemStack TAB_ICON_ITEMSTACK = null;
 
 	/**
 	 * instantiate creative tabs
 	 */
-	public static final CustomCreativeTab CREATIVE_TAB = new CustomCreativeTab(MOD_ID, true) {
-		@Override
-		public ItemStack createIcon() {
-			return TAB_ICON_ITEMSTACK;
-		}
-	};
+	public static final CustomCreativeTab CREATIVE_TAB = new CustomCreativeTab(MOD_ID, true, () ->new ItemStack(ModBlocks.EXAMPLE_BLOCK));
 
 	/**
 	 * This class is used for an extra tab in the creative inventory. Many mods like to group their special items and blocks in a dedicated tab although it is also perfectly acceptable to put them in the vanilla tabs where it makes sense.
 	 */
-	public abstract static class CustomCreativeTab extends CreativeTabs {
+	public static class CustomCreativeTab extends CreativeTabs {
 
 		private final boolean hasSearchBar;
+		private final Supplier<ItemStack> iconSupplier;
 
-		public CustomCreativeTab(final String name, final boolean hasSearchBar) {
+		public CustomCreativeTab(final String name, final boolean hasSearchBar, final Supplier<ItemStack> iconSupplier) {
 			super(name);
 			this.hasSearchBar = hasSearchBar;
+			this.iconSupplier = iconSupplier;
 		}
 
 		/**
@@ -51,7 +43,9 @@ public final class ModCreativeTabs {
 		 */
 		@SideOnly(Side.CLIENT)
 		@Override
-		abstract public ItemStack createIcon();
+		public ItemStack createIcon() {
+			return iconSupplier.get();
+		}
 
 		@Override
 		public String getBackgroundImageName() {
