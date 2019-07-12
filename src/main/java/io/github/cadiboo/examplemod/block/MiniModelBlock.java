@@ -33,12 +33,20 @@ public class MiniModelBlock extends Block {
 		return ModTileEntityTypes.MINI_MODEL.create();
 	}
 
+	/**
+	 * @deprecated Call via {@link BlockState#isSolid()} whenever possible.
+	 * Implementing/overriding is fine.
+	 */
 	@Override
 	public boolean isSolid(final BlockState state) {
 		// This prevents xraying through the world and allows light to go through this block.
 		return false;
 	}
 
+	/**
+	 * @deprecated Call via {@link BlockState#getCollisionShape(IBlockReader, BlockPos, ISelectionContext)} whenever possible.
+	 * Implementing/overriding is fine.
+	 */
 	@Override
 	public VoxelShape getCollisionShape(final BlockState state, final IBlockReader reader, final BlockPos pos, final ISelectionContext context) {
 		// Allow entities to walk through the model

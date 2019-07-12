@@ -22,7 +22,6 @@ public final class ClientModEventSubscriber {
 
 	private static final Logger LOGGER = LogManager.getLogger(ExampleMod.MODID + " Client Mod Event Subscriber");
 
-
 	/**
 	 * This method will be called by Forge when it is time for the mod to do its client-side setup
 	 * This method will always be called after the Registry events.
