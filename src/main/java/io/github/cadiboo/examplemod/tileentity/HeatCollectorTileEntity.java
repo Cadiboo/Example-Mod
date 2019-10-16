@@ -154,14 +154,15 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	 */
 	@Override
 	public void onDataPacket(final NetworkManager net, final SUpdateTileEntityPacket pkt) {
-		this.energy.setEnergy(pkt.getNbtCompound().getInt("energy"));
+		this.energy.setEnergy(pkt.getNbtCompound().getInt(ENERGY_TAG));
 	}
 
 	@Override
 	public void onLoad() {
 		// We set this in onLoad instead of the constructor so that TileEntities
 		// constructed from NBT (saved tile entities) have this set to the proper value
-		lastSyncedEnergy = energy.getEnergyStored();
+		if (world != null && !world.isRemote)
+			lastSyncedEnergy = energy.getEnergyStored();
 	}
 
 	/**
@@ -170,8 +171,8 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	@Override
 	public void read(final CompoundNBT compound) {
 		super.read(compound);
-		this.inventory.deserializeNBT(compound.getCompound("inventory"));
-		this.energy.setEnergy(compound.getInt("energy"));
+		this.inventory.deserializeNBT(compound.getCompound(INVENTORY_TAG));
+		this.energy.setEnergy(compound.getInt(ENERGY_TAG));
 	}
 
 	/**
@@ -193,8 +194,20 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	@Nullable
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		final CompoundNBT tag = new CompoundNBT();
-		tag.putInt("energy", this.energy.getEnergyStored());
+		tag.putInt(ENERGY_TAG, this.energy.getEnergyStored());
 		return new SUpdateTileEntityPacket(this.pos, 0, tag);
+	}
+
+	/**
+	 * Get an NBT compound to sync to the client with SPacketChunkData, used for initial loading of the
+	 * chunk or when many blocks change at once.
+	 * This compound comes back to you client-side in {@link #handleUpdateTag}
+	 * The default implementation ({@link TileEntity#handleUpdateTag}) calls {@link #writeInternal)}
+	 * which doesn't save any of our extra data so we override it to call {@link #write} instead
+	 */
+	@Nonnull
+	public CompoundNBT getUpdateTag() {
+		return this.write(new CompoundNBT());
 	}
 
 	@Nonnull
