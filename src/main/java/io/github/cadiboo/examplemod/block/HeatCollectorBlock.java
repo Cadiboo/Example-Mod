@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,6 +63,25 @@ public class HeatCollectorBlock extends Block {
 	@Override
 	public VoxelShape getShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos, final ISelectionContext context) {
 		return SHAPE;
+	}
+
+	/**
+	 * Called on the logical server when a BlockState with a TileEntity is replaced by another BlockState
+	 * @deprecated Call via {@link BlockState#onReplaced(World, BlockPos, BlockState, boolean)}
+	 * Implementing/overriding is fine.
+	 */
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (state.getBlock() != newState.getBlock()) {
+			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			if (tileEntity instanceof HeatCollectorTileEntity) {
+				final ItemStackHandler inventory = ((HeatCollectorTileEntity) tileEntity).inventory;
+				for (int slot = 0; slot < inventory.getSlots(); ++slot) {
+					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
+				}
+			}
+		}
+		super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	/**
