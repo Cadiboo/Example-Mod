@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -22,11 +21,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -70,20 +69,6 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 		super(ModTileEntityTypes.HEAT_COLLECTOR);
 	}
 
-	/**
-	 * Copied from {@link AbstractFurnaceTileEntity#getBurnTime(ItemStack)}
-	 */
-	private static int getBurnTime(ItemStack stack) {
-		if (stack.isEmpty()) {
-			return 0;
-		} else {
-			int burnTime = stack.getBurnTime();
-			if (burnTime == -1)
-				burnTime = AbstractFurnaceTileEntity.getBurnTimes().getOrDefault(stack.getItem(), 0);
-			return ForgeEventFactory.getItemBurnTime(stack, burnTime);
-		}
-	}
-
 	@Override
 	public void tick() {
 
@@ -96,7 +81,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 
 		final ItemStack fuelStack = this.inventory.getStackInSlot(0);
 		if (!fuelStack.isEmpty()) {
-			int energyToRecieve = getBurnTime(fuelStack);
+			int energyToRecieve = ForgeHooks.getBurnTime(fuelStack);
 			// Only use the stack if we can receive 100% of the energy from it
 			if (energy.receiveEnergy(energyToRecieve, true) == energyToRecieve) {
 				energy.receiveEnergy(energyToRecieve, false);
