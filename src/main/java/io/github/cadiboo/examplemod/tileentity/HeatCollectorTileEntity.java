@@ -5,6 +5,7 @@ import io.github.cadiboo.examplemod.container.HeatCollectorContainer;
 import io.github.cadiboo.examplemod.energy.SettableEnergyStorage;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -37,6 +38,9 @@ import javax.annotation.Nullable;
  * @author Cadiboo
  */
 public class HeatCollectorTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+
+	private static final String INVENTORY_TAG = "inventory";
+	private static final String ENERGY_TAG = "energy";
 
 	// Cache all the directions instead of calling Direction.values()
 	// each time (because each call creates a new Direction[] which is wasteful)
@@ -118,20 +122,17 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 		// If the energy has changed.
 		if (lastSyncedEnergy != energy.getEnergyStored()) {
 
-			// This code is commented out since our energy is only ever used client-side
-			// by our GUI and we use our Container to sync energy in the GUI.
+			// "markDirty" tells vanilla that the chunk containing the tile entity has
+			// changed and means the game will save the chunk to disk later.
+			this.markDirty();
 
-//			// "markDirty" tells vanilla that the chunk containing the tile entity has
-//			// changed and means the game will save the chunk to disk later.
-//			this.markDirty();
-//
-//			// Notify clients of a block update.
-//			// This will result in the packet from getUpdatePacket being sent to the client
-//			// and our energy being synced.
-//			final BlockState blockState = this.getBlockState();
-//			// Flag 2: Send the change to clients
-//			world.notifyBlockUpdate(pos, blockState, blockState, 2);
-//
+			// Notify clients of a block update.
+			// This will result in the packet from getUpdatePacket being sent to the client
+			// and our energy being synced.
+			final BlockState blockState = this.getBlockState();
+			// Flag 2: Send the change to clients
+			world.notifyBlockUpdate(pos, blockState, blockState, 2);
+
 			// Update the last synced energy to the current energy
 			lastSyncedEnergy = energy.getEnergyStored();
 		}
@@ -153,9 +154,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	 */
 	@Override
 	public void onDataPacket(final NetworkManager net, final SUpdateTileEntityPacket pkt) {
-		// This code is commented out since our energy is only ever used client-side
-		// by our GUI and we use our Container to sync energy in the GUI.
-//		this.energy.setEnergy(pkt.getNbtCompound().getInt("energy"));
+		this.energy.setEnergy(pkt.getNbtCompound().getInt("energy"));
 	}
 
 	@Override
@@ -182,8 +181,8 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	@Override
 	public CompoundNBT write(final CompoundNBT compound) {
 		super.write(compound);
-		compound.put("inventory", this.inventory.serializeNBT());
-		compound.putInt("energy", this.energy.getEnergyStored());
+		compound.put(INVENTORY_TAG, this.inventory.serializeNBT());
+		compound.putInt(ENERGY_TAG, this.energy.getEnergyStored());
 		return compound;
 	}
 
@@ -193,12 +192,9 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	 */
 	@Nullable
 	public SUpdateTileEntityPacket getUpdatePacket() {
-		// This code is commented out since our energy is only ever used client-side
-		// by our GUI and we use our Container to sync energy in the GUI.
-//		final CompoundNBT tag = new CompoundNBT();
-//		tag.putInt("energy", this.energy.getEnergyStored());
-//		return new SUpdateTileEntityPacket(this.pos, 0, tag);
-		return null;
+		final CompoundNBT tag = new CompoundNBT();
+		tag.putInt("energy", this.energy.getEnergyStored());
+		return new SUpdateTileEntityPacket(this.pos, 0, tag);
 	}
 
 	@Nonnull

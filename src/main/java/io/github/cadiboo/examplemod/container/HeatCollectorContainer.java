@@ -4,19 +4,16 @@ import io.github.cadiboo.examplemod.energy.SettableEnergyStorage;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
 import io.github.cadiboo.examplemod.tileentity.HeatCollectorTileEntity;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SWindowPropertyPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
@@ -27,7 +24,9 @@ import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 
-/**
+/*
+ The following is commented out because we handle energy syncing in our HeatCollectorTileEntity
+ and because container data syncing like this only works for shorts, not full integers
  * Energy is synced with
  * Server: Each tick {@link #detectAndSendChanges()} is called ({@link ServerPlayerEntity#tick()})
  * Server: The (tracked) value of the tile's energy is updated ({@link #updateProgressBar(int, int)})
@@ -36,7 +35,9 @@ import javax.annotation.Nonnull;
  * Client: The sync packet is received ({@link ClientPlayNetHandler#handleWindowProperty(SWindowPropertyPacket)})
  * and the tracked value of is updated ({@link Container#updateProgressBar(int, int)})
  * Client: The tile's energy is set to the new value ({@link EnergyReferenceHolder#set(int)})
- *
+ */
+
+/**
  * @author Cadiboo
  */
 public class HeatCollectorContainer extends Container {
@@ -53,8 +54,9 @@ public class HeatCollectorContainer extends Container {
 		canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 		this.tileEntity = tileEntity;
 
-		// Add tracking for energy server-side (Syncs to client when it changes)
-		this.trackInt(IntReferenceHolder.single()).set(tileEntity.energy.getEnergyStored());
+		// The following code is commented out because we handle energy syncing in our HeatCollectorTileEntity
+//		// Add tracking for energy server-side (Syncs to client when it changes)
+//		this.trackInt(IntReferenceHolder.single()).set(tileEntity.energy.getEnergyStored());
 
 		addSlots(tileEntity, playerInventory);
 
@@ -70,8 +72,9 @@ public class HeatCollectorContainer extends Container {
 		this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 		this.tileEntity = tileEntity;
 
-		// Add tracking for energy client-side (Updates value when it changes)
-		this.trackInt(new EnergyReferenceHolder(tileEntity.energy));
+		// The following code is commented out because we handle energy syncing in our HeatCollectorTileEntity
+//		// Add tracking for energy client-side (Updates value when it changes)
+//		this.trackInt(new EnergyReferenceHolder(tileEntity.energy));
 
 		addSlots(tileEntity, playerInventory);
 	}
@@ -130,8 +133,9 @@ public class HeatCollectorContainer extends Container {
 
 	@Override
 	public void detectAndSendChanges() {
-		// Update energy server-side (Syncs to client when it changes)
-		updateProgressBar(0, tileEntity.energy.getEnergyStored());
+		// The following code is commented out because we handle energy syncing in our HeatCollectorTileEntity
+//		// Update energy server-side (Syncs to client when it changes)
+//		updateProgressBar(0, tileEntity.energy.getEnergyStored());
 		super.detectAndSendChanges();
 	}
 
@@ -179,6 +183,9 @@ public class HeatCollectorContainer extends Container {
 		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.HEAT_COLLECTOR);
 	}
 
+	/**
+	 * An {@link IntReferenceHolder} backed by a {@link SettableEnergyStorage}
+	 */
 	private static class EnergyReferenceHolder extends IntReferenceHolder {
 
 		private final SettableEnergyStorage energy;
