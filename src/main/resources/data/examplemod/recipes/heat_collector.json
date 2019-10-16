@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"i i",
+		" o ",
+		"i i"
+	],
+	"key": {
+		"i": {
+			"item": "minecraft:iron_block"
+		},
+		"o": {
+			"item": "minecraft:obsidian"
+		}
+	},
+	"result": {
+		"item": "examplemod:heat_collector"
+	}
+}
