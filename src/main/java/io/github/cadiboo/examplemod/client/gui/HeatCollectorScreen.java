@@ -55,24 +55,26 @@ public class HeatCollectorScreen extends ContainerScreen<HeatCollectorContainer>
 		this.minecraft.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
 		int startX = this.guiLeft;
 		int startY = this.guiTop;
+
+		// Screen#blit draws a part of the current texture (assumed to be 256x256) to the screen
+		// The parameters are (x, y, u, v, width, height)
+
 		this.blit(startX, startY, 0, 0, this.xSize, this.ySize);
 
 		final HeatCollectorTileEntity tileEntity = container.tileEntity;
 
 		final SettableEnergyStorage energy = tileEntity.energy;
 		final int energyStored = energy.getEnergyStored();
-		// Screen#blit draws a part of the current texture (assumed to be 256x256) to the screen
-		// The parameters are (x, y, u, v, width, height)
-		if (energyStored > 0) {
+		if (energyStored > 0) { // Draw energy bar
 			final int energyProgress = Math.round((float) energyStored / energy.getMaxEnergyStored() * 65);
 			this.blit(
-					startX + 152, startY + 10,
+					startX + 152, startY + 10 + 65 - energyProgress,
 					176, 14,
 					14, energyProgress
 			);
 		}
 
-		if (!tileEntity.inventory.getStackInSlot(0).isEmpty())
+		if (!tileEntity.inventory.getStackInSlot(0).isEmpty()) // Draw flames
 			this.blit(
 					startX + 81, startY + 58,
 					176, 0,
