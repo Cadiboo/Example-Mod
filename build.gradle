@@ -1,22 +1,16 @@
 // Forge buildscript
 buildscript {
-
-	// Buildscript repositiories
 	repositories {
-
 		// Forge Maven
 		maven { url = 'https://files.minecraftforge.net/maven' }
 		// Other useful Mavens
 		jcenter()
 		mavenCentral()
-
 	}
-
 	// Buildscript dependency on Forge Gradle
 	dependencies {
 		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
 	}
-
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -28,27 +22,23 @@ version = modMinecraftVersion + "-" + modVersion
 group = modGroup
 archivesBaseName = modFileName
 
-// Java 8
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 repositories {
-
 	// Put remote maven repositories here
-
 }
 
 minecraft {
-
 	// The mappings can be changed at any time, and must be in the following format.
-	// snapshot_YYYYMMDD   snapshot are built nightly.
-	// stable_#            stables are built at the discretion of the MCP team.
+	// snapshot_YYYYMMDD   Snapshot are built nightly.
+	// stable_#            Stables are built at the discretion of the MCP team.
 	// Use non-default mappings at your own risk. they may not always work.
-	// simply re-run your setup task after changing the mappings to update your workspace.
+	// Simply re-run your setup task after changing the mappings to update your workspace.
 	mappings channel: modMcpMappingsChannel, version: modMcpMappingsVersion
 
 	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-//	accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
+	// accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
 	// Default run configurations.
 	// These can be tweaked, removed, or duplicated as needed.
@@ -76,7 +66,7 @@ minecraft {
 			workingDirectory project.file('run')
 
 			// Recommended logging data for a userdev environment
-			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
 
 			// Recommended logging level for the console
 			property 'forge.logging.console.level', 'debug'
@@ -90,41 +80,57 @@ minecraft {
 				}
 			}
 		}
-	}
 
+		data {
+			workingDirectory project.file('run')
+
+			// Recommended logging data for a userdev environment
+			property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+
+			// Recommended logging level for the console
+			property 'forge.logging.console.level', 'debug'
+
+			args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+
+			mods {
+				examplemod {
+					// Main sources (everything that goes in your final compiled mod. From /src/main/)
+					source sourceSets.main
+//					// Test sources (debugging, unit tests. From /src/test/)
+//					source sourceSets.test
+				}
+			}
+		}
+	}
 }
 
 dependencies {
-
 	// Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
 	// that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
 	// The userdev artifact is a special name and will get all sorts of transformations applied to it.
 	minecraft "net.minecraftforge:forge:" + modMinecraftVersion + "-" + modForgeVersion
 
-	// you may put jars on which you depend on in ./libs
-	// or you may define them like so..
-	//compile "some.group:artifact:version:classifier"
-	//compile "some.group:artifact:version"
+	// You may put jars on which you depend on in ./libs or you may define them like so..
+	// compile "some.group:artifact:version:classifier"
+	// compile "some.group:artifact:version"
 
-	// real examples
-	//compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-	//compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+	// Real examples
+	// compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+	// compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
 
-	// the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-	//provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+	// The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+	// provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
 	// These dependencies get remapped to your current MCP mappings
-	//deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+	// deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
-	// for more info...
+	// For more info...
 	// http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
 	// http://www.gradle.org/docs/current/userguide/dependency_management.html
 
 }
 
-// Jar Manifest
 jar {
-
 	manifest {
 		attributes([
 				"Specification-Title"     : modId,
@@ -135,9 +141,8 @@ jar {
 				"Implementation-Vendor"   : modGroup,
 				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
 				"Signing-Fingerprint"     : project.hasProperty('signSHA1') ? project.findProperty('signSHA1') : "unsigned"
-		],)
+		])
 	}
-
 }
 
 // Example configuration to allow publishing using the maven-publish task
@@ -166,7 +171,6 @@ publishing {
 import net.minecraftforge.gradle.common.task.SignJar
 
 task signJar(type: SignJar, dependsOn: jar) {
-
 	// Skips if the keyStore property is missing.
 	onlyIf {
 		project.hasProperty('keyStore')
@@ -180,7 +184,6 @@ task signJar(type: SignJar, dependsOn: jar) {
 	keyPass = project.findProperty('keyStoreKeyPass')
 	inputFile = jar.archivePath
 	outputFile = jar.archivePath
-
 }
 
 // Runs the signJar task automatically when build is run.
@@ -188,7 +191,6 @@ build.dependsOn signJar
 
 // Process resources on build
 processResources {
-
 	// This will ensure that this task is redone when the versions change.
 	inputs.property 'version', project.version
 
@@ -204,7 +206,6 @@ processResources {
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'META-INF/mods.toml'
 	}
-
 }
 
 // Create Sources Jar
