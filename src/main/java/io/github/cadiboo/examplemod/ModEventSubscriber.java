@@ -1,16 +1,21 @@
 package io.github.cadiboo.examplemod;
 
 import com.google.common.base.Preconditions;
+import io.github.cadiboo.examplemod.block.HeatCollectorBlock;
 import io.github.cadiboo.examplemod.block.MiniModelBlock;
 import io.github.cadiboo.examplemod.config.ConfigHelper;
 import io.github.cadiboo.examplemod.config.ConfigHolder;
+import io.github.cadiboo.examplemod.container.HeatCollectorContainer;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModItemGroups;
+import io.github.cadiboo.examplemod.tileentity.HeatCollectorTileEntity;
 import io.github.cadiboo.examplemod.tileentity.MiniModelTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
@@ -19,6 +24,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -49,8 +55,10 @@ public final class ModEventSubscriber {
 				setup(new Block(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F)), "example_ore"),
 				// This block has the IRON material, meaning it needs at least a stone pickaxe to break it. It is very similar to the Iron Block
 				setup(new Block(Block.Properties.create(Material.IRON, MaterialColor.IRON).hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)), "example_block"),
-				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to Furnace
-				setup(new MiniModelBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "mini_model")
+				// This block has the MISCELLANEOUS material. It is very similar to the Redstone Torch
+				setup(new MiniModelBlock(Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(3.5F).lightValue(13)), "mini_model"),
+				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to the Furnace
+				setup(new HeatCollectorBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "heat_collector")
 		);
 		LOGGER.debug("Registered Blocks");
 	}
@@ -105,11 +113,28 @@ public final class ModEventSubscriber {
 		// Register your TileEntityTypes here if you have them
 		event.getRegistry().registerAll(
 				// We don't have a datafixer for our TileEntity, so we pass null into build
-				setup(TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model")
+				setup(TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model"),
+				setup(TileEntityType.Builder.create(HeatCollectorTileEntity::new, ModBlocks.HEAT_COLLECTOR).build(null), "heat_collector")
 		);
 		LOGGER.debug("Registered TileEntityTypes");
 	}
 
+	/**
+	 * This method will be called by Forge when it is time for the mod to register its ContainerTypes.
+	 * This method will always be called after the Block and Item registry methods.
+	 */
+	@SubscribeEvent
+	public static void onRegisterContainerTypes(@Nonnull final RegistryEvent.Register<ContainerType<?>> event) {
+		// Register your ContainerTypes here if you have them
+		event.getRegistry().registerAll(
+				setup(new ContainerType<>((IContainerFactory<Container>) HeatCollectorContainer::new), "heat_collector")
+		);
+		LOGGER.debug("Registered ContainerTypes");
+	}
+
+	/**
+	 * This method will be called by Forge when a config changes.
+	 */
 	@SubscribeEvent
 	public static void onModConfigEvent(final ModConfig.ModConfigEvent event) {
 		final ModConfig config = event.getConfig();
@@ -125,6 +150,7 @@ public final class ModEventSubscriber {
 
 	/**
 	 * Performs setup on a registry entry
+	 *
 	 * @param name The path of the entry's name. Used to make a name who's domain is our mod's modid
 	 */
 	@Nonnull
@@ -135,6 +161,7 @@ public final class ModEventSubscriber {
 
 	/**
 	 * Performs setup on a registry entry
+	 *
 	 * @param registryName The full registry name of the entry
 	 */
 	@Nonnull

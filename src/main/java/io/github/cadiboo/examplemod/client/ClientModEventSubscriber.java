@@ -1,12 +1,14 @@
 package io.github.cadiboo.examplemod.client;
 
 import io.github.cadiboo.examplemod.ExampleMod;
+import io.github.cadiboo.examplemod.client.gui.HeatCollectorScreen;
 import io.github.cadiboo.examplemod.client.render.tileentity.MiniModelTileEntityRenderer;
+import io.github.cadiboo.examplemod.init.ModContainerTypes;
 import io.github.cadiboo.examplemod.tileentity.MiniModelTileEntity;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +39,10 @@ public final class ClientModEventSubscriber {
 		// Register Entity Renderers
 //		RenderingRegistry.registerEntityRenderingHandler(YourEntity.class, YourEntityRenderer::new);
 //		LOGGER.debug("Registered Entity Renderers");
+
+		// Register ContainerType Screens
+		ScreenManager.registerFactory(ModContainerTypes.HEAT_COLLECTOR, HeatCollectorScreen::new);
+		LOGGER.debug("Registered ContainerType Screens");
 
 	}
 

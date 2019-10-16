@@ -12,5 +12,6 @@ import net.minecraftforge.registries.ObjectHolder;
 public final class ModBlocks {
 
 	public static final Block MINI_MODEL = ModUtil._null();
+	public static final Block HEAT_COLLECTOR = ModUtil._null();
 
 }

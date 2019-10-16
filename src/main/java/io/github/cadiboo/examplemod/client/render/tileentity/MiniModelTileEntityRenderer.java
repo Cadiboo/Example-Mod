@@ -1,28 +1,24 @@
 package io.github.cadiboo.examplemod.client.render.tileentity;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.cadiboo.examplemod.client.render.MiniModel;
 import io.github.cadiboo.examplemod.config.ExampleModConfig;
 import io.github.cadiboo.examplemod.tileentity.MiniModelTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.chunk.ChunkRender;
-import net.minecraft.client.renderer.chunk.ChunkRenderTask;
 import net.minecraft.client.renderer.chunk.CompiledChunk;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.WeakHashMap;
+
+import static io.github.cadiboo.examplemod.client.render.MiniModel.BLOCK_RENDER_LAYERS;
 
 /**
  * Renders a model of the surrounding blocks.
@@ -34,36 +30,16 @@ import java.util.WeakHashMap;
 public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTileEntity> {
 
 	/**
-	 * We use a WeakHashMap so that we don't hold on to MiniModelTileEntity instances after they have been removed from the world
-	 * If we held on to these references we could cause memory leaks.
-	 * This is because worlds that should be unloaded can't be garbage collected if we still have a reference to them through our TileEntity
-	 * A more efficient system using blockstate updates for cache invalidation & re-rendering could be used
-	 * However, this would be highly advanced and even less suitable for an example mod than this is.
-	 */
-	private final WeakHashMap<MiniModelTileEntity, RenderCache> map = new WeakHashMap<>();
-
-	/**
 	 * Render our TileEntity
 	 */
 	@Override
 	public void render(final MiniModelTileEntity tileEntityIn, final double x, final double y, final double z, final float partialTicks, final int destroyStage) {
 		super.render(tileEntityIn, x, y, z, partialTicks, destroyStage);
-		if (!map.containsKey(tileEntityIn)) {
-			// Calculate the render if it doesn't exist
-			final World world = tileEntityIn.getWorld();
-			if (world == null) {
-				return;
-			}
-			map.put(tileEntityIn, RenderCache.from(world, tileEntityIn.getPos()));
-		} else {
-			// Recalculate the render if its older than 5 seconds
-			final RenderCache cachedRender = map.get(tileEntityIn);
-			final long currentTimeMillis = System.currentTimeMillis();
-			if (currentTimeMillis - cachedRender.timeLastUpdated > 5_000) {
-				cachedRender.timeLastUpdated = currentTimeMillis;
-				cachedRender.rebuild();
-			}
-		}
+
+		final MiniModel miniModel = tileEntityIn.miniModel;
+
+		if (miniModel == null)
+			return;
 
 		// Setup correct GL state
 		this.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
@@ -94,8 +70,7 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 		GlStateManager.translated(-8, -8, -8);
 
 		// Render the buffers
-		final RenderCache renderCache = map.get(tileEntityIn);
-		renderChunkBuffers(renderCache.regionRenderCacheBuilder, renderCache.generator.getCompiledChunk());
+		renderChunkBuffers(miniModel.regionRenderCacheBuilder, miniModel.generator.getCompiledChunk());
 
 		GlStateManager.popMatrix();
 
@@ -115,13 +90,18 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 		return true;
 	}
 
+	/**
+	 * Loops through every non-empty {@link BufferBuilder} in buffers and renders the buffer without resetting it
+	 *
+	 * @param buffers       The {@link RegionRenderCacheBuilder} to get {@link BufferBuilder}s from
+	 * @param compiledChunk The {@link CompiledChunk} to use to check if a layer has any rendered blocks
+	 */
 	private void renderChunkBuffers(final RegionRenderCacheBuilder buffers, final CompiledChunk compiledChunk) {
-		final BlockRenderLayer[] blockRenderLayers = BlockRenderLayer.values();
-		final int length = blockRenderLayers.length;
+		final int length = BLOCK_RENDER_LAYERS.length;
 		// Render each buffer that has been used
-		for (int ordinal = 0; ordinal < length; ++ordinal) {
-			if (!compiledChunk.isLayerEmpty(blockRenderLayers[ordinal])) {
-				drawBufferWithoutResetting(buffers.getBuilder(ordinal));
+		for (int layerOrdinal = 0; layerOrdinal < length; ++layerOrdinal) {
+			if (!compiledChunk.isLayerEmpty(BLOCK_RENDER_LAYERS[layerOrdinal])) {
+				drawBufferWithoutResetting(buffers.getBuilder(layerOrdinal));
 			}
 		}
 	}
@@ -155,67 +135,6 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 
 		// Commented out - don't reset the buffer
 //		bufferBuilderIn.reset();
-	}
-
-	private static class RenderCache {
-
-		private final ChunkRender chunkRender;
-		// We only create one of these per cache, we reset it each time we rebuild
-		private final RegionRenderCacheBuilder regionRenderCacheBuilder;
-		private ChunkRenderTask generator;
-		private long timeLastUpdated;
-
-		private RenderCache(final ChunkRender chunkRender, final RegionRenderCacheBuilder regionRenderCacheBuilder) {
-			this.chunkRender = chunkRender;
-			this.regionRenderCacheBuilder = regionRenderCacheBuilder;
-			rebuild();
-			this.timeLastUpdated = System.currentTimeMillis();
-		}
-
-		private static RenderCache from(final World world, final BlockPos pos) {
-			final ChunkRender chunkRender = new ChunkRender(world, Minecraft.getInstance().worldRenderer);
-			// We want to render everything in a 16x16x16 radius, with the centre being our TileEntity
-			chunkRender.setPosition(pos.getX() - 8, pos.getY() - 8, pos.getZ() - 8);
-
-			final RegionRenderCacheBuilder regionRenderCacheBuilder = new RegionRenderCacheBuilder();
-
-			return new RenderCache(chunkRender, regionRenderCacheBuilder);
-		}
-
-		/**
-		 * (re)build the render
-		 */
-		private void rebuild() {
-			final ChunkRender chunkRender = this.chunkRender;
-			final RegionRenderCacheBuilder buffers = this.regionRenderCacheBuilder;
-
-			final ChunkRenderTask generator = chunkRender.makeCompileTaskChunk();
-			this.generator = generator;
-
-			final BlockRenderLayer[] blockRenderLayers = BlockRenderLayer.values();
-			final int length = blockRenderLayers.length;
-			// Reset regionRenderCacheBuilder
-			for (int ordinal = 0; ordinal < length; ++ordinal) {
-				buffers.getBuilder(ordinal).reset();
-			}
-
-			// Setup generator
-			generator.setStatus(ChunkRenderTask.Status.COMPILING);
-			generator.setRegionRenderCacheBuilder(buffers);
-
-			final Vec3d vec3d = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
-
-			chunkRender.rebuildChunk((float) vec3d.x, (float) vec3d.y, (float) vec3d.z, generator);
-			// rebuildChunk increments this, we don't want to increment it
-			--ChunkRender.renderChunksUpdated;
-
-			// Set the translation of each buffer back to 0
-			for (int ordinal = 0; ordinal < length; ++ordinal) {
-				buffers.getBuilder(ordinal).setTranslation(0, 0, 0);
-			}
-
-		}
-
 	}
 
 }

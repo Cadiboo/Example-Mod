@@ -1,0 +1,7 @@
+{
+	"variants": {
+		"": {
+			"model": "examplemod:block/heat_collector"
+		}
+	}
+}

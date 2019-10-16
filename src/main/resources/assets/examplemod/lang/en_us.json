@@ -2,6 +2,9 @@
 	"block.examplemod.example_ore": "Example Ore",
 	"block.examplemod.example_block": "Example Block",
 	"block.examplemod.mini_model": "Mini Model",
+	"block.examplemod.heat_collector": "Heat Collector",
 	"item.examplemod.example_item": "Example Item",
-	"itemGroup.examplemod": "Example Mod"
+	"itemGroup.examplemod": "Example Mod",
+	"gui.examplemod.refresh_mini_model": "Refresh Mini Model",
+	"gui.examplemod.energy": "Energy %s"
 }

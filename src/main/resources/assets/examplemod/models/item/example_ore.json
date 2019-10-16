@@ -1,6 +1,3 @@
 {
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "examplemod:block/example_ore"
-	}
+	"parent": "examplemod:block/example_ore"
 }

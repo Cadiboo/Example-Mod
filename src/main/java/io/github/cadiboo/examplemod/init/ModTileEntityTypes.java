@@ -9,8 +9,10 @@ import net.minecraftforge.registries.ObjectHolder;
  * @author Cadiboo
  */
 @ObjectHolder(ExampleMod.MODID)
-public class ModTileEntityTypes {
+public final class ModTileEntityTypes {
 
 	public static final TileEntityType<?> MINI_MODEL = ModUtil._null();
+
+	public static final TileEntityType<?> HEAT_COLLECTOR = ModUtil._null();
 
 }
