@@ -6,14 +6,17 @@ import io.github.cadiboo.examplemod.energy.SettableEnergyStorage;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -91,6 +94,26 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 				energy.receiveEnergy(energyToRecieve, false);
 				fuelStack.shrink(1);
 			}
+		}
+
+		// Collect from all heat blocks in a 5 block radius
+		for (final BlockPos blockPos : BlockPos.getAllInBoxMutable(pos.add(-5, -5, -5), pos.add(5, 5, 5))) {
+			final BlockState blockState = world.getBlockState(blockPos);
+			final IFluidState fluidState = world.getFluidState(blockPos);
+
+			int fireEnergy = 0;
+
+			if (blockState.getBlock() == Blocks.FIRE)
+				fireEnergy += 20;
+			else if (blockState.getBlock() == Blocks.CAMPFIRE)
+				fireEnergy += 10;
+
+			if (fluidState.isTagged(FluidTags.LAVA))
+				fireEnergy += 50;
+
+			if(fireEnergy > 0)
+				energy.receiveEnergy(fireEnergy, false);
+
 		}
 
 		// How much energy to try and transfer in each direction.
