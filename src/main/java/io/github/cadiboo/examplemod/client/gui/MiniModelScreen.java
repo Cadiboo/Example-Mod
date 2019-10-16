@@ -48,4 +48,9 @@ public class MiniModelScreen extends Screen {
 		super.init();
 	}
 
+	@Override
+	public boolean isPauseScreen() {
+		return false; // Don't pause the game when this screen is open
+	}
+
 }
