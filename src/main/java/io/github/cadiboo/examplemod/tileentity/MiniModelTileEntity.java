@@ -37,6 +37,7 @@ public class MiniModelTileEntity extends TileEntity {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void onLoad() {
+		super.onLoad();
 		World world = getWorld();
 		if (world == null || !world.isRemote)
 			return; // Return if the world is null or if we are on the logical server
