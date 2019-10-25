@@ -80,7 +80,7 @@ public final class ModEventSubscriber {
 
 			final ResourceLocation blockRegistryName = block.getRegistryName();
 			// An extra safe-guard against badly registered blocks
-			Preconditions.checkNotNull(blockRegistryName, "Registry Name of Block \"" + block + "\" is null! This is not allowed!");
+			Preconditions.checkNotNull(blockRegistryName, "Registry Name of Block \"" + block + "\" of class \"" + block.getClass().getName() + "\"is null! This is not allowed!");
 
 			// Check that the blocks is from our mod, if not, continue to the next block
 			if (!blockRegistryName.getNamespace().equals(ExampleMod.MODID)) {
