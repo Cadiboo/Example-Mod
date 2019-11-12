@@ -70,7 +70,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	private final LazyOptional<ItemStackHandler> inventoryCapabilityExternal = LazyOptional.of(() -> this.inventory);
 	private final LazyOptional<EnergyStorage> energyCapabilityExternal = LazyOptional.of(() -> this.energy);
 
-	private int lastSyncedEnergy = -1;
+	private int lastEnergy = -1;
 
 	public HeatCollectorTileEntity() {
 		super(ModTileEntityTypes.HEAT_COLLECTOR);
@@ -111,7 +111,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 			if (fluidState.isTagged(FluidTags.LAVA))
 				fireEnergy += 50;
 
-			if(fireEnergy > 0)
+			if (fireEnergy > 0)
 				energy.receiveEnergy(fireEnergy, false);
 
 		}
@@ -143,7 +143,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 		}
 
 		// If the energy has changed.
-		if (lastSyncedEnergy != energy.getEnergyStored()) {
+		if (lastEnergy != energy.getEnergyStored()) {
 
 			// "markDirty" tells vanilla that the chunk containing the tile entity has
 			// changed and means the game will save the chunk to disk later.
@@ -157,7 +157,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 			world.notifyBlockUpdate(pos, blockState, blockState, 2);
 
 			// Update the last synced energy to the current energy
-			lastSyncedEnergy = energy.getEnergyStored();
+			lastEnergy = energy.getEnergyStored();
 		}
 
 	}
@@ -186,7 +186,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 		// We set this in onLoad instead of the constructor so that TileEntities
 		// constructed from NBT (saved tile entities) have this set to the proper value
 		if (world != null && !world.isRemote)
-			lastSyncedEnergy = energy.getEnergyStored();
+			lastEnergy = energy.getEnergyStored();
 	}
 
 	/**
@@ -232,6 +232,18 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	@Nonnull
 	public CompoundNBT getUpdateTag() {
 		return this.write(new CompoundNBT());
+	}
+
+	/**
+	 * Invalidates our tile entity
+	 */
+	@Override
+	public void remove() {
+		super.remove();
+		// We need to invalidate our capability references so that any cached references (by other mods) don't
+		// continue to reference our capabilities and try to use them and/or prevent them from being garbage collected
+		inventoryCapabilityExternal.invalidate();
+		energyCapabilityExternal.invalidate();
 	}
 
 	@Nonnull
