@@ -25,11 +25,11 @@ public class MiniModel {
 	public final RegionRenderCacheBuilder regionRenderCacheBuilder;
 	private final ChunkRender chunkRender;
 	public ChunkRenderTask generator;
+	private boolean isBuilt = false;
 
 	private MiniModel(final ChunkRender chunkRender, final RegionRenderCacheBuilder regionRenderCacheBuilder) {
 		this.chunkRender = chunkRender;
 		this.regionRenderCacheBuilder = regionRenderCacheBuilder;
-		rebuild();
 	}
 
 	public static MiniModel forTileEntity(final TileEntity tileEntity) {
@@ -70,7 +70,11 @@ public class MiniModel {
 		for (int ordinal = 0; ordinal < length; ++ordinal) {
 			buffers.getBuilder(ordinal).setTranslation(0, 0, 0);
 		}
+		this.isBuilt = true;
+	}
 
+	public boolean isBuilt() {
+		return isBuilt;
 	}
 
 }

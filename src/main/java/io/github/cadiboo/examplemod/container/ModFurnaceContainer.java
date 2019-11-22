@@ -3,49 +3,70 @@ package io.github.cadiboo.examplemod.container;
 import io.github.cadiboo.examplemod.ModUtil;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
-import io.github.cadiboo.examplemod.tileentity.HeatCollectorTileEntity;
+import io.github.cadiboo.examplemod.tileentity.ModFurnaceTileEntity;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SWindowPropertyPacket;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 
 /**
+ * Smelt time is synced with
+ * Server: Each tick {@link #detectAndSendChanges()} is called ({@link ServerPlayerEntity#tick()})
+ * Server: The (tracked) value of the tile's energy is updated ({@link #updateProgressBar(int, int)})
+ * Server: If the value is different from the value last sent to the client ({@link IntReferenceHolder#isDirty()}),
+ * it is synced to the client ({@link ServerPlayerEntity#sendWindowProperty(Container, int, int)})
+ * Client: The sync packet is received ({@link ClientPlayNetHandler#handleWindowProperty(SWindowPropertyPacket)})
+ * and the tracked value of is updated ({@link Container#updateProgressBar(int, int)})
+ * Client: The tile's data is set to the new value
+ *
  * @author Cadiboo
  */
-public class HeatCollectorContainer extends Container {
+public class ModFurnaceContainer extends Container {
 
-	public final HeatCollectorTileEntity tileEntity;
+	public final ModFurnaceTileEntity tileEntity;
 	private final IWorldPosCallable canInteractWithCallable;
 
 	/**
 	 * Logical-client-side constructor, called from {@link ContainerType#create(IContainerFactory)}
 	 * Calls the logical-server-side constructor with the TileEntity at the pos in the PacketBuffer
 	 */
-	public HeatCollectorContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
-		this(windowId, playerInventory, ModUtil.getTileEntityOrCrash(playerInventory, data, HeatCollectorTileEntity.class));
+	public ModFurnaceContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
+		this(windowId, playerInventory, ModUtil.getTileEntityOrCrash(playerInventory, data, ModFurnaceTileEntity.class));
 	}
 
 	/**
-	 * Constructor called logical-server-side from {@link HeatCollectorTileEntity#createMenu}
-	 * and logical-client-side from {@link #HeatCollectorContainer(int, PlayerInventory, PacketBuffer)}
+	 * Constructor called logical-server-side from {@link ModFurnaceTileEntity#createMenu}
+	 * and logical-client-side from {@link #ModFurnaceContainer(int, PlayerInventory, PacketBuffer)}
 	 */
-	public HeatCollectorContainer(final int windowId, final PlayerInventory playerInventory, final HeatCollectorTileEntity tileEntity) {
-		super(ModContainerTypes.HEAT_COLLECTOR, windowId);
+	public ModFurnaceContainer(final int windowId, final PlayerInventory playerInventory, final ModFurnaceTileEntity tileEntity) {
+		super(ModContainerTypes.MOD_FURNACE, windowId);
 		this.tileEntity = tileEntity;
 		this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
+
+		// Add tracking for data (Syncs to client/updates value when it changes)
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.smeltTimeLeft, v -> tileEntity.smeltTimeLeft = (short) v));
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.maxSmeltTime, v -> tileEntity.maxSmeltTime = (short) v));
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.fuelBurnTimeLeft, v -> tileEntity.fuelBurnTimeLeft = (short) v));
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.maxFuelBurnTime, v -> tileEntity.maxFuelBurnTime = (short) v));
 
 		// Add all the slots for the tileEntity's inventory and the playerInventory to this container
 
 		// Tile inventory slot(s)
-		this.addSlot(new SlotItemHandler(tileEntity.inventory, HeatCollectorTileEntity.FUEL_SLOT, 80, 35));
+		this.addSlot(new SlotItemHandler(tileEntity.inventory, ModFurnaceTileEntity.FUEL_SLOT, 56, 53));
+		this.addSlot(new SlotItemHandler(tileEntity.inventory, ModFurnaceTileEntity.INPUT_SLOT, 56, 17));
+		this.addSlot(new SlotItemHandler(tileEntity.inventory, ModFurnaceTileEntity.OUTPUT_SLOT, 116, 35));
 
 		final int playerInventoryStartX = 8;
 		final int playerInventoryStartY = 84;
@@ -106,7 +127,7 @@ public class HeatCollectorContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(@Nonnull final PlayerEntity player) {
-		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.HEAT_COLLECTOR);
+		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.MOD_FURNACE);
 	}
 
 }

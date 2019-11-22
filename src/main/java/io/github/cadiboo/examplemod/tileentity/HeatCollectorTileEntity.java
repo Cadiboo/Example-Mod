@@ -1,5 +1,6 @@
 package io.github.cadiboo.examplemod.tileentity;
 
+import io.github.cadiboo.examplemod.ModUtil;
 import io.github.cadiboo.examplemod.block.HeatCollectorBlock;
 import io.github.cadiboo.examplemod.container.HeatCollectorContainer;
 import io.github.cadiboo.examplemod.energy.SettableEnergyStorage;
@@ -42,14 +43,9 @@ import javax.annotation.Nullable;
  */
 public class HeatCollectorTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
+	public static final int FUEL_SLOT = 0;
 	private static final String INVENTORY_TAG = "inventory";
 	private static final String ENERGY_TAG = "energy";
-
-	// Cache all the directions instead of calling Direction.values()
-	// each time (because each call creates a new Direction[] which is wasteful)
-	// TODO: change to Direction.VALUES once it's ATed
-	private static final Direction[] DIRECTIONS = Direction.values();
-
 	public final ItemStackHandler inventory = new ItemStackHandler(1) {
 		@Override
 		public boolean isItemValid(final int slot, @Nonnull final ItemStack stack) {
@@ -86,12 +82,12 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 		final BlockPos pos = this.pos;
 		final SettableEnergyStorage energy = this.energy;
 
-		final ItemStack fuelStack = this.inventory.getStackInSlot(0);
+		final ItemStack fuelStack = this.inventory.getStackInSlot(FUEL_SLOT);
 		if (!fuelStack.isEmpty()) {
-			int energyToRecieve = ForgeHooks.getBurnTime(fuelStack);
+			int energyToReceive = ForgeHooks.getBurnTime(fuelStack);
 			// Only use the stack if we can receive 100% of the energy from it
-			if (energy.receiveEnergy(energyToRecieve, true) == energyToRecieve) {
-				energy.receiveEnergy(energyToRecieve, false);
+			if (energy.receiveEnergy(energyToReceive, true) == energyToReceive) {
+				energy.receiveEnergy(energyToReceive, false);
 				fuelStack.shrink(1);
 			}
 		}
@@ -121,7 +117,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 
 		// Skip trying to transfer if there isn't enough energy to transfer
 		if (energy.getEnergyStored() >= transferAmount) {
-			for (Direction direction : DIRECTIONS) {
+			for (Direction direction : ModUtil.DIRECTIONS) {
 				final TileEntity te = world.getTileEntity(pos.offset(direction));
 				if (te == null) {
 					continue;
@@ -261,7 +257,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	@Nonnull
 	@Override
 	public Container createMenu(final int windowId, final PlayerInventory inventory, final PlayerEntity player) {
-		return new HeatCollectorContainer(windowId, this, inventory, player);
+		return new HeatCollectorContainer(windowId, inventory, this);
 	}
 
 }

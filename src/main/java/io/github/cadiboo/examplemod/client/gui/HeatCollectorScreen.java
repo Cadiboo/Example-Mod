@@ -52,7 +52,7 @@ public class HeatCollectorScreen extends ContainerScreen<HeatCollectorContainer>
 	@Override
 	protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.minecraft.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
+		getMinecraft().getTextureManager().bindTexture(BACKGROUND_TEXTURE);
 		int startX = this.guiLeft;
 		int startY = this.guiTop;
 
@@ -74,7 +74,7 @@ public class HeatCollectorScreen extends ContainerScreen<HeatCollectorContainer>
 			);
 		}
 
-		if (!tileEntity.inventory.getStackInSlot(0).isEmpty()) // Draw flames
+		if (!tileEntity.inventory.getStackInSlot(HeatCollectorTileEntity.FUEL_SLOT).isEmpty()) // Draw flames
 			this.blit(
 					startX + 81, startY + 58,
 					176, 0,

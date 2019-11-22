@@ -41,6 +41,9 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 		if (miniModel == null)
 			return;
 
+		if (!miniModel.isBuilt())
+			miniModel.rebuild();
+
 		// Setup correct GL state
 		this.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		RenderHelper.disableStandardItemLighting();
