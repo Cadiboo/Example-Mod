@@ -1,6 +1,7 @@
 package io.github.cadiboo.examplemod.tileentity;
 
 import io.github.cadiboo.examplemod.block.ElectricFurnaceBlock;
+import io.github.cadiboo.examplemod.block.ModFurnaceBlock;
 import io.github.cadiboo.examplemod.container.ModFurnaceContainer;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
@@ -165,8 +166,12 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 			// This will result in the packet from getUpdatePacket being sent to the client
 			// and our burning being synced.
 			final BlockState blockState = this.getBlockState();
+
+			final BlockState newState = ModBlocks.MOD_FURNACE.getDefaultState()
+					.with(ModFurnaceBlock.BURNING, this.isBurning());
+
 			// Flag 2: Send the change to clients
-			world.notifyBlockUpdate(pos, blockState, blockState, 2);
+			world.notifyBlockUpdate(pos, blockState, newState, 2);
 
 			// Update the last synced burning state to the current burning state
 			lastBurning = this.isBurning();
@@ -239,10 +244,10 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 	public CompoundNBT write(final CompoundNBT compound) {
 		super.write(compound);
 		compound.put(INVENTORY_TAG, this.inventory.serializeNBT());
-		compound.putShort("smeltTimeLeft", this.smeltTimeLeft);
-		compound.putShort("maxSmeltTime", this.maxSmeltTime);
-		compound.putShort("fuelBurnTimeLeft", this.fuelBurnTimeLeft);
-		compound.putShort("maxFuelBurnTime", this.maxFuelBurnTime);
+		compound.putShort(SMELT_TIME_LEFT_TAG, this.smeltTimeLeft);
+		compound.putShort(MAX_SMELT_TIME_TAG, this.maxSmeltTime);
+		compound.putShort(FUEL_BURN_TIME_LEFT_TAG, this.fuelBurnTimeLeft);
+		compound.putShort(MAX_FUEL_BURN_TIME_TAG, this.maxFuelBurnTime);
 		return compound;
 	}
 

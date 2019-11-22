@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +29,7 @@ public class ModFurnaceBlock extends Block {
 
 	public ModFurnaceBlock(final Properties properties) {
 		super(properties);
+		this.setDefaultState(this.getDefaultState().with(BURNING, false));
 	}
 
 	@Override
@@ -75,6 +77,11 @@ public class ModFurnaceBlock extends Block {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder.add(BURNING));
 	}
 
 }
