@@ -1,6 +1,5 @@
 package io.github.cadiboo.examplemod.container;
 
-import io.github.cadiboo.examplemod.ModUtil;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
 import io.github.cadiboo.examplemod.tileentity.HeatCollectorTileEntity;
@@ -11,11 +10,13 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * @author Cadiboo
@@ -30,7 +31,7 @@ public class HeatCollectorContainer extends Container {
 	 * Calls the logical-server-side constructor with the TileEntity at the pos in the PacketBuffer
 	 */
 	public HeatCollectorContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
-		this(windowId, playerInventory, ModUtil.getTileEntityOrCrash(playerInventory, data, HeatCollectorTileEntity.class));
+		this(windowId, playerInventory, getTileEntity(playerInventory, data));
 	}
 
 	/**
@@ -63,6 +64,15 @@ public class HeatCollectorContainer extends Container {
 		for (int column = 0; column < 9; ++column) {
 			this.addSlot(new Slot(playerInventory, column, playerInventoryStartX + (column * slotSizePlus2), playerHotbarY));
 		}
+	}
+
+	private static HeatCollectorTileEntity getTileEntity(final PlayerInventory playerInventory, final PacketBuffer data) {
+		Objects.requireNonNull(playerInventory, "playerInventory cannot be null!");
+		Objects.requireNonNull(data, "data cannot be null!");
+		final TileEntity tileAtPos = playerInventory.player.world.getTileEntity(data.readBlockPos());
+		if (tileAtPos instanceof HeatCollectorTileEntity)
+			return (HeatCollectorTileEntity) tileAtPos;
+		throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
 	}
 
 	/**

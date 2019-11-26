@@ -1,47 +1,41 @@
 package io.github.cadiboo.examplemod.block;
 
-import io.github.cadiboo.examplemod.ModUtil;
 import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
-import io.github.cadiboo.examplemod.tileentity.HeatCollectorTileEntity;
+import io.github.cadiboo.examplemod.tileentity.ElectricFurnaceTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 /**
  * @author Cadiboo
  */
-public class HeatCollectorBlock extends Block {
+public class ElectricFurnaceBlock extends HorizontalBlock {
 
-	private static final VoxelShape SHAPE = Stream.of(
-			Block.makeCuboidShape(11, 0, 0, 16, 16, 5),
-			Block.makeCuboidShape(11, 0, 11, 16, 16, 16),
-			Block.makeCuboidShape(0, 0, 11, 5, 16, 16),
-			Block.makeCuboidShape(0, 0, 0, 5, 16, 5),
-			Block.makeCuboidShape(5, 5, 5, 11, 11, 11)
-	)
-			.reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR))
-			.get();
-
-	public HeatCollectorBlock(final Properties properties) {
+	public ElectricFurnaceBlock(final Properties properties) {
 		super(properties);
+		// Set the default values for our blockstate properties
+		this.setDefaultState(this.getDefaultState()
+				.with(HORIZONTAL_FACING, Direction.NORTH)
+		);
 	}
 
 	@Override
@@ -53,17 +47,7 @@ public class HeatCollectorBlock extends Block {
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.HEAT_COLLECTOR.create();
-	}
-
-	/**
-	 * @deprecated Call via {@link BlockState#getShape(IBlockReader, BlockPos, ISelectionContext)}
-	 * Implementing/overriding is fine.
-	 */
-	@Nonnull
-	@Override
-	public VoxelShape getShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos, final ISelectionContext context) {
-		return SHAPE;
+		return ModTileEntityTypes.ELECTRIC_FURNACE.create();
 	}
 
 	/**
@@ -77,8 +61,8 @@ public class HeatCollectorBlock extends Block {
 	public void onReplaced(BlockState oldState, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (oldState.getBlock() != newState.getBlock()) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
-			if (tileEntity instanceof HeatCollectorTileEntity) {
-				final ItemStackHandler inventory = ((HeatCollectorTileEntity) tileEntity).inventory;
+			if (tileEntity instanceof ElectricFurnaceTileEntity) {
+				final ItemStackHandler inventory = ((ElectricFurnaceTileEntity) tileEntity).inventory;
 				for (int slot = 0; slot < inventory.getSlots(); ++slot)
 					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
 			}
@@ -97,14 +81,22 @@ public class HeatCollectorBlock extends Block {
 	public boolean onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
 		if (!worldIn.isRemote) {
 			final TileEntity tileEntity = worldIn.getTileEntity(pos);
-			if (tileEntity instanceof HeatCollectorTileEntity)
-				NetworkHooks.openGui((ServerPlayerEntity) player, (HeatCollectorTileEntity) tileEntity, pos);
+			if (tileEntity instanceof ElectricFurnaceTileEntity)
+				NetworkHooks.openGui((ServerPlayerEntity) player, (ElectricFurnaceTileEntity) tileEntity, pos);
 		}
 		return true;
 	}
 
 	/**
-	 * We return the redstone calculated from our energy
+	 * Makes the block face the player when placed
+	 */
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+	}
+
+	/**
+	 * We return the redstone calculated from our inventory
 	 *
 	 * @deprecated call via {@link BlockState#getComparatorInputOverride(World, BlockPos)} whenever possible.
 	 * Implementing/overriding is fine.
@@ -112,9 +104,40 @@ public class HeatCollectorBlock extends Block {
 	@Override
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		final TileEntity tileEntity = worldIn.getTileEntity(pos);
-		if (tileEntity instanceof HeatCollectorTileEntity)
-			return ModUtil.calcRedstoneFromEnergyStorage(((HeatCollectorTileEntity) tileEntity).energy);
+		if (tileEntity instanceof ElectricFurnaceTileEntity)
+			return ItemHandlerHelper.calcRedstoneFromInventory(((ElectricFurnaceTileEntity) tileEntity).inventory);
 		return super.getComparatorInputOverride(blockState, worldIn, pos);
+	}
+
+	/**
+	 * Called from inside the constructor {@link Block#Block(Properties)} to add all the properties to our blockstate
+	 */
+	@Override
+	protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder);
+		builder.add(HORIZONTAL_FACING);
+	}
+
+	/**
+	 * Returns the blockstate with the given rotation from the passed blockstate.
+	 * If inapplicable, returns the passed blockstate.
+	 *
+	 * @deprecated call via {@link BlockState#rotate(Rotation)} whenever possible. Implementing/overriding is fine.
+	 */
+	@Override
+	public BlockState rotate(BlockState state, Rotation rot) {
+		return state.with(HORIZONTAL_FACING, rot.rotate(state.get(HORIZONTAL_FACING)));
+	}
+
+	/**
+	 * Returns the blockstate with the given mirror of the passed blockstate.
+	 * If inapplicable, returns the passed blockstate.
+	 *
+	 * @deprecated call via {@link BlockState#mirror(Mirror)} whenever possible. Implementing/overriding is fine.
+	 */
+	@Override
+	public BlockState mirror(BlockState state, Mirror mirrorIn) {
+		return state.rotate(mirrorIn.toRotation(state.get(HORIZONTAL_FACING)));
 	}
 
 }

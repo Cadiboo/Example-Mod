@@ -20,7 +20,7 @@ public final class ConfigHelper {
 
 		ExampleModConfig.clientBoolean = ConfigHolder.CLIENT.clientBoolean.get();
 		ExampleModConfig.clientStringList = ConfigHolder.CLIENT.clientStringList.get();
-		ExampleModConfig.clientEnumDyeColor = ConfigHolder.CLIENT.clientEnumDyeColor.get();
+		ExampleModConfig.clientDyeColorEnum = ConfigHolder.CLIENT.clientDyeColorEnum.get();
 
 		ExampleModConfig.modelTranslucency = ConfigHolder.CLIENT.modelTranslucency.get();
 		ExampleModConfig.modelScale = ConfigHolder.CLIENT.modelScale.get();

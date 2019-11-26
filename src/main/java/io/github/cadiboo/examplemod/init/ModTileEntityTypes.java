@@ -2,6 +2,7 @@ package io.github.cadiboo.examplemod.init;
 
 import io.github.cadiboo.examplemod.ExampleMod;
 import io.github.cadiboo.examplemod.ModUtil;
+import io.github.cadiboo.examplemod.tileentity.ElectricFurnaceTileEntity;
 import io.github.cadiboo.examplemod.tileentity.HeatCollectorTileEntity;
 import io.github.cadiboo.examplemod.tileentity.MiniModelTileEntity;
 import io.github.cadiboo.examplemod.tileentity.ModFurnaceTileEntity;
@@ -16,6 +17,7 @@ public final class ModTileEntityTypes {
 
 	public static final TileEntityType<MiniModelTileEntity> MINI_MODEL = ModUtil._null();
 	public static final TileEntityType<HeatCollectorTileEntity> HEAT_COLLECTOR = ModUtil._null();
+	public static final TileEntityType<ElectricFurnaceTileEntity> ELECTRIC_FURNACE = ModUtil._null();
 	public static final TileEntityType<ModFurnaceTileEntity> MOD_FURNACE = ModUtil._null();
 
 }

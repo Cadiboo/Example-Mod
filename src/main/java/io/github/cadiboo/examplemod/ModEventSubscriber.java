@@ -1,15 +1,18 @@
 package io.github.cadiboo.examplemod;
 
 import com.google.common.base.Preconditions;
+import io.github.cadiboo.examplemod.block.ElectricFurnaceBlock;
 import io.github.cadiboo.examplemod.block.HeatCollectorBlock;
 import io.github.cadiboo.examplemod.block.MiniModelBlock;
 import io.github.cadiboo.examplemod.block.ModFurnaceBlock;
 import io.github.cadiboo.examplemod.config.ConfigHelper;
 import io.github.cadiboo.examplemod.config.ConfigHolder;
+import io.github.cadiboo.examplemod.container.ElectricFurnaceContainer;
 import io.github.cadiboo.examplemod.container.HeatCollectorContainer;
 import io.github.cadiboo.examplemod.container.ModFurnaceContainer;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModItemGroups;
+import io.github.cadiboo.examplemod.tileentity.ElectricFurnaceTileEntity;
 import io.github.cadiboo.examplemod.tileentity.HeatCollectorTileEntity;
 import io.github.cadiboo.examplemod.tileentity.MiniModelTileEntity;
 import io.github.cadiboo.examplemod.tileentity.ModFurnaceTileEntity;
@@ -61,6 +64,7 @@ public final class ModEventSubscriber {
 				setup(new MiniModelBlock(Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(1.5F).lightValue(13)), "mini_model"),
 				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to the Furnace
 				setup(new HeatCollectorBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "heat_collector"),
+				setup(new ElectricFurnaceBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "electric_furnace"),
 				setup(new ModFurnaceBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "mod_furnace")
 		);
 		LOGGER.debug("Registered Blocks");
@@ -118,6 +122,7 @@ public final class ModEventSubscriber {
 				// We don't have a datafixer for our TileEntity, so we pass null into build
 				setup(TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL).build(null), "mini_model"),
 				setup(TileEntityType.Builder.create(HeatCollectorTileEntity::new, ModBlocks.HEAT_COLLECTOR).build(null), "heat_collector"),
+				setup(TileEntityType.Builder.create(ElectricFurnaceTileEntity::new, ModBlocks.ELECTRIC_FURNACE).build(null), "electric_furnace"),
 				setup(TileEntityType.Builder.create(ModFurnaceTileEntity::new, ModBlocks.MOD_FURNACE).build(null), "mod_furnace")
 		);
 		LOGGER.debug("Registered TileEntityTypes");
@@ -132,6 +137,7 @@ public final class ModEventSubscriber {
 		// Register your ContainerTypes here if you have them
 		event.getRegistry().registerAll(
 				setup(IForgeContainerType.create(HeatCollectorContainer::new), "heat_collector"),
+				setup(IForgeContainerType.create(ElectricFurnaceContainer::new), "electric_furnace"),
 				setup(IForgeContainerType.create(ModFurnaceContainer::new), "mod_furnace")
 		);
 		LOGGER.debug("Registered ContainerTypes");

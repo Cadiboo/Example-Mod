@@ -17,7 +17,7 @@ final class ClientConfig {
 
 	final ForgeConfigSpec.BooleanValue clientBoolean;
 	final ForgeConfigSpec.ConfigValue<List<String>> clientStringList;
-	final ForgeConfigSpec.ConfigValue<DyeColor> clientEnumDyeColor;
+	final ForgeConfigSpec.EnumValue<DyeColor> clientDyeColorEnum;
 
 	final ForgeConfigSpec.BooleanValue modelTranslucency;
 	final ForgeConfigSpec.DoubleValue modelScale;
@@ -32,10 +32,10 @@ final class ClientConfig {
 				.comment("An example list of Strings in the client config")
 				.translation(ExampleMod.MODID + ".config.clientStringList")
 				.define("clientStringList", new ArrayList<>());
-		clientEnumDyeColor = builder
-				.comment("An example enum DyeColor in the client config")
-				.translation(ExampleMod.MODID + ".config.clientEnumDyeColor")
-				.defineEnum("clientEnumDyeColor", DyeColor.WHITE);
+		clientDyeColorEnum = builder
+				.comment("An example DyeColor enum in the client config")
+				.translation(ExampleMod.MODID + ".config.clientDyeColorEnum")
+				.defineEnum("clientDyeColorEnum", DyeColor.WHITE);
 
 		modelTranslucency = builder
 				.comment("If the model should be rendered translucent")

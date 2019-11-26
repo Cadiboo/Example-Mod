@@ -3,8 +3,12 @@
 	"block.examplemod.example_block": "Example Block",
 	"block.examplemod.mini_model": "Mini Model",
 	"block.examplemod.heat_collector": "Heat Collector",
+	"block.examplemod.electric_furnace": "Electric Furnace",
+	"block.examplemod.mod_furnace": "Mod Furnace",
 	"item.examplemod.example_item": "Example Item",
 	"itemGroup.examplemod": "Example Mod",
 	"gui.examplemod.refresh_mini_model": "Refresh Mini Model",
-	"gui.examplemod.energy": "Energy %s"
+	"gui.examplemod.energy": "Energy %s",
+	"gui.examplemod.smeltTimeProgress": "Smelt time %s/%s",
+	"gui.examplemod.fuelBurnTimeProgress": "Fuel burn time %s/%s"
 }

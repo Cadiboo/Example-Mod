@@ -1,12 +1,14 @@
 package io.github.cadiboo.examplemod.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.cadiboo.examplemod.ExampleMod;
 import io.github.cadiboo.examplemod.container.ModFurnaceContainer;
 import io.github.cadiboo.examplemod.tileentity.ModFurnaceTileEntity;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * @author Cadiboo
@@ -24,6 +26,26 @@ public class ModFurnaceScreen extends ContainerScreen<ModFurnaceContainer> {
 		this.renderBackground();
 		super.render(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
+
+		int relMouseX = mouseX - this.guiLeft;
+		int relMouseY = mouseY - this.guiTop;
+		final ModFurnaceTileEntity tileEntity = this.container.tileEntity;
+		boolean arrowHovered = relMouseX > 79 && relMouseX < 104 && relMouseY > 34 && relMouseY < 50;
+		if (arrowHovered && tileEntity.maxSmeltTime > 0) {
+			String tooltip = new TranslationTextComponent(
+					"gui." + ExampleMod.MODID + ".smeltTimeProgress",
+					tileEntity.smeltTimeLeft, tileEntity.maxSmeltTime
+			).getFormattedText();
+			this.renderTooltip(tooltip, mouseX, mouseY);
+		}
+		boolean fireHovered = relMouseX > 56 && relMouseX < 70 && relMouseY > 36 && relMouseY < 50;
+		if (fireHovered && tileEntity.maxFuelBurnTime > 0) {
+			String tooltip = new TranslationTextComponent(
+					"gui." + ExampleMod.MODID + ".fuelBurnTimeProgress",
+					tileEntity.fuelBurnTimeLeft, tileEntity.maxFuelBurnTime
+			).getFormattedText();
+			this.renderTooltip(tooltip, mouseX, mouseY);
+		}
 	}
 
 	@Override
@@ -52,15 +74,6 @@ public class ModFurnaceScreen extends ContainerScreen<ModFurnaceContainer> {
 		this.blit(startX, startY, 0, 0, this.xSize, this.ySize);
 
 		final ModFurnaceTileEntity tileEntity = container.tileEntity;
-		if (tileEntity.isBurning()) {
-			// Draw flames
-			int flameHeight = getFuelBurnTimeScaled();
-			this.blit(
-					startX + 56, startY + 50 - flameHeight,
-					176, 14 - flameHeight,
-					14, flameHeight
-			);
-		}
 		if (tileEntity.smeltTimeLeft > 0) {
 			// Draw progress arrow
 			int arrowWidth = getSmeltTimeScaled();
@@ -68,6 +81,15 @@ public class ModFurnaceScreen extends ContainerScreen<ModFurnaceContainer> {
 					startX + 79, startY + 34,
 					176, 14,
 					arrowWidth, 14
+			);
+		}
+		if (tileEntity.isBurning()) {
+			// Draw flames
+			int flameHeight = getFuelBurnTimeScaled();
+			this.blit(
+					startX + 56, startY + 50 - flameHeight,
+					176, 14 - flameHeight,
+					14, flameHeight
 			);
 		}
 	}

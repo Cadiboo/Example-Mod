@@ -8,6 +8,7 @@ import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -86,34 +88,57 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 		super(ModTileEntityTypes.MOD_FURNACE);
 	}
 
+	/**
+	 * @return If the stack is not empty and has a smelting recipe associated with it
+	 */
 	private boolean isInput(final ItemStack stack) {
 		if (stack.isEmpty())
 			return false;
 		return getRecipe(stack).isPresent();
 	}
 
+	/**
+	 * @return If the stack's item is equal to the result of smelting our input
+	 */
 	private boolean isOutput(final ItemStack stack) {
 		final Optional<ItemStack> result = getResult(inventory.getStackInSlot(INPUT_SLOT));
 		return result.isPresent() && ItemStack.areItemsEqual(result.get(), stack);
 	}
 
+	/**
+	 * @return The smelting recipe for the input stack
+	 */
 	private Optional<FurnaceRecipe> getRecipe(final ItemStack input) {
+		// Due to vanilla's code we need to pass an IInventory into RecipeManager#getRecipe so we make one here.
 		return getRecipe(new Inventory(input));
 	}
 
-	private Optional<FurnaceRecipe> getRecipe(final Inventory dummyInventory) {
-		return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, dummyInventory, world);
+	/**
+	 * @return The smelting recipe for the inventory
+	 */
+	private Optional<FurnaceRecipe> getRecipe(final IInventory inventory) {
+		return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, inventory, world);
 	}
 
+	/**
+	 * @return The result of smelting the input stack
+	 */
 	private Optional<ItemStack> getResult(final ItemStack input) {
+		// Due to vanilla's code we need to pass an IInventory into RecipeManager#getRecipe and
+		// AbstractCookingRecipe#getCraftingResult() so we make one here.
 		final Inventory dummyInventory = new Inventory(input);
 		return getRecipe(dummyInventory).map(recipe -> recipe.getCraftingResult(dummyInventory));
 	}
 
+	/**
+	 * Called every tick to update our tile entity
+	 */
 	@Override
 	public void tick() {
 		if (world == null || world.isRemote)
 			return;
+
+		// Fuel burning code
 
 		boolean hasFuel = false;
 		if (isBurning()) {
@@ -121,8 +146,11 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 			--fuelBurnTimeLeft;
 		}
 
+		// Smelting code
+
 		final ItemStack input = inventory.getStackInSlot(INPUT_SLOT);
 		final ItemStack result = getResult(input).orElse(ItemStack.EMPTY);
+
 		if (!result.isEmpty() && isInput(input)) {
 			final boolean canInsertResultIntoOutput = inventory.insertItem(OUTPUT_SLOT, result, true).isEmpty();
 			if (canInsertResultIntoOutput) {
@@ -130,55 +158,67 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 					if (burnFuel())
 						hasFuel = true;
 				if (hasFuel) {
-					if (smeltTimeLeft == -1) { // Item just got inserted
+					if (smeltTimeLeft == -1) { // Item has not been smelted before
 						smeltTimeLeft = maxSmeltTime = getSmeltTime(input);
-					} else { // Item was already in here
+					} else { // Item was already being smelted
 						--smeltTimeLeft;
 						if (smeltTimeLeft == 0) {
 							inventory.insertItem(OUTPUT_SLOT, result, false);
+							if (input.hasContainerItem())
+								insertOrDropContainerItem(input, INPUT_SLOT);
 							input.shrink(1);
 							inventory.setStackInSlot(INPUT_SLOT, input); // Update the data
-							if (input.hasContainerItem()) {
-								final ItemStack containerItem = input.getContainerItem();
-								final boolean canInsertContainerItemIntoInput = inventory.insertItem(INPUT_SLOT, containerItem, true).isEmpty();
-								if (canInsertContainerItemIntoInput)
-									inventory.insertItem(INPUT_SLOT, containerItem, false);
-								else // Drop the container item if we can't insert it
-									InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), containerItem);
-							}
+							smeltTimeLeft = -1; // Set to -1 so we smelt the next stack on the next tick
 						}
 					}
-				} else // No fuel -> add to smelt time to simulate cooling
+				} else // No fuel -> add to smelt time left to simulate cooling
 					if (smeltTimeLeft < maxSmeltTime)
 						++smeltTimeLeft;
 			}
-		} else // Invalid input (somehow)
+		} else // We have an invalid input stack (somehow)
 			smeltTimeLeft = maxSmeltTime = -1;
 
+		// Syncing code
+
 		// If the burning state has changed.
-		if (lastBurning != this.isBurning()) {
+		if (lastBurning != hasFuel) { // We use hasFuel because the current fuel may be all burnt out but we have more that will be used next tick
 
 			// "markDirty" tells vanilla that the chunk containing the tile entity has
 			// changed and means the game will save the chunk to disk later.
 			this.markDirty();
 
-			// Notify clients of a block update.
-			// This will result in the packet from getUpdatePacket being sent to the client
-			// and our burning being synced.
-			final BlockState blockState = this.getBlockState();
-
 			final BlockState newState = ModBlocks.MOD_FURNACE.getDefaultState()
-					.with(ModFurnaceBlock.BURNING, this.isBurning());
+					.with(ModFurnaceBlock.BURNING, hasFuel);
 
 			// Flag 2: Send the change to clients
-			world.notifyBlockUpdate(pos, blockState, newState, 2);
+			world.setBlockState(pos, newState, 2);
 
 			// Update the last synced burning state to the current burning state
-			lastBurning = this.isBurning();
+			lastBurning = hasFuel;
 		}
 
 	}
 
+	/**
+	 * Tries to insert the container item for the stack into the given slot or drops the item on the ground if it can't insert
+	 *
+	 * @param stack The stack that has a container item
+	 * @param slot  The slot to try to insert the container item into
+	 */
+	private void insertOrDropContainerItem(final ItemStack stack, final int slot) {
+		final ItemStack containerItem = stack.getContainerItem();
+		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, containerItem, true).isEmpty();
+		if (canInsertContainerItemIntoSlot)
+			inventory.insertItem(slot, containerItem, false);
+		else // Drop the container item if we can't insert it
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), containerItem);
+	}
+
+	/**
+	 * Mimics the code in {@link AbstractFurnaceTileEntity#func_214005_h()}
+	 *
+	 * @return The custom smelt time or 200 if there is no recipe for the input
+	 */
 	private short getSmeltTime(final ItemStack input) {
 		final Optional<FurnaceRecipe> recipe = getRecipe(input);
 		if (recipe.isPresent())
@@ -194,11 +234,14 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 		if (!fuelStack.isEmpty()) {
 			final int burnTime = ForgeHooks.getBurnTime(fuelStack);
 			if (burnTime > 0) {
-				this.fuelBurnTimeLeft = this.maxFuelBurnTime = ((short) burnTime);
+				fuelBurnTimeLeft = maxFuelBurnTime = ((short) burnTime);
+				if (fuelStack.hasContainerItem())
+					insertOrDropContainerItem(fuelStack, FUEL_SLOT);
 				fuelStack.shrink(1);
 				return true;
 			}
 		}
+		fuelBurnTimeLeft = maxFuelBurnTime = -1;
 		return false;
 	}
 

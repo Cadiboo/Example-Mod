@@ -2,7 +2,7 @@ package io.github.cadiboo.examplemod.container;
 
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
-import io.github.cadiboo.examplemod.tileentity.ModFurnaceTileEntity;
+import io.github.cadiboo.examplemod.tileentity.ElectricFurnaceTileEntity;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -34,40 +34,36 @@ import java.util.Objects;
  *
  * @author Cadiboo
  */
-public class ModFurnaceContainer extends Container {
+public class ElectricFurnaceContainer extends Container {
 
-	public final ModFurnaceTileEntity tileEntity;
+	public final ElectricFurnaceTileEntity tileEntity;
 	private final IWorldPosCallable canInteractWithCallable;
 
 	/**
 	 * Logical-client-side constructor, called from {@link ContainerType#create(IContainerFactory)}
 	 * Calls the logical-server-side constructor with the TileEntity at the pos in the PacketBuffer
 	 */
-	public ModFurnaceContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
+	public ElectricFurnaceContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
 		this(windowId, playerInventory, getTileEntity(playerInventory, data));
 	}
 
 	/**
-	 * Constructor called logical-server-side from {@link ModFurnaceTileEntity#createMenu}
-	 * and logical-client-side from {@link #ModFurnaceContainer(int, PlayerInventory, PacketBuffer)}
+	 * Constructor called logical-server-side from {@link ElectricFurnaceTileEntity#createMenu}
+	 * and logical-client-side from {@link #ElectricFurnaceContainer(int, PlayerInventory, PacketBuffer)}
 	 */
-	public ModFurnaceContainer(final int windowId, final PlayerInventory playerInventory, final ModFurnaceTileEntity tileEntity) {
-		super(ModContainerTypes.MOD_FURNACE, windowId);
+	public ElectricFurnaceContainer(final int windowId, final PlayerInventory playerInventory, final ElectricFurnaceTileEntity tileEntity) {
+		super(ModContainerTypes.ELECTRIC_FURNACE, windowId);
 		this.tileEntity = tileEntity;
 		this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 
 		// Add tracking for data (Syncs to client/updates value when it changes)
-		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.smeltTimeLeft, v -> tileEntity.smeltTimeLeft = (short) v));
-		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.maxSmeltTime, v -> tileEntity.maxSmeltTime = (short) v));
-		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.fuelBurnTimeLeft, v -> tileEntity.fuelBurnTimeLeft = (short) v));
-		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.maxFuelBurnTime, v -> tileEntity.maxFuelBurnTime = (short) v));
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.smeltProgress, v -> tileEntity.smeltProgress = (short) v));
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.maxSmeltProgress, v -> tileEntity.maxSmeltProgress = (short) v));
 
 		// Add all the slots for the tileEntity's inventory and the playerInventory to this container
 
 		// Tile inventory slot(s)
-		this.addSlot(new SlotItemHandler(tileEntity.inventory, ModFurnaceTileEntity.FUEL_SLOT, 56, 53));
-		this.addSlot(new SlotItemHandler(tileEntity.inventory, ModFurnaceTileEntity.INPUT_SLOT, 56, 17));
-		this.addSlot(new SlotItemHandler(tileEntity.inventory, ModFurnaceTileEntity.OUTPUT_SLOT, 116, 35));
+		this.addSlot(new SlotItemHandler(tileEntity.inventory, 0, 80, 35));
 
 		final int playerInventoryStartX = 8;
 		final int playerInventoryStartY = 84;
@@ -87,12 +83,12 @@ public class ModFurnaceContainer extends Container {
 		}
 	}
 
-	private static ModFurnaceTileEntity getTileEntity(final PlayerInventory playerInventory, final PacketBuffer data) {
+	private static ElectricFurnaceTileEntity getTileEntity(final PlayerInventory playerInventory, final PacketBuffer data) {
 		Objects.requireNonNull(playerInventory, "playerInventory cannot be null!");
 		Objects.requireNonNull(data, "data cannot be null!");
 		final TileEntity tileAtPos = playerInventory.player.world.getTileEntity(data.readBlockPos());
-		if (tileAtPos instanceof ModFurnaceTileEntity)
-			return (ModFurnaceTileEntity) tileAtPos;
+		if (tileAtPos instanceof ElectricFurnaceTileEntity)
+			return (ElectricFurnaceTileEntity) tileAtPos;
 		throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
 	}
 
@@ -137,7 +133,7 @@ public class ModFurnaceContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(@Nonnull final PlayerEntity player) {
-		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.MOD_FURNACE);
+		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.ELECTRIC_FURNACE);
 	}
 
 }

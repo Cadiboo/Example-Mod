@@ -13,6 +13,7 @@ public final class ModBlocks {
 
 	public static final Block MINI_MODEL = ModUtil._null();
 	public static final Block HEAT_COLLECTOR = ModUtil._null();
+	public static final Block ELECTRIC_FURNACE = ModUtil._null();
 	public static final Block MOD_FURNACE = ModUtil._null();
 
 }
