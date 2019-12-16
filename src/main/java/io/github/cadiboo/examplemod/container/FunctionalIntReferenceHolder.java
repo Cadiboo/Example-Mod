@@ -6,7 +6,7 @@ import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
 /**
- * An IntReferenceHolder that uses lambdas for its getter and setter
+ * An {@link IntReferenceHolder} that uses {@link IntSupplier}s for its getter and setter
  *
  * @author Cadiboo
  */

@@ -27,4 +27,7 @@ public final class ExampleModConfig {
 	public static List<String> serverStringList;
 	public static DyeColor serverEnumDyeColor;
 
+	public static int electricFurnaceEnergySmeltCostPerTick = 100;
+	public static int heatCollectorTransferAmountPerTick = 100;
+
 }

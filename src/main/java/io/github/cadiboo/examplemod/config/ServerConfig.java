@@ -19,6 +19,8 @@ final class ServerConfig {
 	final ForgeConfigSpec.ConfigValue<List<String>> serverStringList;
 	final ForgeConfigSpec.ConfigValue<DyeColor> serverEnumDyeColor;
 
+	final ForgeConfigSpec.IntValue electricFurnaceEnergySmeltCostPerTick;
+
 	ServerConfig(final ForgeConfigSpec.Builder builder) {
 		builder.push("general");
 		serverBoolean = builder
@@ -33,6 +35,11 @@ final class ServerConfig {
 				.comment("An example enum DyeColor in the server config")
 				.translation(ExampleMod.MODID + ".config.serverEnumDyeColor")
 				.defineEnum("serverEnumDyeColor", DyeColor.WHITE);
+
+		electricFurnaceEnergySmeltCostPerTick = builder
+				.comment("How much energy for the Electric Furnace to consume to smelt an item per tick")
+				.translation(ExampleMod.MODID + ".config.electricFurnaceEnergySmeltCostPerTick")
+				.defineInRange("electricFurnaceEnergySmeltCostPerTick", 100, 0, Integer.MAX_VALUE);
 		builder.pop();
 	}
 

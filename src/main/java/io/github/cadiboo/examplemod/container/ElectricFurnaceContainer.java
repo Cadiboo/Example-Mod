@@ -57,13 +57,14 @@ public class ElectricFurnaceContainer extends Container {
 		this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 
 		// Add tracking for data (Syncs to client/updates value when it changes)
-		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.smeltProgress, v -> tileEntity.smeltProgress = (short) v));
-		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.maxSmeltProgress, v -> tileEntity.maxSmeltProgress = (short) v));
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.smeltTimeLeft, v -> tileEntity.smeltTimeLeft = (short) v));
+		this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.maxSmeltTime, v -> tileEntity.maxSmeltTime = (short) v));
 
 		// Add all the slots for the tileEntity's inventory and the playerInventory to this container
 
 		// Tile inventory slot(s)
-		this.addSlot(new SlotItemHandler(tileEntity.inventory, 0, 80, 35));
+		this.addSlot(new SlotItemHandler(tileEntity.inventory, ElectricFurnaceTileEntity.INPUT_SLOT, 56, 35));
+		this.addSlot(new SlotItemHandler(tileEntity.inventory, ElectricFurnaceTileEntity.OUTPUT_SLOT, 116, 35));
 
 		final int playerInventoryStartX = 8;
 		final int playerInventoryStartY = 84;

@@ -1,6 +1,7 @@
 package io.github.cadiboo.examplemod.tileentity;
 
 import io.github.cadiboo.examplemod.block.ElectricFurnaceBlock;
+import io.github.cadiboo.examplemod.config.ExampleModConfig;
 import io.github.cadiboo.examplemod.container.ElectricFurnaceContainer;
 import io.github.cadiboo.examplemod.energy.SettableEnergyStorage;
 import io.github.cadiboo.examplemod.init.ModBlocks;
@@ -8,50 +9,62 @@ import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.FurnaceTileEntity;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @author Cadiboo
  */
 public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-	private static final String INVENTORY_TAG = "inventory";
-	private static final String ENERGY_TAG = "energy";
-	public static final int FUEL_SLOT = 0;
-	public static final int INPUT_SLOT = 1;
-	public static final int OUTPUT_SLOT = 2;
+	public static final int INPUT_SLOT = 0;
+	public static final int OUTPUT_SLOT = 1;
 
-	public final ItemStackHandler inventory = new ItemStackHandler(3) {
+	private static final String INVENTORY_TAG = "inventory";
+	private static final String SMELT_TIME_LEFT_TAG = "smeltTimeLeft";
+	private static final String MAX_SMELT_TIME_TAG = "maxSmeltTime";
+	private static final String ENERGY_TAG = "energy";
+
+	public final ItemStackHandler inventory = new ItemStackHandler(2) {
 		@Override
 		public boolean isItemValid(final int slot, @Nonnull final ItemStack stack) {
-			return !stack.isEmpty() && FurnaceTileEntity.isFuel(stack);
+			switch (slot) {
+				case INPUT_SLOT:
+					return isInput(stack);
+				case OUTPUT_SLOT:
+					return isOutput(stack);
+				default:
+					return false;
+			}
 		}
 
 		@Override
@@ -64,64 +77,110 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 		}
 	};
 	public final SettableEnergyStorage energy = new SettableEnergyStorage(100_000);
+
 	// Store the capability lazy optionals as fields to keep the amount of objects we use to a minimum
 	private final LazyOptional<ItemStackHandler> inventoryCapabilityExternal = LazyOptional.of(() -> this.inventory);
+	// Machines (hoppers, pipes) connected to this furnace's top can only insert/extract items from the input slot
+	private final LazyOptional<IItemHandlerModifiable> inventoryCapabilityExternalUpAndSides = LazyOptional.of(() -> new RangedWrapper(this.inventory, INPUT_SLOT, INPUT_SLOT + 1));
+	// Machines (hoppers, pipes) connected to this furnace's bottom can only insert/extract items from the output slot
+	private final LazyOptional<IItemHandlerModifiable> inventoryCapabilityExternalDown = LazyOptional.of(() -> new RangedWrapper(this.inventory, OUTPUT_SLOT, OUTPUT_SLOT + 1));
 	private final LazyOptional<EnergyStorage> energyCapabilityExternal = LazyOptional.of(() -> this.energy);
-	public short smeltProgress = -1;
-	public short maxSmeltProgress = -1;
+
+	public short smeltTimeLeft = -1;
+	public short maxSmeltTime = -1;
 	private int lastEnergy = -1;
 
 	public ElectricFurnaceTileEntity() {
 		super(ModTileEntityTypes.ELECTRIC_FURNACE);
 	}
 
+	/**
+	 * @return If the stack is not empty and has a smelting recipe associated with it
+	 */
+	private boolean isInput(final ItemStack stack) {
+		if (stack.isEmpty())
+			return false;
+		return getRecipe(stack).isPresent();
+	}
+
+	/**
+	 * @return If the stack's item is equal to the result of smelting our input
+	 */
+	private boolean isOutput(final ItemStack stack) {
+		final Optional<ItemStack> result = getResult(inventory.getStackInSlot(INPUT_SLOT));
+		return result.isPresent() && ItemStack.areItemsEqual(result.get(), stack);
+	}
+
+	/**
+	 * @return The smelting recipe for the input stack
+	 */
+	private Optional<FurnaceRecipe> getRecipe(final ItemStack input) {
+		// Due to vanilla's code we need to pass an IInventory into RecipeManager#getRecipe so we make one here.
+		return getRecipe(new Inventory(input));
+	}
+
+	/**
+	 * @return The smelting recipe for the inventory
+	 */
+	private Optional<FurnaceRecipe> getRecipe(final IInventory inventory) {
+		return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, inventory, world);
+	}
+
+	/**
+	 * @return The result of smelting the input stack
+	 */
+	private Optional<ItemStack> getResult(final ItemStack input) {
+		// Due to vanilla's code we need to pass an IInventory into RecipeManager#getRecipe and
+		// AbstractCookingRecipe#getCraftingResult() so we make one here.
+		final Inventory dummyInventory = new Inventory(input);
+		return getRecipe(dummyInventory).map(recipe -> recipe.getCraftingResult(dummyInventory));
+	}
+
+	/**
+	 * Called every tick to update our tile entity
+	 */
 	@Override
 	public void tick() {
-
-		final World world = this.world;
 		if (world == null || world.isRemote)
 			return;
 
-		final BlockPos pos = this.pos;
-		final SettableEnergyStorage energy = this.energy;
-		final ItemStackHandler inventory = this.inventory;
+		// Energy will get pushed into our machine by generators/wires
 
-		burnFuelIfNeeded();
+		// Smelting code
 
-		final boolean hasEnoughEnergy = consumeEnergy();
+		final ItemStack input = inventory.getStackInSlot(INPUT_SLOT);
+		final ItemStack result = getResult(input).orElse(ItemStack.EMPTY);
 
-		if (hasEnoughEnergy) {
-			final ItemStack inputStack = inventory.getStackInSlot(INPUT_SLOT);
-			if (!inputStack.isEmpty()) {
-				final Inventory dummyInventory = new Inventory(inputStack);
-				final FurnaceRecipe recipe = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, dummyInventory, world).orElse(null);
-				if (recipe != null) {
-					if (smeltProgress < maxSmeltProgress)
-						++smeltProgress;
-					maxSmeltProgress = 200;
-					if (smeltProgress == maxSmeltProgress) {
-						// If we can fit the result into the output, do it and shrink the input
-						final ItemStack result = recipe.getCraftingResult(dummyInventory);
-						if (inventory.insertItem(OUTPUT_SLOT, result, true).isEmpty()) {
+		if (!result.isEmpty() && isInput(input)) {
+			final boolean canInsertResultIntoOutput = inventory.insertItem(OUTPUT_SLOT, result, true).isEmpty();
+			if (canInsertResultIntoOutput) {
+				// Energy consuming code
+				final int energySmeltCostPerTick = ExampleModConfig.electricFurnaceEnergySmeltCostPerTick;
+				boolean hasEnergy = false;
+				if (energy.extractEnergy(energySmeltCostPerTick, true) == energySmeltCostPerTick) {
+					hasEnergy = true;
+					energy.extractEnergy(energySmeltCostPerTick, false);
+				}
+				if (hasEnergy) {
+					if (smeltTimeLeft == -1) { // Item has not been smelted before
+						smeltTimeLeft = maxSmeltTime = getSmeltTime(input);
+					} else { // Item was already being smelted
+						--smeltTimeLeft;
+						if (smeltTimeLeft == 0) {
 							inventory.insertItem(OUTPUT_SLOT, result, false);
-							final ItemStack newInput;
-							if (inputStack.hasContainerItem()) {
-								newInput = inputStack.getContainerItem();
-							} else {
-								inputStack.shrink(1);
-								newInput = inputStack;
-							}
-							inventory.setStackInSlot(INPUT_SLOT, newInput);
-							smeltProgress = 0;
+							if (input.hasContainerItem())
+								insertOrDropContainerItem(input, INPUT_SLOT);
+							input.shrink(1);
+							inventory.setStackInSlot(INPUT_SLOT, input); // Update the data
+							smeltTimeLeft = -1; // Set to -1 so we smelt the next stack on the next tick
 						}
 					}
-				} else {
-					smeltProgress = maxSmeltProgress = -1;
-				}
-			} else {
-				smeltProgress = maxSmeltProgress = -1;
+				} else // No energy -> add to smelt time left to simulate cooling
+					if (smeltTimeLeft < maxSmeltTime)
+						++smeltTimeLeft;
 			}
-		}
+		} else // We have an invalid input stack (somehow)
+			smeltTimeLeft = maxSmeltTime = -1;
 
 		// If the energy has changed.
 		if (lastEnergy != energy.getEnergyStored()) {
@@ -143,32 +202,57 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 
 	}
 
-	private boolean consumeEnergy() {
-		final int energySmeltCostPerTick = 100;
-		if (energy.extractEnergy(energySmeltCostPerTick, true) == energySmeltCostPerTick) {
-			energy.extractEnergy(energySmeltCostPerTick, false);
-			return true;
-		}
-		return false;
+	/**
+	 * Tries to insert the container item for the stack into the given slot or drops the item on the ground if it can't insert
+	 *
+	 * @param stack The stack that has a container item
+	 * @param slot  The slot to try to insert the container item into
+	 */
+	private void insertOrDropContainerItem(final ItemStack stack, final int slot) {
+		final ItemStack containerItem = stack.getContainerItem();
+		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, containerItem, true).isEmpty();
+		if (canInsertContainerItemIntoSlot)
+			inventory.insertItem(slot, containerItem, false);
+		else // Drop the container item if we can't insert it
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), containerItem);
 	}
 
-	private void burnFuelIfNeeded() {
-		final ItemStack fuelStack = inventory.getStackInSlot(FUEL_SLOT);
-		if (!fuelStack.isEmpty()) {
-			int energyToReceive = ForgeHooks.getBurnTime(fuelStack);
-			// Only use the stack if we can receive 100% of the energy from it
-			if (energy.receiveEnergy(energyToReceive, true) == energyToReceive) {
-				energy.receiveEnergy(energyToReceive, false);
-				fuelStack.shrink(1);
-			}
-		}
+	/**
+	 * Mimics the code in {@link AbstractFurnaceTileEntity#func_214005_h()}
+	 *
+	 * @return The custom smelt time or 200 if there is no recipe for the input
+	 */
+	private short getSmeltTime(final ItemStack input) {
+		return getRecipe(input)
+				.map(AbstractCookingRecipe::getCookTime)
+				.orElse(200)
+				.shortValue();
 	}
 
+	/**
+	 * Retrieves the Optional handler for the capability requested on the specific side.
+	 *
+	 * @param cap  The capability to check
+	 * @param side The Direction to check from. CAN BE NULL! Null is defined to represent 'internal' or 'self'
+	 * @return The requested an optional holding the requested capability.
+	 */
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return inventoryCapabilityExternal.cast();
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			if (side == null)
+				return inventoryCapabilityExternal.cast();
+			switch (side) {
+				case DOWN:
+					return inventoryCapabilityExternalDown.cast();
+				case UP:
+				case NORTH:
+				case SOUTH:
+				case WEST:
+				case EAST:
+					return inventoryCapabilityExternalUpAndSides.cast();
+			}
+		}
 		if (cap == CapabilityEnergy.ENERGY)
 			return energyCapabilityExternal.cast();
 		return super.getCapability(cap, side);
@@ -198,6 +282,8 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 	public void read(final CompoundNBT compound) {
 		super.read(compound);
 		this.inventory.deserializeNBT(compound.getCompound(INVENTORY_TAG));
+		this.smeltTimeLeft = compound.getShort(SMELT_TIME_LEFT_TAG);
+		this.maxSmeltTime = compound.getShort(MAX_SMELT_TIME_TAG);
 		this.energy.setEnergy(compound.getInt(ENERGY_TAG));
 	}
 
@@ -209,6 +295,8 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 	public CompoundNBT write(final CompoundNBT compound) {
 		super.write(compound);
 		compound.put(INVENTORY_TAG, this.inventory.serializeNBT());
+		compound.putShort(SMELT_TIME_LEFT_TAG, this.smeltTimeLeft);
+		compound.putShort(MAX_SMELT_TIME_TAG, this.maxSmeltTime);
 		compound.putInt(ENERGY_TAG, this.energy.getEnergyStored());
 		return compound;
 	}

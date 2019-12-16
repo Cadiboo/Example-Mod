@@ -34,6 +34,8 @@ public final class ConfigHelper {
 		ExampleModConfig.serverStringList = ConfigHolder.SERVER.serverStringList.get();
 		ExampleModConfig.serverEnumDyeColor = ConfigHolder.SERVER.serverEnumDyeColor.get();
 
+		ExampleModConfig.electricFurnaceEnergySmeltCostPerTick = ConfigHolder.SERVER.electricFurnaceEnergySmeltCostPerTick.get();
+		ExampleModConfig.heatCollectorTransferAmountPerTick = ConfigHolder.SERVER.heatCollectorTransferAmountPerTick.get();
 	}
 
 	/**

@@ -14,6 +14,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,7 +30,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,12 +80,18 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 
 	// Store the capability lazy optionals as fields to keep the amount of objects we use to a minimum
 	private final LazyOptional<ItemStackHandler> inventoryCapabilityExternal = LazyOptional.of(() -> this.inventory);
+	// Machines (hoppers, pipes) connected to this furnace's top can only insert/extract items from the input slot
+	private final LazyOptional<IItemHandlerModifiable> inventoryCapabilityExternalUp = LazyOptional.of(() -> new RangedWrapper(this.inventory, INPUT_SLOT, INPUT_SLOT + 1));
+	// Machines (hoppers, pipes) connected to this furnace's bottom can only insert/extract items from the output slot
+	private final LazyOptional<IItemHandlerModifiable> inventoryCapabilityExternalDown = LazyOptional.of(() -> new RangedWrapper(this.inventory, OUTPUT_SLOT, OUTPUT_SLOT + 1));
+	// Machines (hoppers, pipes) connected to this furnace's side can only insert/extract items from the fuel and input slots
+	private final LazyOptional<IItemHandlerModifiable> inventoryCapabilityExternalSides = LazyOptional.of(() -> new RangedWrapper(this.inventory, FUEL_SLOT, INPUT_SLOT + 1));
 
 	public short smeltTimeLeft = -1;
 	public short maxSmeltTime = -1;
 	public short fuelBurnTimeLeft = -1;
 	public short maxFuelBurnTime = -1;
-	public boolean lastBurning = false;
+	private boolean lastBurning = false;
 
 	public ModFurnaceTileEntity() {
 		super(ModTileEntityTypes.MOD_FURNACE);
@@ -220,10 +229,10 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 	 * @return The custom smelt time or 200 if there is no recipe for the input
 	 */
 	private short getSmeltTime(final ItemStack input) {
-		final Optional<FurnaceRecipe> recipe = getRecipe(input);
-		if (recipe.isPresent())
-			return (short) recipe.get().getCookTime();
-		return 200;
+		return getRecipe(input)
+				.map(AbstractCookingRecipe::getCookTime)
+				.orElse(200)
+				.shortValue();
 	}
 
 	/**
@@ -249,11 +258,31 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 		return this.fuelBurnTimeLeft > 0;
 	}
 
+	/**
+	 * Retrieves the Optional handler for the capability requested on the specific side.
+	 *
+	 * @param cap  The capability to check
+	 * @param side The Direction to check from. CAN BE NULL! Null is defined to represent 'internal' or 'self'
+	 * @return The requested an optional holding the requested capability.
+	 */
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return inventoryCapabilityExternal.cast();
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			if (side == null)
+				return inventoryCapabilityExternal.cast();
+			switch (side) {
+				case DOWN:
+					return inventoryCapabilityExternalDown.cast();
+				case UP:
+					return inventoryCapabilityExternalUp.cast();
+				case NORTH:
+				case SOUTH:
+				case WEST:
+				case EAST:
+					return inventoryCapabilityExternalSides.cast();
+			}
+		}
 		return super.getCapability(cap, side);
 	}
 

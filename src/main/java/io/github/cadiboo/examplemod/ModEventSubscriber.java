@@ -64,7 +64,7 @@ public final class ModEventSubscriber {
 				setup(new MiniModelBlock(Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(1.5F).lightValue(13)), "mini_model"),
 				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to the Furnace
 				setup(new HeatCollectorBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "heat_collector"),
-				setup(new ElectricFurnaceBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "electric_furnace"),
+				setup(new ElectricFurnaceBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F)), "electric_furnace"),
 				setup(new ModFurnaceBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "mod_furnace")
 		);
 		LOGGER.debug("Registered Blocks");
