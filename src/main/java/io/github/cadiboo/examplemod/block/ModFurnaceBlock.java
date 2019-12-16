@@ -55,6 +55,16 @@ public class ModFurnaceBlock extends HorizontalBlock {
 	}
 
 	/**
+	 * Amount of light emitted
+	 *
+	 * @deprecated Call via {@link BlockState#getLightValue())}
+	 * Implementing/overriding is fine.
+	 */
+	public int getLightValue(BlockState state) {
+		return state.get(BURNING) ? super.getLightValue(state) : 0;
+	}
+
+	/**
 	 * Called on the logical server when a BlockState with a TileEntity is replaced by another BlockState.
 	 * We use this method to drop all the items from our tile entity's inventory and update comparators near our block.
 	 *
