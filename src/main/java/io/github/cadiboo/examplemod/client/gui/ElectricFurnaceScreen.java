@@ -3,13 +3,13 @@ package io.github.cadiboo.examplemod.client.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.cadiboo.examplemod.ExampleMod;
 import io.github.cadiboo.examplemod.container.ElectricFurnaceContainer;
-import io.github.cadiboo.examplemod.energy.SettableEnergyStorage;
 import io.github.cadiboo.examplemod.tileentity.ElectricFurnaceTileEntity;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.energy.EnergyStorage;
 
 /**
  * @author Cadiboo
@@ -30,11 +30,20 @@ public class ElectricFurnaceScreen extends ContainerScreen<ElectricFurnaceContai
 
 		int relMouseX = mouseX - this.guiLeft;
 		int relMouseY = mouseY - this.guiTop;
+		final ElectricFurnaceTileEntity tileEntity = this.container.tileEntity;
 		boolean energyBarHovered = relMouseX > 151 && relMouseX < 166 && relMouseY > 10 && relMouseY < 76;
 		if (energyBarHovered) {
 			String tooltip = new TranslationTextComponent(
 					"gui." + ExampleMod.MODID + ".energy",
-					this.container.tileEntity.energy.getEnergyStored()
+					tileEntity.energy.getEnergyStored()
+			).getFormattedText();
+			this.renderTooltip(tooltip, mouseX, mouseY);
+		}
+		boolean arrowHovered = relMouseX > 79 && relMouseX < 104 && relMouseY > 34 && relMouseY < 50;
+		if (arrowHovered && tileEntity.maxSmeltTime > 0) {
+			String tooltip = new TranslationTextComponent(
+					"gui." + ExampleMod.MODID + ".smeltTimeProgress",
+					tileEntity.smeltTimeLeft, tileEntity.maxSmeltTime
 			).getFormattedText();
 			this.renderTooltip(tooltip, mouseX, mouseY);
 		}
@@ -62,24 +71,40 @@ public class ElectricFurnaceScreen extends ContainerScreen<ElectricFurnaceContai
 		this.blit(startX, startY, 0, 0, this.xSize, this.ySize);
 
 		final ElectricFurnaceTileEntity tileEntity = container.tileEntity;
-
-		final SettableEnergyStorage energy = tileEntity.energy;
-		final int energyStored = energy.getEnergyStored();
-		if (energyStored > 0) { // Draw energy bar
-			final int energyProgress = Math.round((float) energyStored / energy.getMaxEnergyStored() * 65);
+		if (tileEntity.energy.getEnergyStored() > 0) { // Draw energy bar
+			int energyProgress = getEnergyProgressScaled();
 			this.blit(
 					startX + 152, startY + 10 + 65 - energyProgress,
-					176, 14,
+					176, 16,
 					14, energyProgress
 			);
 		}
-
-		if (!tileEntity.inventory.getStackInSlot(ElectricFurnaceTileEntity.INPUT_SLOT).isEmpty()) // Draw flames
+		if (tileEntity.smeltTimeLeft > 0) {
+			// Draw progress arrow
+			int arrowWidth = getSmeltTimeScaled();
 			this.blit(
-					startX + 81, startY + 58,
+					startX + 79, startY + 34,
 					176, 0,
-					14, 14
+					arrowWidth, 16
 			);
+		}
+	}
+
+	private int getEnergyProgressScaled() {
+		final ElectricFurnaceTileEntity tileEntity = this.container.tileEntity;
+		final EnergyStorage energy = tileEntity.energy;
+		final int energyStored = energy.getEnergyStored();
+		final int maxEnergyStored = energy.getMaxEnergyStored();
+		return Math.round((float) energyStored / maxEnergyStored * 65); // 65 is the height of the arrow
+	}
+
+	private int getSmeltTimeScaled() {
+		final ElectricFurnaceTileEntity tileEntity = this.container.tileEntity;
+		final short smeltTimeLeft = tileEntity.smeltTimeLeft;
+		final short maxSmeltTime = tileEntity.maxSmeltTime;
+		if (smeltTimeLeft <= 0 || maxSmeltTime <= 0)
+			return 0;
+		return (maxSmeltTime - smeltTimeLeft) * 24 / maxSmeltTime; // 24 is the width of the arrow
 	}
 
 }

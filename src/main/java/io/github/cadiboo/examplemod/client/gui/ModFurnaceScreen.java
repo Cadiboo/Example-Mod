@@ -57,7 +57,8 @@ public class ModFurnaceScreen extends ContainerScreen<ModFurnaceContainer> {
 		this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 96 + 2), 0x404040);
 
 		final ModFurnaceTileEntity tileEntity = this.container.tileEntity;
-		this.font.drawString(tileEntity.smeltTimeLeft + " / " + tileEntity.maxSmeltTime, 8.0F, this.ySize, 0x404040);
+		if (tileEntity.smeltTimeLeft > 0)
+			this.font.drawString(tileEntity.smeltTimeLeft + " / " + tileEntity.maxSmeltTime, 8.0F, this.ySize, 0x404040);
 		this.font.drawString(tileEntity.fuelBurnTimeLeft + " / " + tileEntity.maxFuelBurnTime, 8.0F, this.ySize + 14, 0x404040);
 	}
 
@@ -107,7 +108,7 @@ public class ModFurnaceScreen extends ContainerScreen<ModFurnaceContainer> {
 		final ModFurnaceTileEntity tileEntity = this.container.tileEntity;
 		if (tileEntity.maxFuelBurnTime <= 0)
 			return 0;
-		return tileEntity.fuelBurnTimeLeft * 14 / tileEntity.maxFuelBurnTime; // 14 is the height of the flames
+		return tileEntity.fuelBurnTimeLeft * 16 / tileEntity.maxFuelBurnTime; // 14 is the height of the flames
 	}
 
 }
