@@ -2,6 +2,7 @@ package io.github.cadiboo.examplemod.tileentity;
 
 import io.github.cadiboo.examplemod.ModUtil;
 import io.github.cadiboo.examplemod.block.HeatCollectorBlock;
+import io.github.cadiboo.examplemod.config.ExampleModConfig;
 import io.github.cadiboo.examplemod.container.HeatCollectorContainer;
 import io.github.cadiboo.examplemod.energy.SettableEnergyStorage;
 import io.github.cadiboo.examplemod.init.ModBlocks;
@@ -44,8 +45,10 @@ import javax.annotation.Nullable;
 public class HeatCollectorTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
 	public static final int FUEL_SLOT = 0;
+
 	private static final String INVENTORY_TAG = "inventory";
 	private static final String ENERGY_TAG = "energy";
+
 	public final ItemStackHandler inventory = new ItemStackHandler(1) {
 		@Override
 		public boolean isItemValid(final int slot, @Nonnull final ItemStack stack) {
@@ -62,10 +65,10 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 		}
 	};
 	public final SettableEnergyStorage energy = new SettableEnergyStorage(100_000);
+
 	// Store the capability lazy optionals as fields to keep the amount of objects we use to a minimum
 	private final LazyOptional<ItemStackHandler> inventoryCapabilityExternal = LazyOptional.of(() -> this.inventory);
 	private final LazyOptional<EnergyStorage> energyCapabilityExternal = LazyOptional.of(() -> this.energy);
-
 	private int lastEnergy = -1;
 
 	public HeatCollectorTileEntity() {
@@ -112,11 +115,9 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 
 		}
 
-		// How much energy to try and transfer in each direction.
-		final int transferAmount = 100;
-
+		final int transferAmountPerTick = ExampleModConfig.heatCollectorTransferAmountPerTick;
 		// Skip trying to transfer if there isn't enough energy to transfer
-		if (energy.getEnergyStored() >= transferAmount) {
+		if (energy.getEnergyStored() >= transferAmountPerTick) {
 			for (Direction direction : ModUtil.DIRECTIONS) {
 				final TileEntity te = world.getTileEntity(pos.offset(direction));
 				if (te == null) {

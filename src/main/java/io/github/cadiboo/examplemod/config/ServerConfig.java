@@ -20,6 +20,7 @@ final class ServerConfig {
 	final ForgeConfigSpec.ConfigValue<DyeColor> serverEnumDyeColor;
 
 	final ForgeConfigSpec.IntValue electricFurnaceEnergySmeltCostPerTick;
+	final ForgeConfigSpec.IntValue heatCollectorTransferAmountPerTick;
 
 	ServerConfig(final ForgeConfigSpec.Builder builder) {
 		builder.push("general");
@@ -40,6 +41,10 @@ final class ServerConfig {
 				.comment("How much energy for the Electric Furnace to consume to smelt an item per tick")
 				.translation(ExampleMod.MODID + ".config.electricFurnaceEnergySmeltCostPerTick")
 				.defineInRange("electricFurnaceEnergySmeltCostPerTick", 100, 0, Integer.MAX_VALUE);
+		heatCollectorTransferAmountPerTick = builder
+				.comment("How much energy for the Heat Collector to try and transfer in each direction per tick")
+				.translation(ExampleMod.MODID + ".config.heatCollectorTransferAmountPerTick")
+				.defineInRange("heatCollectorTransferAmountPerTick", 100, 0, Integer.MAX_VALUE);
 		builder.pop();
 	}
 
