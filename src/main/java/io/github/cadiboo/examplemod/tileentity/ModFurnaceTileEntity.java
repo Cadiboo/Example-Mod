@@ -196,7 +196,7 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 			// changed and means the game will save the chunk to disk later.
 			this.markDirty();
 
-			final BlockState newState = ModBlocks.MOD_FURNACE.getDefaultState()
+			final BlockState newState = this.getBlockState()
 					.with(ModFurnaceBlock.BURNING, hasFuel);
 
 			// Flag 2: Send the change to clients
