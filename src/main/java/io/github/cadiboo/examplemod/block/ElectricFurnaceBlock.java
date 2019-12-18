@@ -11,6 +11,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
@@ -78,13 +79,14 @@ public class ElectricFurnaceBlock extends HorizontalBlock {
 	 * Implementing/overriding is fine.
 	 */
 	@Override
-	public boolean onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
+//	public boolean onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
+	public ActionResultType func_225533_a_(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
 		if (!worldIn.isRemote) {
 			final TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof ElectricFurnaceTileEntity)
 				NetworkHooks.openGui((ServerPlayerEntity) player, (ElectricFurnaceTileEntity) tileEntity, pos);
 		}
-		return true;
+		return ActionResultType.SUCCESS;
 	}
 
 	/**
