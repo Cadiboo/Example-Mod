@@ -12,6 +12,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -91,6 +92,8 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 			// Only use the stack if we can receive 100% of the energy from it
 			if (energy.receiveEnergy(energyToReceive, true) == energyToReceive) {
 				energy.receiveEnergy(energyToReceive, false);
+				if (fuelStack.hasContainerItem())
+					insertOrDropContainerItem(fuelStack, FUEL_SLOT);
 				fuelStack.shrink(1);
 			}
 		}
@@ -157,6 +160,21 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 			lastEnergy = energy.getEnergyStored();
 		}
 
+	}
+
+	/**
+	 * Tries to insert the container item for the stack into the given slot or drops the item on the ground if it can't insert
+	 *
+	 * @param stack The stack that has a container item
+	 * @param slot  The slot to try to insert the container item into
+	 */
+	private void insertOrDropContainerItem(final ItemStack stack, final int slot) {
+		final ItemStack containerItem = stack.getContainerItem();
+		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, containerItem, true).isEmpty();
+		if (canInsertContainerItemIntoSlot)
+			inventory.insertItem(slot, containerItem, false);
+		else // Drop the container item if we can't insert it
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), containerItem);
 	}
 
 	@Nonnull
