@@ -7,9 +7,9 @@ import io.github.cadiboo.examplemod.client.gui.ModFurnaceScreen;
 import io.github.cadiboo.examplemod.client.render.tileentity.ElectricFurnaceTileEntityRenderer;
 import io.github.cadiboo.examplemod.client.render.tileentity.MiniModelTileEntityRenderer;
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
-import io.github.cadiboo.examplemod.tileentity.ElectricFurnaceTileEntity;
-import io.github.cadiboo.examplemod.tileentity.MiniModelTileEntity;
+import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -37,12 +37,12 @@ public final class ClientModEventSubscriber {
 	public static void onFMLClientSetupEvent(final FMLClientSetupEvent event) {
 
 		// Register TileEntity Renderers
-		ClientRegistry.bindTileEntitySpecialRenderer(MiniModelTileEntity.class, new MiniModelTileEntityRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(ElectricFurnaceTileEntity.class, new ElectricFurnaceTileEntityRenderer());
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.MINI_MODEL, new MiniModelTileEntityRenderer(TileEntityRendererDispatcher.instance));
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ELECTRIC_FURNACE, new ElectricFurnaceTileEntityRenderer(TileEntityRendererDispatcher.instance));
 		LOGGER.debug("Registered TileEntity Renderers");
 
 		// Register Entity Renderers
-//		RenderingRegistry.registerEntityRenderingHandler(YourEntity.class, YourEntityRenderer::new);
+//		RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.YOUR_ENTITY_TYPE, YourEntityRenderer::new);
 //		LOGGER.debug("Registered Entity Renderers");
 
 		// Register ContainerType Screens
