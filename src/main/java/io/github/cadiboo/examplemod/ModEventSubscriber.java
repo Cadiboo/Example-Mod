@@ -61,7 +61,7 @@ public final class ModEventSubscriber {
 				// This block has the IRON material, meaning it needs at least a stone pickaxe to break it. It is very similar to the Iron Block
 				setup(new Block(Block.Properties.create(Material.IRON, MaterialColor.IRON).hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)), "example_block"),
 				// This block has the MISCELLANEOUS material. It is very similar to the Redstone Torch
-				setup(new MiniModelBlock(Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(1.5F).lightValue(13)), "mini_model"),
+				setup(new MiniModelBlock(Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(1.5F).lightValue(13).doesNotBlockMovement()), "mini_model"),
 				// This block has the ROCK material, meaning it needs at least a wooden pickaxe to break it. It is very similar to the Furnace
 				setup(new HeatCollectorBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).lightValue(13)), "heat_collector"),
 				setup(new ElectricFurnaceBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F)), "electric_furnace"),
