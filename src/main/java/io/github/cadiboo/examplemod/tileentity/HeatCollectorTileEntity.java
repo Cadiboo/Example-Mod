@@ -92,9 +92,14 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 			// Only use the stack if we can receive 100% of the energy from it
 			if (energy.receiveEnergy(energyToReceive, true) == energyToReceive) {
 				energy.receiveEnergy(energyToReceive, false);
-				if (fuelStack.hasContainerItem())
-					insertOrDropContainerItem(fuelStack, FUEL_SLOT);
-				fuelStack.shrink(1);
+				if (fuelStack.hasContainerItem()) {
+					final ItemStack containerStack = fuelStack.getContainerItem();
+					fuelStack.shrink(1); // Shrink now to make space in the slot.
+					insertOrDropStack(FUEL_SLOT, containerStack);
+				} else {
+					fuelStack.shrink(1);
+				}
+				inventory.setStackInSlot(FUEL_SLOT, fuelStack); // Update the data
 			}
 		}
 
@@ -163,18 +168,17 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	}
 
 	/**
-	 * Tries to insert the container item for the stack into the given slot or drops the item on the ground if it can't insert
+	 * Tries to insert the stack into the given slot or drops the stack on the ground if it can't insert it.
 	 *
-	 * @param stack The stack that has a container item
 	 * @param slot  The slot to try to insert the container item into
+	 * @param stack The stack to try to insert
 	 */
-	private void insertOrDropContainerItem(final ItemStack stack, final int slot) {
-		final ItemStack containerItem = stack.getContainerItem();
-		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, containerItem, true).isEmpty();
+	private void insertOrDropStack(final int slot, final ItemStack stack) {
+		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, stack, true).isEmpty();
 		if (canInsertContainerItemIntoSlot)
-			inventory.insertItem(slot, containerItem, false);
-		else // Drop the container item if we can't insert it
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), containerItem);
+			inventory.insertItem(slot, stack, false);
+		else // Drop the stack if we can't insert it
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 	}
 
 	@Nonnull

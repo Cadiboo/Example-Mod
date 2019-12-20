@@ -168,9 +168,13 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 						--smeltTimeLeft;
 						if (smeltTimeLeft == 0) {
 							inventory.insertItem(OUTPUT_SLOT, result, false);
-							if (input.hasContainerItem())
-								insertOrDropContainerItem(input, INPUT_SLOT);
-							input.shrink(1);
+							if (input.hasContainerItem()) {
+								final ItemStack containerStack = input.getContainerItem();
+								input.shrink(1); // Shrink now to make space in the slot.
+								insertOrDropStack(INPUT_SLOT, containerStack);
+							} else {
+								input.shrink(1);
+							}
 							inventory.setStackInSlot(INPUT_SLOT, input); // Update the data
 							smeltTimeLeft = -1; // Set to -1 so we smelt the next stack on the next tick
 						}
@@ -203,18 +207,17 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 	}
 
 	/**
-	 * Tries to insert the container item for the stack into the given slot or drops the item on the ground if it can't insert
+	 * Tries to insert the stack into the given slot or drops the stack on the ground if it can't insert it.
 	 *
-	 * @param stack The stack that has a container item
 	 * @param slot  The slot to try to insert the container item into
+	 * @param stack The stack to try to insert
 	 */
-	private void insertOrDropContainerItem(final ItemStack stack, final int slot) {
-		final ItemStack containerItem = stack.getContainerItem();
-		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, containerItem, true).isEmpty();
+	private void insertOrDropStack(final int slot, final ItemStack stack) {
+		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, stack, true).isEmpty();
 		if (canInsertContainerItemIntoSlot)
-			inventory.insertItem(slot, containerItem, false);
-		else // Drop the container item if we can't insert it
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), containerItem);
+			inventory.insertItem(slot, stack, false);
+		else // Drop the stack if we can't insert it
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 	}
 
 	/**
