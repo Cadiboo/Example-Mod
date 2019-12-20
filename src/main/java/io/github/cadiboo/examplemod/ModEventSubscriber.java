@@ -82,32 +82,21 @@ public final class ModEventSubscriber {
 				setup(new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)), "example_item")
 		);
 
-		// We need to go over the entire registry so that we include any potential Registry Overrides
-		for (final Block block : ForgeRegistries.BLOCKS.getValues()) {
-
-			final ResourceLocation blockRegistryName = block.getRegistryName();
-			// An extra safe-guard against badly registered blocks
-			Preconditions.checkNotNull(blockRegistryName, "Registry Name of Block \"" + block + "\" of class \"" + block.getClass().getName() + "\"is null! This is not allowed!");
-
-			// Check that the blocks is from our mod, if not, continue to the next block
-			if (!blockRegistryName.getNamespace().equals(ExampleMod.MODID)) {
-				continue;
-			}
-
-			// If you have blocks that don't have a corresponding BlockItem, uncomment this code and create
-			// an Interface - or even better an Annotation - called NoAutomaticBlockItem with no methods
-			// and implement it on your blocks that shouldn't have BlockItems autmatically made for them
-//			if (block instanceof NoAutomaticBlockItem) {
-//				continue;
-//			}
-
-			// Make the properties, and make it so that the item will be on our ItemGroup (CreativeTab)
-			final Item.Properties properties = new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP);
-			// Create the new BlockItem with the block and it's properties
-			final BlockItem blockItem = new BlockItem(block, properties);
-			// Setup the new BlockItem with the block's registry name and register it
-			registry.register(setup(blockItem, blockRegistryName));
-		}
+		// Automatically register BlockItems for all our Blocks
+		// (We need to go over the entire registry so that we include any potential Registry Overrides)
+		ForgeRegistries.BLOCKS.getValues().parallelStream()
+				// Filter out blocks that aren't from our mod
+				.filter(block -> block.getRegistryName().getNamespace().equals(ExampleMod.MODID))
+				// You can do extra filtering here if you don't want some blocks to have an BlockItem automatically registered for them
+				// Register the BlockItem for the block
+				.forEach(block -> {
+					// Make the properties, and make it so that the item will be on our ItemGroup (CreativeTab)
+					final Item.Properties properties = new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP);
+					// Create the new BlockItem with the block and it's properties
+					final BlockItem blockItem = new BlockItem(block, properties);
+					// Setup the new BlockItem with the block's registry name and register it
+					registry.register(setup(blockItem, block.getRegistryName()));
+				});
 		LOGGER.debug("Registered Items");
 	}
 
