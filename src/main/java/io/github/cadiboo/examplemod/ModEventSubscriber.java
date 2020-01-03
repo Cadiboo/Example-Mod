@@ -84,7 +84,7 @@ public final class ModEventSubscriber {
 
 		// Automatically register BlockItems for all our Blocks
 		// (We need to go over the entire registry so that we include any potential Registry Overrides)
-		ForgeRegistries.BLOCKS.getValues().parallelStream()
+		ForgeRegistries.BLOCKS.getValues().stream()
 				// Filter out blocks that aren't from our mod
 				.filter(block -> block.getRegistryName().getNamespace().equals(ExampleMod.MODID))
 				// You can do extra filtering here if you don't want some blocks to have an BlockItem automatically registered for them
