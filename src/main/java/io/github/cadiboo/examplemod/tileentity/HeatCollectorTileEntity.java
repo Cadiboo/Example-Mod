@@ -73,7 +73,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	private int lastEnergy = -1;
 
 	public HeatCollectorTileEntity() {
-		super(ModTileEntityTypes.HEAT_COLLECTOR);
+		super(ModTileEntityTypes.HEAT_COLLECTOR.get());
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.HEAT_COLLECTOR.getTranslationKey());
+		return new TranslationTextComponent(ModBlocks.HEAT_COLLECTOR.get().getTranslationKey());
 	}
 
 	/**

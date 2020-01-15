@@ -38,7 +38,7 @@ public class MiniModelBlock extends Block {
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.MINI_MODEL.create();
+		return ModTileEntityTypes.MINI_MODEL.get().create();
 	}
 
 	/**

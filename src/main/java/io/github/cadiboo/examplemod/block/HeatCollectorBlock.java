@@ -54,7 +54,7 @@ public class HeatCollectorBlock extends Block {
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.HEAT_COLLECTOR.create();
+		return ModTileEntityTypes.HEAT_COLLECTOR.get().create();
 	}
 
 	/**

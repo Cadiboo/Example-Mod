@@ -94,7 +94,7 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 	private boolean lastBurning = false;
 
 	public ModFurnaceTileEntity() {
-		super(ModTileEntityTypes.MOD_FURNACE);
+		super(ModTileEntityTypes.MOD_FURNACE.get());
 	}
 
 	/**
@@ -357,7 +357,7 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.MOD_FURNACE.getTranslationKey());
+		return new TranslationTextComponent(ModBlocks.MOD_FURNACE.get().getTranslationKey());
 	}
 
 	/**

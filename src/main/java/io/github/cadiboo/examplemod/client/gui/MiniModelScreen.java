@@ -19,7 +19,7 @@ public class MiniModelScreen extends Screen {
 	private final MiniModelTileEntity tileEntity;
 
 	public MiniModelScreen(final MiniModelTileEntity tileEntity) {
-		super(ModBlocks.MINI_MODEL.getNameTextComponent());
+		super(ModBlocks.MINI_MODEL.get().getNameTextComponent());
 		this.tileEntity = tileEntity;
 	}
 

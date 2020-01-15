@@ -91,7 +91,7 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 	private int lastEnergy = -1;
 
 	public ElectricFurnaceTileEntity() {
-		super(ModTileEntityTypes.ELECTRIC_FURNACE);
+		super(ModTileEntityTypes.ELECTRIC_FURNACE.get());
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 	@Nonnull
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.ELECTRIC_FURNACE.getTranslationKey());
+		return new TranslationTextComponent(ModBlocks.ELECTRIC_FURNACE.get().getTranslationKey());
 	}
 
 	/**

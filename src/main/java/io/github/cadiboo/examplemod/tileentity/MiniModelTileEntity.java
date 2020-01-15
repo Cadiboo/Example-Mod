@@ -29,7 +29,7 @@ public class MiniModelTileEntity extends TileEntity {
 	}
 
 	public MiniModelTileEntity() {
-		this(ModTileEntityTypes.MINI_MODEL);
+		this(ModTileEntityTypes.MINI_MODEL.get());
 	}
 
 	// @OnlyIn(Dist.CLIENT) Makes it so this method will be removed from the class on the PHYSICAL SERVER

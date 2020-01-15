@@ -52,7 +52,7 @@ public class ModFurnaceContainer extends Container {
 	 * and logical-client-side from {@link #ModFurnaceContainer(int, PlayerInventory, PacketBuffer)}
 	 */
 	public ModFurnaceContainer(final int windowId, final PlayerInventory playerInventory, final ModFurnaceTileEntity tileEntity) {
-		super(ModContainerTypes.MOD_FURNACE, windowId);
+		super(ModContainerTypes.MOD_FURNACE.get(), windowId);
 		this.tileEntity = tileEntity;
 		this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 
@@ -137,7 +137,7 @@ public class ModFurnaceContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(@Nonnull final PlayerEntity player) {
-		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.MOD_FURNACE);
+		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.MOD_FURNACE.get());
 	}
 
 }

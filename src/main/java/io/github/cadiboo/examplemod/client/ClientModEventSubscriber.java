@@ -9,7 +9,6 @@ import io.github.cadiboo.examplemod.client.render.tileentity.MiniModelTileEntity
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
 import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -40,8 +39,8 @@ public final class ClientModEventSubscriber {
 	public static void onFMLClientSetupEvent(final FMLClientSetupEvent event) {
 
 		// Register TileEntity Renderers
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.MINI_MODEL, new MiniModelTileEntityRenderer(TileEntityRendererDispatcher.instance));
-		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ELECTRIC_FURNACE, new ElectricFurnaceTileEntityRenderer(TileEntityRendererDispatcher.instance));
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.MINI_MODEL.get(), MiniModelTileEntityRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.ELECTRIC_FURNACE.get(), ElectricFurnaceTileEntityRenderer::new);
 		LOGGER.debug("Registered TileEntity Renderers");
 
 		// Register Entity Renderers
@@ -49,9 +48,9 @@ public final class ClientModEventSubscriber {
 //		LOGGER.debug("Registered Entity Renderers");
 
 		// Register ContainerType Screens
-		ScreenManager.registerFactory(ModContainerTypes.HEAT_COLLECTOR, HeatCollectorScreen::new);
-		ScreenManager.registerFactory(ModContainerTypes.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
-		ScreenManager.registerFactory(ModContainerTypes.MOD_FURNACE, ModFurnaceScreen::new);
+		ScreenManager.registerFactory(ModContainerTypes.HEAT_COLLECTOR.get(), HeatCollectorScreen::new);
+		ScreenManager.registerFactory(ModContainerTypes.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
+		ScreenManager.registerFactory(ModContainerTypes.MOD_FURNACE.get(), ModFurnaceScreen::new);
 		LOGGER.debug("Registered ContainerType Screens");
 
 	}

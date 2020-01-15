@@ -52,7 +52,7 @@ public class ModFurnaceBlock extends HorizontalBlock {
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
 		// Always use TileEntityType#create to allow registry overrides to work.
-		return ModTileEntityTypes.MOD_FURNACE.create();
+		return ModTileEntityTypes.MOD_FURNACE.get().create();
 	}
 
 	/**

@@ -39,7 +39,7 @@ public class HeatCollectorContainer extends Container {
 	 * and logical-client-side from {@link #HeatCollectorContainer(int, PlayerInventory, PacketBuffer)}
 	 */
 	public HeatCollectorContainer(final int windowId, final PlayerInventory playerInventory, final HeatCollectorTileEntity tileEntity) {
-		super(ModContainerTypes.HEAT_COLLECTOR, windowId);
+		super(ModContainerTypes.HEAT_COLLECTOR.get(), windowId);
 		this.tileEntity = tileEntity;
 		this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
 
@@ -116,7 +116,7 @@ public class HeatCollectorContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(@Nonnull final PlayerEntity player) {
-		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.HEAT_COLLECTOR);
+		return isWithinUsableDistance(canInteractWithCallable, player, ModBlocks.HEAT_COLLECTOR.get());
 	}
 
 }

@@ -8,11 +8,14 @@ import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
+ * This class holds all our ItemGroups (Formerly called CreativeTabs).
+ * Static initialisers are fine here.
+ *
  * @author Cadiboo
  */
 public final class ModItemGroups {
 
-	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ExampleMod.MODID, () -> new ItemStack(ModItems.EXAMPLE_ITEM));
+	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ExampleMod.MODID, () -> new ItemStack(ModItems.EXAMPLE_ITEM.get()));
 
 	public static final class ModItemGroup extends ItemGroup {
 
