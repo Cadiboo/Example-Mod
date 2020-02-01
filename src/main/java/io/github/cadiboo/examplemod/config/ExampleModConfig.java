@@ -20,7 +20,7 @@ public final class ExampleModConfig {
 	public static DyeColor clientDyeColorEnum;
 
 	public static boolean modelTranslucency;
-	public static double modelScale;
+	public static float modelScale;
 
 	// Server
 	public static boolean serverBoolean;

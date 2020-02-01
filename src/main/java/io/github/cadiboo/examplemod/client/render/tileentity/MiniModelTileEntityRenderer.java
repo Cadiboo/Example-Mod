@@ -17,6 +17,9 @@ import org.lwjgl.opengl.GL11;
 import java.nio.ByteBuffer;
 
 /**
+ * Handles rendering all MiniModel TileEntities.
+ * The render method is called once each frame for every visible MiniModel.
+ * <p>
  * Renders a model of the surrounding blocks.
  * This should really probably not be in an examplemod for beginners,
  * but I added comments to it so its all good

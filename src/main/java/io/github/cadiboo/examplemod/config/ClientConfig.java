@@ -44,7 +44,7 @@ final class ClientConfig {
 		modelScale = builder
 				.comment("The scale to render the model at")
 				.translation(ExampleMod.MODID + ".config.modelScale")
-				.defineInRange("modelScale", 0.0625, 0.0001, 100);
+				.defineInRange("modelScale", 0.0625F, 0.0001F, 100F);
 		builder.pop();
 	}
 

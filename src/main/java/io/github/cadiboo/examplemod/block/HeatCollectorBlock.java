@@ -95,8 +95,7 @@ public class HeatCollectorBlock extends Block {
 	 * Implementing/overriding is fine.
 	 */
 	@Override
-//	public boolean onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
-	public ActionResultType func_225533_a_(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
+	public ActionResultType onBlockActivated(final BlockState state, final World worldIn, final BlockPos pos, final PlayerEntity player, final Hand handIn, final BlockRayTraceResult hit) {
 		if (!worldIn.isRemote) {
 			final TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof HeatCollectorTileEntity)

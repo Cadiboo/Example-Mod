@@ -1,24 +1,21 @@
 package io.github.cadiboo.examplemod;
 
-import com.google.common.base.Preconditions;
 import io.github.cadiboo.examplemod.config.ConfigHelper;
 import io.github.cadiboo.examplemod.config.ConfigHolder;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModItemGroups;
+import io.github.cadiboo.examplemod.item.ModdedSpawnEggItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
 
 /**
  * Subscribe to events from the MOD EventBus that should be handled on both PHYSICAL sides in this class
@@ -48,8 +45,10 @@ public final class ModEventSubscriber {
 					final Item.Properties properties = new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP);
 					// Create the new BlockItem with the block and it's properties
 					final BlockItem blockItem = new BlockItem(block, properties);
-					// Setup the new BlockItem with the block's registry name and register it
-					registry.register(setup(blockItem, block.getRegistryName()));
+					// Set the new BlockItem's registry name to the block's registry name
+					blockItem.setRegistryName(block.getRegistryName());
+					// Register the BlockItem
+					registry.register(blockItem);
 				});
 		LOGGER.debug("Registered BlockItems");
 	}
@@ -68,30 +67,6 @@ public final class ModEventSubscriber {
 			ConfigHelper.bakeServer(config);
 			LOGGER.debug("Baked server config");
 		}
-	}
-
-	/**
-	 * Performs setup on a registry entry
-	 *
-	 * @param name The path of the entry's name. Used to make a name who's domain is our mod's modid
-	 */
-	@Nonnull
-	private static <T extends IForgeRegistryEntry<T>> T setup(@Nonnull final T entry, @Nonnull final String name) {
-		Preconditions.checkNotNull(name, "Name to assign to entry cannot be null!");
-		return setup(entry, new ResourceLocation(ExampleMod.MODID, name));
-	}
-
-	/**
-	 * Performs setup on a registry entry
-	 *
-	 * @param registryName The full registry name of the entry
-	 */
-	@Nonnull
-	private static <T extends IForgeRegistryEntry<T>> T setup(@Nonnull final T entry, @Nonnull final ResourceLocation registryName) {
-		Preconditions.checkNotNull(entry, "Entry cannot be null!");
-		Preconditions.checkNotNull(registryName, "Registry name to assign to entry cannot be null!");
-		entry.setRegistryName(registryName);
-		return entry;
 	}
 
 }

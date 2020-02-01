@@ -4,14 +4,18 @@ import io.github.cadiboo.examplemod.ExampleMod;
 import io.github.cadiboo.examplemod.client.gui.ElectricFurnaceScreen;
 import io.github.cadiboo.examplemod.client.gui.HeatCollectorScreen;
 import io.github.cadiboo.examplemod.client.gui.ModFurnaceScreen;
+import io.github.cadiboo.examplemod.client.render.entity.WildBoarRenderer;
 import io.github.cadiboo.examplemod.client.render.tileentity.ElectricFurnaceTileEntityRenderer;
 import io.github.cadiboo.examplemod.client.render.tileentity.MiniModelTileEntityRenderer;
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
+import io.github.cadiboo.examplemod.init.ModEntityTypes;
 import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.apache.logging.log4j.LogManager;
@@ -44,14 +48,17 @@ public final class ClientModEventSubscriber {
 		LOGGER.debug("Registered TileEntity Renderers");
 
 		// Register Entity Renderers
-//		RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.YOUR_ENTITY_TYPE, YourEntityRenderer::new);
-//		LOGGER.debug("Registered Entity Renderers");
+		RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.WILD_BOAR.get(), WildBoarRenderer::new);
+		LOGGER.debug("Registered Entity Renderers");
 
 		// Register ContainerType Screens
-		ScreenManager.registerFactory(ModContainerTypes.HEAT_COLLECTOR.get(), HeatCollectorScreen::new);
-		ScreenManager.registerFactory(ModContainerTypes.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
-		ScreenManager.registerFactory(ModContainerTypes.MOD_FURNACE.get(), ModFurnaceScreen::new);
-		LOGGER.debug("Registered ContainerType Screens");
+		// ScreenManager.registerFactory is not safe to call during parallel mod loading so we queue it to run later
+		DeferredWorkQueue.runLater(() -> {
+			ScreenManager.registerFactory(ModContainerTypes.HEAT_COLLECTOR.get(), HeatCollectorScreen::new);
+			ScreenManager.registerFactory(ModContainerTypes.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
+			ScreenManager.registerFactory(ModContainerTypes.MOD_FURNACE.get(), ModFurnaceScreen::new);
+			LOGGER.debug("Registered ContainerType Screens");
+		});
 
 	}
 

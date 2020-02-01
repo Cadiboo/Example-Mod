@@ -8,11 +8,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.RedstoneTorchBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
 /**
+ * Handles rendering all ElectricFurnace TileEntities.
+ * The render method is called once each frame for every visible ElectricFurnace.
+ *
  * @author Cadiboo
  */
 public class ElectricFurnaceTileEntityRenderer extends TileEntityRenderer<ElectricFurnaceTileEntity> {
@@ -25,21 +27,14 @@ public class ElectricFurnaceTileEntityRenderer extends TileEntityRenderer<Electr
 	 * Render our TileEntity
 	 */
 	@Override
-	public void func_225616_a_(final ElectricFurnaceTileEntity tileEntityIn, final float partialTicks, final MatrixStack matrixStack, final IRenderTypeBuffer renderTypeBuffer, final int packedLight, final int backupPackedLight) {
-
-		// Set up GL state
-//		RenderHelper.enableStandardItemLighting();
-		RenderHelper.func_227780_a_();
+	public void render(final ElectricFurnaceTileEntity tileEntityIn, final float partialTicks, final MatrixStack matrixStack, final IRenderTypeBuffer renderTypeBuffer, final int packedLight, final int backupPackedLight) {
+		// TODO: Fix this up to actually do the rendering I want
 
 		final boolean hasEnergy = tileEntityIn.energy.getEnergyStored() >= ExampleModConfig.electricFurnaceEnergySmeltCostPerTick;
 		final BlockState renderState = Blocks.REDSTONE_TORCH.getDefaultState()
 				.with(RedstoneTorchBlock.LIT, hasEnergy);
 		// Render the torch (We use the depreciated method because we don't have an IModelData instance and want to use the default one)
-		Minecraft.getInstance().getBlockRendererDispatcher()
-				.func_228791_a_(renderState, matrixStack, renderTypeBuffer, packedLight, backupPackedLight);
-
-		// Clean up GL state
-		RenderHelper.disableStandardItemLighting();
+		Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(renderState, matrixStack, renderTypeBuffer, packedLight, backupPackedLight);
 	}
 
 }

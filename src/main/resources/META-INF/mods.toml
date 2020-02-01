@@ -9,8 +9,8 @@ modLoader="javafml" #mandatory
 
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 # See "https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html"
-# 24 is 1.13-pre, 25 is 1.13.2, 26 is 1.14.2, 27 is 1.14.3, 28 is 1.14.4, 29 is 1.15, 30 is 1.15.1
-loaderVersion="[30,)" #mandatory
+# 24 is 1.13-pre, 25 is 1.13.2, 26 is 1.14.2, 27 is 1.14.3, 28 is 1.14.4, 29 is 1.15, 30 is 1.15.1, 31 is 1.15.2
+loaderVersion="[31,)" #mandatory
 
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="http://github.com/YourName/Your-Mod-Name/issues" #optional
@@ -49,7 +49,7 @@ modId="forge" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified
 mandatory=true #mandatory
 # The version range of the dependency (see "https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html")
-versionRange="[30,)" #mandatory
+versionRange="[31,)" #mandatory
 # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
 ordering="NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -59,6 +59,6 @@ side="BOTH"
 [[dependencies.examplemod]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.15.1]"
+versionRange="[1.15.2]"
 ordering="NONE"
 side="BOTH"

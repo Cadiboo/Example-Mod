@@ -3,6 +3,7 @@ package io.github.cadiboo.examplemod;
 import io.github.cadiboo.examplemod.config.ConfigHolder;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModContainerTypes;
+import io.github.cadiboo.examplemod.init.ModEntityTypes;
 import io.github.cadiboo.examplemod.init.ModItems;
 import io.github.cadiboo.examplemod.init.ModTileEntityTypes;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -33,6 +34,7 @@ public final class ExampleMod {
 		ModBlocks.BLOCKS.register(modEventBus);
 		ModItems.ITEMS.register(modEventBus);
 		ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
+		ModEntityTypes.ENTITY_TYPES.register(modEventBus);
 		ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
 		// Register Configs (Does not need to be after Deferred Registers)
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);

@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  */
 public final class ModItemGroups {
 
-	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ExampleMod.MODID, () -> new ItemStack(ModItems.EXAMPLE_ITEM.get()));
+	public static final ItemGroup MOD_ITEM_GROUP = new ModItemGroup(ExampleMod.MODID, () -> new ItemStack(ModItems.EXAMPLE_CRYSTAL.get()));
 
 	public static final class ModItemGroup extends ItemGroup {
 

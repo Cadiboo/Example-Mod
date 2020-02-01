@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "examplemod:item/example_item"
+		"layer0": "examplemod:item/example_crystal"
 	}
 }

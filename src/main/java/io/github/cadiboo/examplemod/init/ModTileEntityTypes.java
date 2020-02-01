@@ -24,10 +24,23 @@ import net.minecraftforge.registries.ForgeRegistries;
 public final class ModTileEntityTypes {
 
 	public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, ExampleMod.MODID);
-	// We don't have a datafixer for our TileEntities, so we pass null into build
-	public static final RegistryObject<TileEntityType<MiniModelTileEntity>> MINI_MODEL = TILE_ENTITY_TYPES.register("mini_model", () -> TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL.get()).build(null));
-	public static final RegistryObject<TileEntityType<HeatCollectorTileEntity>> HEAT_COLLECTOR = TILE_ENTITY_TYPES.register("heat_collector", () -> TileEntityType.Builder.create(HeatCollectorTileEntity::new, ModBlocks.HEAT_COLLECTOR.get()).build(null));
-	public static final RegistryObject<TileEntityType<ElectricFurnaceTileEntity>> ELECTRIC_FURNACE = TILE_ENTITY_TYPES.register("electric_furnace", () -> TileEntityType.Builder.create(ElectricFurnaceTileEntity::new, ModBlocks.ELECTRIC_FURNACE.get()).build(null));
-	public static final RegistryObject<TileEntityType<ModFurnaceTileEntity>> MOD_FURNACE = TILE_ENTITY_TYPES.register("mod_furnace", () -> TileEntityType.Builder.create(ModFurnaceTileEntity::new, ModBlocks.MOD_FURNACE.get()).build(null));
+
+	// We don't have a datafixer for our TileEntities, so we pass null into build.
+	public static final RegistryObject<TileEntityType<MiniModelTileEntity>> MINI_MODEL = TILE_ENTITY_TYPES.register("mini_model", () ->
+			TileEntityType.Builder.create(MiniModelTileEntity::new, ModBlocks.MINI_MODEL.get())
+					.build(null)
+	);
+	public static final RegistryObject<TileEntityType<HeatCollectorTileEntity>> HEAT_COLLECTOR = TILE_ENTITY_TYPES.register("heat_collector", () ->
+			TileEntityType.Builder.create(HeatCollectorTileEntity::new, ModBlocks.HEAT_COLLECTOR.get())
+					.build(null)
+	);
+	public static final RegistryObject<TileEntityType<ElectricFurnaceTileEntity>> ELECTRIC_FURNACE = TILE_ENTITY_TYPES.register("electric_furnace", () ->
+			TileEntityType.Builder.create(ElectricFurnaceTileEntity::new, ModBlocks.ELECTRIC_FURNACE.get())
+					.build(null)
+	);
+	public static final RegistryObject<TileEntityType<ModFurnaceTileEntity>> MOD_FURNACE = TILE_ENTITY_TYPES.register("mod_furnace", () ->
+			TileEntityType.Builder.create(ModFurnaceTileEntity::new, ModBlocks.MOD_FURNACE.get())
+					.build(null)
+	);
 
 }

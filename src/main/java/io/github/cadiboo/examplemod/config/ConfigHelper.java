@@ -16,7 +16,7 @@ public final class ConfigHelper {
 		ExampleModConfig.clientDyeColorEnum = ConfigHolder.CLIENT.clientDyeColorEnum.get();
 
 		ExampleModConfig.modelTranslucency = ConfigHolder.CLIENT.modelTranslucency.get();
-		ExampleModConfig.modelScale = ConfigHolder.CLIENT.modelScale.get();
+		ExampleModConfig.modelScale = ConfigHolder.CLIENT.modelScale.get().floatValue();
 	}
 
 	public static void bakeServer(final ModConfig config) {
