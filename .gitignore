@@ -14,7 +14,9 @@ classes
 *.ipr
 *.iws
 *.iml
-.idea
+
+.idea/*
+!.idea/codeStyles/
 
 # gradle
 build
@@ -22,7 +24,4 @@ build
 
 # other
 run
-!LICENSE
-!README.*
-!.gitignore
 *.DS_Store*
