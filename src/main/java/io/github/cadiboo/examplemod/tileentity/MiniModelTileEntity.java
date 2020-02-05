@@ -12,6 +12,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 /**
+ * This is the TileEntity for our MiniModel.
+ * It stores the render data for its surroundings.
+ * <p>
+ * Rendering code only exists on the client distribution so @OnlyIn is used a lot.
+ * The @OnlyIn annotation makes it so that a class/field/method annotated with it does not
+ * exist on the other distribution. This is important as TileEntities exist on both distributions
+ * but rendering only happens on the client.
+ * As a general rule you should avoid using @OnlyIn unless it is absolutely necessary.
+ *
  * @author Cadiboo
  */
 public class MiniModelTileEntity extends TileEntity {
