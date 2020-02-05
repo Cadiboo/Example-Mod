@@ -11,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -53,7 +52,6 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 	private static final String SMELT_TIME_LEFT_TAG = "smeltTimeLeft";
 	private static final String MAX_SMELT_TIME_TAG = "maxSmeltTime";
 	private static final String ENERGY_TAG = "energy";
-
 	public final ItemStackHandler inventory = new ItemStackHandler(2) {
 		@Override
 		public boolean isItemValid(final int slot, @Nonnull final ItemStack stack) {
@@ -148,7 +146,7 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 
 		// Smelting code
 
-		final ItemStack input = inventory.getStackInSlot(INPUT_SLOT);
+		final ItemStack input = inventory.getStackInSlot(INPUT_SLOT).copy();
 		final ItemStack result = getResult(input).orElse(ItemStack.EMPTY);
 
 		if (!result.isEmpty() && isInput(input)) {
@@ -168,14 +166,12 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 						--smeltTimeLeft;
 						if (smeltTimeLeft == 0) {
 							inventory.insertItem(OUTPUT_SLOT, result, false);
-							if (input.hasContainerItem()) {
-								final ItemStack containerStack = input.getContainerItem();
-								input.shrink(1); // Shrink now to make space in the slot.
-								insertOrDropStack(INPUT_SLOT, containerStack);
-							} else {
+							if (input.hasContainerItem())
+								inventory.setStackInSlot(INPUT_SLOT, input.getContainerItem());
+							else {
 								input.shrink(1);
+								inventory.setStackInSlot(INPUT_SLOT, input); // Update the data
 							}
-							inventory.setStackInSlot(INPUT_SLOT, input); // Update the data
 							smeltTimeLeft = -1; // Set to -1 so we smelt the next stack on the next tick
 						}
 					}
@@ -204,20 +200,6 @@ public class ElectricFurnaceTileEntity extends TileEntity implements ITickableTi
 			lastEnergy = energy.getEnergyStored();
 		}
 
-	}
-
-	/**
-	 * Tries to insert the stack into the given slot or drops the stack on the ground if it can't insert it.
-	 *
-	 * @param slot  The slot to try to insert the container item into
-	 * @param stack The stack to try to insert
-	 */
-	private void insertOrDropStack(final int slot, final ItemStack stack) {
-		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, stack, true).isEmpty();
-		if (canInsertContainerItemIntoSlot)
-			inventory.insertItem(slot, stack, false);
-		else // Drop the stack if we can't insert it
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 	}
 
 	/**

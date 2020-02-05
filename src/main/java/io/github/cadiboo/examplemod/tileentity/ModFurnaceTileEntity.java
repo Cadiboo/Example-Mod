@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -157,7 +156,7 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 
 		// Smelting code
 
-		final ItemStack input = inventory.getStackInSlot(INPUT_SLOT);
+		final ItemStack input = inventory.getStackInSlot(INPUT_SLOT).copy();
 		final ItemStack result = getResult(input).orElse(ItemStack.EMPTY);
 
 		if (!result.isEmpty() && isInput(input)) {
@@ -173,14 +172,12 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 						--smeltTimeLeft;
 						if (smeltTimeLeft == 0) {
 							inventory.insertItem(OUTPUT_SLOT, result, false);
-							if (input.hasContainerItem()) {
-								final ItemStack containerStack = input.getContainerItem();
-								input.shrink(1); // Shrink now to make space in the slot.
-								insertOrDropStack(FUEL_SLOT, containerStack);
-							} else {
+							if (input.hasContainerItem())
+								inventory.setStackInSlot(INPUT_SLOT, input.getContainerItem());
+							else {
 								input.shrink(1);
+								inventory.setStackInSlot(INPUT_SLOT, input); // Update the data
 							}
-							inventory.setStackInSlot(INPUT_SLOT, input); // Update the data
 							smeltTimeLeft = -1; // Set to -1 so we smelt the next stack on the next tick
 						}
 					}
@@ -213,20 +210,6 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 	}
 
 	/**
-	 * Tries to insert the stack into the given slot or drops the stack on the ground if it can't insert it.
-	 *
-	 * @param slot  The slot to try to insert the container item into
-	 * @param stack The stack to try to insert
-	 */
-	private void insertOrDropStack(final int slot, final ItemStack stack) {
-		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, stack, true).isEmpty();
-		if (canInsertContainerItemIntoSlot)
-			inventory.insertItem(slot, stack, false);
-		else // Drop the stack if we can't insert it
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-	}
-
-	/**
 	 * Mimics the code in {@link AbstractFurnaceTileEntity#func_214005_h()}
 	 *
 	 * @return The custom smelt time or 200 if there is no recipe for the input
@@ -242,19 +225,17 @@ public class ModFurnaceTileEntity extends TileEntity implements ITickableTileEnt
 	 * @return If the fuel was burnt
 	 */
 	private boolean burnFuel() {
-		final ItemStack fuelStack = inventory.getStackInSlot(FUEL_SLOT);
+		final ItemStack fuelStack = inventory.getStackInSlot(FUEL_SLOT).copy();
 		if (!fuelStack.isEmpty()) {
 			final int burnTime = ForgeHooks.getBurnTime(fuelStack);
 			if (burnTime > 0) {
 				fuelBurnTimeLeft = maxFuelBurnTime = ((short) burnTime);
-				if (fuelStack.hasContainerItem()) {
-					final ItemStack containerStack = fuelStack.getContainerItem();
-					fuelStack.shrink(1); // Shrink now to make space in the slot.
-					insertOrDropStack(FUEL_SLOT, containerStack);
-				} else {
+				if (fuelStack.hasContainerItem())
+					inventory.setStackInSlot(FUEL_SLOT, fuelStack.getContainerItem());
+				else {
 					fuelStack.shrink(1);
+					inventory.setStackInSlot(FUEL_SLOT, fuelStack); // Update the data
 				}
-				inventory.setStackInSlot(FUEL_SLOT, fuelStack); // Update the data
 				return true;
 			}
 		}

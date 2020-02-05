@@ -12,7 +12,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
@@ -53,7 +52,7 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 	public final ItemStackHandler inventory = new ItemStackHandler(1) {
 		@Override
 		public boolean isItemValid(final int slot, @Nonnull final ItemStack stack) {
-			return !stack.isEmpty() && FurnaceTileEntity.isFuel(stack);
+			return FurnaceTileEntity.isFuel(stack);
 		}
 
 		@Override
@@ -86,20 +85,18 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 		final BlockPos pos = this.pos;
 		final SettableEnergyStorage energy = this.energy;
 
-		final ItemStack fuelStack = this.inventory.getStackInSlot(FUEL_SLOT);
+		final ItemStack fuelStack = this.inventory.getStackInSlot(FUEL_SLOT).copy();
 		if (!fuelStack.isEmpty()) {
 			int energyToReceive = ForgeHooks.getBurnTime(fuelStack);
 			// Only use the stack if we can receive 100% of the energy from it
 			if (energy.receiveEnergy(energyToReceive, true) == energyToReceive) {
 				energy.receiveEnergy(energyToReceive, false);
-				if (fuelStack.hasContainerItem()) {
-					final ItemStack containerStack = fuelStack.getContainerItem();
-					fuelStack.shrink(1); // Shrink now to make space in the slot.
-					insertOrDropStack(FUEL_SLOT, containerStack);
-				} else {
+				if (fuelStack.hasContainerItem())
+					inventory.setStackInSlot(FUEL_SLOT, fuelStack.getContainerItem());
+				else {
 					fuelStack.shrink(1);
+					inventory.setStackInSlot(FUEL_SLOT, fuelStack); // Update the data
 				}
-				inventory.setStackInSlot(FUEL_SLOT, fuelStack); // Update the data
 			}
 		}
 
@@ -165,20 +162,6 @@ public class HeatCollectorTileEntity extends TileEntity implements ITickableTile
 			lastEnergy = energy.getEnergyStored();
 		}
 
-	}
-
-	/**
-	 * Tries to insert the stack into the given slot or drops the stack on the ground if it can't insert it.
-	 *
-	 * @param slot  The slot to try to insert the container item into
-	 * @param stack The stack to try to insert
-	 */
-	private void insertOrDropStack(final int slot, final ItemStack stack) {
-		final boolean canInsertContainerItemIntoSlot = inventory.insertItem(slot, stack, true).isEmpty();
-		if (canInsertContainerItemIntoSlot)
-			inventory.insertItem(slot, stack, false);
-		else // Drop the stack if we can't insert it
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 	}
 
 	@Nonnull
