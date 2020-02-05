@@ -5,14 +5,15 @@ import io.github.cadiboo.examplemod.config.ConfigHolder;
 import io.github.cadiboo.examplemod.init.ModBlocks;
 import io.github.cadiboo.examplemod.init.ModItemGroups;
 import io.github.cadiboo.examplemod.item.ModdedSpawnEggItem;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +68,18 @@ public final class ModEventSubscriber {
 			ConfigHelper.bakeServer(config);
 			LOGGER.debug("Baked server config");
 		}
+	}
+
+	/**
+	 * Exists to work around a limitation with Spawn Eggs:
+	 * Spawn Eggs require an EntityType, but EntityTypes are created AFTER Items.
+	 * Therefore it is "impossible" for modded spawn eggs to exist.
+	 * To get around this we have our own custom SpawnEggItem, but it needs
+	 * some extra setup after Item and EntityType registration completes.
+	 */
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void onPostRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
+		ModdedSpawnEggItem.initUnaddedEggs();
 	}
 
 }
