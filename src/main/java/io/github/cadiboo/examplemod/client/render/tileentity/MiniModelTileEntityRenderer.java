@@ -24,6 +24,8 @@ import java.nio.ByteBuffer;
  * This should really probably not be in an examplemod for beginners,
  * but I added comments to it so its all good
  *
+ * TODO: Update this to 1.15
+ *
  * @author Cadiboo
  */
 public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTileEntity> {
@@ -36,33 +38,33 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 	 * Render our TileEntity
 	 */
 	@Override
-	public void func_225616_a_(final MiniModelTileEntity tileEntityIn, final float partialTicks, final MatrixStack matrixStack, final IRenderTypeBuffer renderTypeBuffer, final int packedLight, final int backupPackedLight) {
+	public void render(final MiniModelTileEntity tileEntityIn, final float partialTicks, final MatrixStack matrixStack, final IRenderTypeBuffer renderTypeBuffer, final int packedLight, final int backupPackedLight) {
 
-		final MiniModel miniModel = tileEntityIn.miniModel;
-
-		if (miniModel == null)
-			return;
-
-		if (!miniModel.isBuilt())
-			miniModel.rebuild();
-
-		// Setup correct GL state
-//		this.field_228858_b_.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		RenderHelper.disableStandardItemLighting();
-		// Translucency
-		if (ExampleModConfig.modelTranslucency) {
-			RenderSystem.blendFunc(GL11.GL_ONE, GL11.GL_ONE);
-		} else {
-			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		}
-		RenderSystem.enableBlend();
-
-		if (Minecraft.isAmbientOcclusionEnabled()) {
-			RenderSystem.shadeModel(GL11.GL_SMOOTH);
-		} else {
-			RenderSystem.shadeModel(GL11.GL_FLAT);
-		}
-
+//		final MiniModel miniModel = tileEntityIn.miniModel;
+//
+//		if (miniModel == null)
+//			return;
+//
+//		if (!miniModel.isBuilt())
+//			miniModel.rebuild();
+//
+//		// Setup correct GL state
+////		this.field_228858_b_.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+//		RenderHelper.disableStandardItemLighting();
+//		// Translucency
+//		if (ExampleModConfig.modelTranslucency) {
+//			RenderSystem.blendFunc(GL11.GL_ONE, GL11.GL_ONE);
+//		} else {
+//			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//		}
+//		RenderSystem.enableBlend();
+//
+//		if (Minecraft.isAmbientOcclusionEnabled()) {
+//			RenderSystem.shadeModel(GL11.GL_SMOOTH);
+//		} else {
+//			RenderSystem.shadeModel(GL11.GL_FLAT);
+//		}
+//
 //		GlStateManager.pushMatrix();
 //
 //		// Translate to render pos. The 0.5 is to translate into the centre of the block, rather than to the corner of it
@@ -110,22 +112,22 @@ public class MiniModelTileEntityRenderer extends TileEntityRenderer<MiniModelTil
 //			}
 //		}
 //	}
-
-	/**
-	 * This should work.
-	 * Draws a BufferBuilder without resetting its internal data.
-	 *
-	 * @param bufferBuilder The BufferBuilder to draw (but not reset)
-	 */
-	private void drawBufferWithoutResetting(final BufferBuilder bufferBuilder) {
-		// Get the internal data from the BufferBuilder (This resets the BufferBuilder's own copy of this data)
-		final ByteBuffer byteBuffer = bufferBuilder.func_227832_f_().getSecond();
-		// Set the BufferBuilder's internal data to the original data
-		bufferBuilder.putBulkData(byteBuffer);
-		// Draw the BufferBuilder (This resets the BufferBuilder's data)
-		WorldVertexBufferUploader.draw(bufferBuilder);
-		// Set the BufferBuilder's internal data back to the original data
-		bufferBuilder.putBulkData(byteBuffer);
-	}
+//
+//	/**
+//	 * This should work.
+//	 * Draws a BufferBuilder without resetting its internal data.
+//	 *
+//	 * @param bufferBuilder The BufferBuilder to draw (but not reset)
+//	 */
+//	private void drawBufferWithoutResetting(final BufferBuilder bufferBuilder) {
+//		// Get the internal data from the BufferBuilder (This resets the BufferBuilder's own copy of this data)
+//		final ByteBuffer byteBuffer = bufferBuilder.getAndResetData().getSecond();
+//		// Set the BufferBuilder's internal data to the original data
+//		bufferBuilder.putBulkData(byteBuffer);
+//		// Draw the BufferBuilder (This resets the BufferBuilder's data)
+//		WorldVertexBufferUploader.draw(bufferBuilder);
+//		// Set the BufferBuilder's internal data back to the original data
+//		bufferBuilder.putBulkData(byteBuffer);
+//	}
 
 }

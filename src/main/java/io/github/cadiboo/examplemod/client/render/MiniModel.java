@@ -5,20 +5,17 @@ import net.minecraft.tileentity.TileEntity;
 /**
  * A wrapper around ChunkRender.
  * Stores the a render of the chunk (16x16x16) surrounding a TileEntity
+ * TODO: Make this work on 1.15
  *
  * @author Cadiboo
  */
 public class MiniModel {
 
-	//	// Cache the result of BlockRenderLayer.values() instead of calling BlockRenderLayer.values()
-//	// each time (because each call creates a new BlockRenderLayer[] which is wasteful)
-//	public static final BlockRenderLayer[] BLOCK_RENDER_LAYERS = BlockRenderLayer.values();
-//
 //	// We only create one of these per cache, we reset it each time we rebuild
 //	public final RegionRenderCacheBuilder regionRenderCacheBuilder;
 //	private final ChunkRender chunkRender;
 //	public ChunkRenderTask generator;
-	private boolean isBuilt = false;
+	private boolean isCompiled = false;
 
 //	private MiniModel(final ChunkRender chunkRender, final RegionRenderCacheBuilder regionRenderCacheBuilder) {
 //		this.chunkRender = chunkRender;
@@ -39,7 +36,7 @@ public class MiniModel {
 	/**
 	 * (re)build the render
 	 */
-	public void rebuild() {
+	public void compile() {
 //		final ChunkRender chunkRender = this.chunkRender;
 //		final RegionRenderCacheBuilder buffers = this.regionRenderCacheBuilder;
 //
@@ -67,8 +64,8 @@ public class MiniModel {
 //		this.isBuilt = true;
 	}
 
-	public boolean isBuilt() {
-		return isBuilt;
+	public boolean isCompiled() {
+		return isCompiled;
 	}
 
 }
