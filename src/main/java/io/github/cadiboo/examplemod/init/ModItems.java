@@ -1,9 +1,11 @@
 package io.github.cadiboo.examplemod.init;
 
 import io.github.cadiboo.examplemod.ExampleMod;
+import io.github.cadiboo.examplemod.item.ItemBase;
 import io.github.cadiboo.examplemod.item.ModdedSpawnEggItem;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -19,11 +21,21 @@ import net.minecraftforge.registries.ForgeRegistries;
  * @author Cadiboo
  */
 public final class ModItems {
-
 	public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, ExampleMod.MODID);
 
 	// This is a very simple Item. It has no special properties except for being on our creative tab.
 	public static final RegistryObject<Item> EXAMPLE_CRYSTAL = ITEMS.register("example_crystal", () -> new Item(new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 	public static final RegistryObject<ModdedSpawnEggItem> WILD_BOAR_SPAWN_EGG = ITEMS.register("wild_boar_spawn_egg", () -> new ModdedSpawnEggItem(ModEntityTypes.WILD_BOAR, 0xF0A5A2, 0xA9672B, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
+	public static final RegistryObject<Item> RUBY = ITEMS.register("ruby", ItemBase::new);
+	public static final RegistryObject<SwordItem> RUBY_SWORD = ITEMS.register("ruby_sword", () -> new SwordItem(ItemTier.DIAMOND, 9, 6.0f, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
+	public static final RegistryObject<PickaxeItem> RUBY_PICKAXE = ITEMS.register("ruby_pickaxe", () -> new PickaxeItem(ItemTier.DIAMOND, 7, 5.0f, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
+	public static final RegistryObject<ShovelItem> RUBY_SHOVEL = ITEMS.register("ruby_shovel", () -> new ShovelItem(ItemTier.DIAMOND, 6, 5.0f, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
+	public static final RegistryObject<AxeItem> RUBY_AXE = ITEMS.register("ruby_axe", () -> new AxeItem(ItemTier.DIAMOND, 11, 4.0f, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
+	public static final RegistryObject<HoeItem> RUBY_HOE = ITEMS.register("ruby_hoe", () -> new HoeItem(ItemTier.DIAMOND, 5.0f, new Item.Properties().group(ModItemGroups.MOD_ITEM_GROUP)));
 
+
+	public static void init() {
+		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+	}
 }
+

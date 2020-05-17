@@ -4,7 +4,6 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -41,7 +40,7 @@ public class WildBoarEntity extends PigEntity {
 	 *
 	 * @param parent The entity that made this child
 	 * @return A new WildBoar
-	 * @see AbstractHorseEntity#setOffspringAttributes(AgeableEntity, AbstractHorseEntity)
+	 * see AbstractHorseEntity#setOffspringAttributes(AgeableEntity, AbstractHorseEntity)
 	 */
 	@Override
 	public WildBoarEntity createChild(final AgeableEntity parent) {

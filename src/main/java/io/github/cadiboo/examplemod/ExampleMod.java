@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 public final class ExampleMod {
 
 	public static final String MODID = "examplemod";
-
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	public ExampleMod() {
@@ -40,5 +39,4 @@ public final class ExampleMod {
 		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
 		modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC);
 	}
-
 }
